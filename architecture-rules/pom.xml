@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>society-complaint</artifactId>
+    <groupId>com.mycity.runwal</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>architecture-rules</artifactId>
+  <name>architecture-rules</name>
+  <description>ArchUnit rules (DDD + layering) shared by every service's tests.</description>
+
+  <!--
+    Deliberately NOT depending on `shared`: shared's own ArchitectureTest depends on this module
+    (test scope), and Maven forbids reactor cycles. Shared kernel types are referenced by name.
+  -->
+  <dependencies>
+    <dependency>
+      <groupId>com.tngtech.archunit</groupId>
+      <artifactId>archunit-junit5</artifactId>
+    </dependency>
+  </dependencies>
+</project>

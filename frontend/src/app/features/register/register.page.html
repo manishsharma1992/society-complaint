@@ -1,0 +1,131 @@
+<div class="sheet" *transloco="let t">
+  <header class="bar">
+    <p class="society">{{ t('app.society') }}</p>
+    <app-language-switch />
+  </header>
+
+  @if (waiting()) {
+    <main class="body waiting">
+      <h1>{{ t('register.waitingTitle') }}</h1>
+      <p class="lead">{{ t('register.waitingBody') }}</p>
+      @if (user()?.claim; as claim) {
+        <dl class="facts ruled stock">
+          <div><dt>{{ t('register.nameLabel') }}</dt><dd>{{ user()?.name }}</dd></div>
+          <div><dt>{{ t('signups.flat') }}</dt><dd class="num">{{ flatLabels()[claim.flatId] ?? '…' }}</dd></div>
+          <div><dt>{{ t('signups.as') }}</dt><dd>{{ t('signups.' + claim.occupancy) }}</dd></div>
+        </dl>
+      }
+      @if (stillWaiting()) {
+        <p class="help" role="status">{{ t('register.stillWaiting') }}</p>
+      }
+      <button hlmBtn size="xl" type="button" class="w-full" (click)="checkAgain()" [disabled]="checking()">
+        @if (checking()) { <hlm-spinner aria-hidden="true" /> }
+        {{ t('register.checkAgain') }}
+      </button>
+      <button type="button" class="text-btn press" (click)="signOut()">{{ t('profile.signOut') }}</button>
+    </main>
+  } @else {
+    <div class="progress" aria-hidden="true">
+      @for (n of [1, 2, 3]; track n) {
+        <span [class.on]="n <= step()"></span>
+      }
+    </div>
+    <p class="count num" aria-live="polite">{{ t('raise.step', { n: step() }) }}</p>
+
+    <main class="body">
+      @switch (step()) {
+        @case (1) {
+          <section class="pane" [attr.data-direction]="direction()" aria-labelledby="name-title">
+            <h1 id="name-title">{{ t('register.nameTitle') }}</h1>
+            @if (user()?.status === 'REJECTED') {
+              <p class="notice stock" role="status">{{ t('account.REJECTED', { reason: user()?.rejectionReason ?? '' }) }} {{ t('register.tryAgain') }}</p>
+            } @else {
+              <p class="lead">{{ t('register.welcome') }}</p>
+            }
+            <label class="label" for="name">{{ t('register.nameLabel') }}</label>
+            <input id="name" class="field" type="text" maxlength="100" autocomplete="name" enterkeyhint="next"
+                   [value]="name()" (input)="name.set($any($event.target).value)" aria-describedby="name-help" />
+            <p class="help" id="name-help">{{ t('register.nameHelp') }}</p>
+          </section>
+        }
+        @case (2) {
+          <section class="pane" [attr.data-direction]="direction()" aria-labelledby="flat-title">
+            <h1 id="flat-title">{{ t('register.flatTitle') }}</h1>
+            <fieldset>
+              <legend>{{ t('raise.towerLabel') }}</legend>
+              <div class="chips">
+                @for (tower of towers(); track tower.id) {
+                  <button type="button" class="chip press" [attr.aria-pressed]="towerId() === tower.id" (click)="chooseTower(tower.id)">
+                    <span class="num">{{ tower.code }}</span> {{ tower.name }}
+                  </button>
+                }
+              </div>
+            </fieldset>
+            @if (loadingFlats()) {
+              <p class="help" aria-live="polite"><hlm-spinner aria-hidden="true" /> {{ t('register.loadingFlats') }}</p>
+            }
+            @if (floors().length) {
+              <fieldset>
+                <legend>{{ t('register.floorLabel') }}</legend>
+                <div class="grid floors">
+                  @for (f of floors(); track f) {
+                    <button type="button" class="chip num press" [attr.aria-pressed]="floor() === f" (click)="chooseFloor(f)">{{ f }}</button>
+                  }
+                </div>
+              </fieldset>
+            }
+            @if (flatsOnFloor().length) {
+              <fieldset>
+                <legend>{{ t('register.flatLabel') }}</legend>
+                <div class="grid flats">
+                  @for (flat of flatsOnFloor(); track flat.id) {
+                    <button type="button" class="chip num press" [attr.aria-pressed]="flatId() === flat.id" (click)="flatId.set(flat.id)">{{ flat.label }}</button>
+                  }
+                </div>
+              </fieldset>
+            }
+          </section>
+        }
+        @case (3) {
+          <section class="pane" [attr.data-direction]="direction()" aria-labelledby="as-title">
+            <h1 id="as-title">{{ t('register.asTitle', { flat: chosenFlat()?.label }) }}</h1>
+            <div class="choices" role="radiogroup" aria-labelledby="as-title">
+              <button type="button" role="radio" class="choice press" [attr.aria-checked]="occupancy() === 'OWNER'" (click)="occupancy.set('OWNER')">
+                <span class="name">{{ t('signups.OWNER') }}</span>
+                <span class="sub">{{ t('register.ownerHelp') }}</span>
+              </button>
+              <button type="button" role="radio" class="choice press" [attr.aria-checked]="occupancy() === 'TENANT'" (click)="occupancy.set('TENANT')">
+                <span class="name">{{ t('signups.TENANT') }}</span>
+                <span class="sub">{{ t('register.tenantHelp') }}</span>
+              </button>
+            </div>
+            <p class="help">{{ t('register.reviewNote') }}</p>
+          </section>
+        }
+      }
+      @if (error()) {
+        <p class="error" role="alert">{{ t(error()!) }}</p>
+      }
+    </main>
+
+    <footer class="actions">
+      @if (step() > 1) {
+        <button hlmBtn variant="outline" size="xl" type="button" (click)="back()" [disabled]="sending()">{{ t('raise.back') }}</button>
+      }
+      @switch (step()) {
+        @case (1) {
+          <button hlmBtn size="xl" type="button" class="grow" (click)="next()" [disabled]="!nameValid()">{{ t('raise.next') }}</button>
+        }
+        @case (2) {
+          <button hlmBtn size="xl" type="button" class="grow" (click)="next()" [disabled]="flatId() === null">{{ t('raise.next') }}</button>
+        }
+        @case (3) {
+          <button hlmBtn size="xl" type="button" class="grow" (click)="send()" [disabled]="occupancy() === null || sending()">
+            @if (sending()) { <hlm-spinner aria-hidden="true" /> }
+            {{ t('register.send') }}
+          </button>
+        }
+      }
+    </footer>
+  }
+</div>

@@ -1,0 +1,16 @@
+{
+  "rules": [
+    {
+      "id": "app-photo-upload-and-view",
+      "allowedOrigins": [
+        "https://runwalltdfakepromises.com",
+        "https://www.runwalltdfakepromises.com",
+        "http://localhost:4200"
+      ],
+      "allowedMethods": ["GET", "PUT"],
+      "allowedHeaders": ["Content-Type"],
+      "exposeHeaders": ["ETag"],
+      "maxAgeSeconds": 3600
+    }
+  ]
+}

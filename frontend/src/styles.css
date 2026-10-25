@@ -1,0 +1,84 @@
+/* Hallmark · shape: app screen · genre: editorial · theme: Atelier (deal 2/3, seed luxury-residential-society-complaint-0506·2c8c8255·2026-10-25·r0) · brand: Runwal MyCity residents (spec 2026-10-25)
+ * nav: top bar with the society name and language; bottom tab bar (max 4) on phones, top tabs from 60rem · signature: the complaint card, numbered, pressed on cotton stock, its status history ruled beneath · states: loading, empty, error, full
+ * axes: light/roman-serif/cool -> brand green accent · posture: restrained · contrast: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P2 H2 E2 S2 R1 V2 · weakest: R (a calm app can read as a generic form), answered by the numbered card stock and ruled history as the one object the app is known by */
+/* waive 48: Spartan's generated components read shadcn token names (--primary, --border...); they are mapped below onto the Hallmark tokens, so no literal colour reaches a component */
+/* answered: Atelier's slate signal and its faces are replaced by the brand green measured from the supplied logo and by Latin + Devanagari faces; the WebGL air is dropped (app scope: no ornament) */
+
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css';
+@import '@spartan-ng/brain/hlm-tailwind-preset.css';
+
+@import '@fontsource/mukta/400.css';
+@import '@fontsource/mukta/500.css';
+@import '@fontsource/mukta/600.css';
+@import '@fontsource/tiro-devanagari-marathi/400.css';
+
+@import './theme/tokens.css';
+@import './theme/base.css' layer(base);
+
+@source '../libs/ui';
+
+/* Spartan (shadcn) token names, pointed at the Hallmark tokens */
+:root {
+  color-scheme: light;
+  --font-sans: var(--font-body);
+  --radius: var(--radius-pill);
+  --background: var(--color-paper);
+  --foreground: var(--color-ink);
+  --card: var(--color-stock);
+  --card-foreground: var(--color-ink);
+  --popover: var(--color-stock);
+  --popover-foreground: var(--color-ink);
+  --primary: var(--color-brand);
+  --primary-foreground: var(--color-brand-ink);
+  --secondary: var(--color-paper-2);
+  --secondary-foreground: var(--color-ink);
+  --muted: var(--color-paper-2);
+  --muted-foreground: var(--color-ink-muted);
+  --accent: var(--color-paper-2);
+  --accent-foreground: var(--color-ink);
+  --destructive: var(--color-error);
+  --border: var(--color-rule);
+  --input: var(--color-rule);
+  --ring: var(--color-focus);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    min-height: 100dvh;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button, a, [role='button'] {
+    touch-action: manipulation;
+  }
+}
+
+/* Cotton card stock (Atelier): fibre, a lit edge from the top left, pressed type */
+.stock {
+  position: relative;
+  border-radius: var(--radius-card);
+  background: linear-gradient(160deg, var(--card-lit), var(--color-stock) 55%, var(--card-shade));
+  box-shadow: var(--shadow-card), inset 1px 1px 0 var(--lit);
+}
+
+/* Press feedback on everything pressable: instant on pointer-down, transform only */
+.press {
+  transition: transform var(--dur-micro) var(--ease-out);
+}
+.press:active {
+  transform: scale(0.97);
+}
+
+/* A list or table opens on an ink rule; rows are hairlines */
+.ruled {
+  border-top: var(--rule-head) solid var(--color-ink);
+}
+.ruled > * + * {
+  border-top: var(--rule-hair) solid var(--color-rule);
+}

@@ -1,0 +1,175 @@
+<div class="sheet" *transloco="let t">
+  <header class="bar">
+    @if (!raised()) {
+      <button type="button" class="text-btn press" (click)="cancel()">{{ t('raise.cancel') }}</button>
+      <p class="step num" aria-live="polite">{{ t('raise.step', { n: step() }) }}</p>
+    }
+  </header>
+
+  @if (!raised()) {
+    <div class="progress" aria-hidden="true">
+      @for (n of [1, 2, 3]; track n) {
+        <span [class.on]="n <= step()"></span>
+      }
+    </div>
+
+    @if (confirmingCancel()) {
+      <div class="confirm stock" role="alertdialog" aria-labelledby="discard-text">
+        <p id="discard-text">{{ t('raise.discardQuestion') }}</p>
+        <div class="confirm-actions">
+          <button hlmBtn variant="outline" size="lg" type="button" (click)="confirmingCancel.set(false)">{{ t('raise.keepEditing') }}</button>
+          <button hlmBtn variant="destructive" size="lg" type="button" (click)="cancel()">{{ t('raise.discard') }}</button>
+        </div>
+      </div>
+    }
+
+    <main class="body">
+      @switch (step()) {
+        @case (1) {
+          <section class="step" [attr.data-direction]="direction()" aria-labelledby="photos-title">
+            <h1 id="photos-title">{{ t('raise.photosTitle') }}</h1>
+            <p class="lead">{{ t('raise.photosLead') }}</p>
+
+            @if (photos().length || preparing()) {
+              <ul class="thumbs" role="list">
+                @for (photo of photos(); track photo.url; let i = $index) {
+                  <li class="thumb">
+                    <img [src]="photo.url" alt="" />
+                    <button type="button" class="remove press" (click)="removePhoto(i)" [attr.aria-label]="t('raise.remove', { n: i + 1 })">
+                      <ng-icon name="lucideX" aria-hidden="true" />
+                    </button>
+                  </li>
+                }
+                @for (p of [].constructor(preparing()); track $index) {
+                  <li class="thumb pending" [attr.aria-label]="t('raise.preparing')"><hlm-spinner /></li>
+                }
+              </ul>
+            }
+
+            @if (canAddPhoto()) {
+              <div class="pick">
+                <label class="pick-btn press">
+                  <ng-icon name="lucideCamera" aria-hidden="true" />
+                  <span>{{ t('raise.take') }}</span>
+                  <input type="file" accept="image/*" capture="environment" (change)="addPhotos($any($event.target))" />
+                </label>
+                <label class="pick-btn press">
+                  <ng-icon name="lucideImagePlus" aria-hidden="true" />
+                  <span>{{ t('raise.choose') }}</span>
+                  <input type="file" accept="image/*" multiple (change)="addPhotos($any($event.target))" />
+                </label>
+              </div>
+            }
+            <p class="help">{{ t('raise.photosLimit') }}</p>
+            @if (photoError()) {
+              <p class="error" role="alert">{{ t('raise.photoFailed') }}</p>
+            }
+          </section>
+        }
+
+        @case (2) {
+          <section class="step" [attr.data-direction]="direction()" aria-labelledby="where-title">
+            <h1 id="where-title">{{ t('raise.whereTitle') }}</h1>
+
+            <fieldset>
+              <legend>{{ t('raise.categoryLabel') }}</legend>
+              <div class="choices categories">
+                @for (category of categories(); track category.id) {
+                  <button type="button" class="choice press" [attr.aria-pressed]="categoryId() === category.id" (click)="categoryId.set(category.id)">
+                    <span class="name">{{ t('category.' + category.name) }}</span>
+                    <span class="sub">{{ t(sla(category).key, { n: sla(category).n }) }}</span>
+                  </button>
+                }
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>{{ t('raise.locationLabel') }}</legend>
+              <div class="choices">
+                @for (flat of myFlats(); track flat.id) {
+                  <button type="button" class="choice press" [attr.aria-pressed]="isFlat(flat.id)" (click)="chooseFlat(flat.id)">
+                    <span class="name">{{ t('raise.myFlat', { label: flat.label }) }}</span>
+                  </button>
+                }
+                <button type="button" class="choice press" [attr.aria-pressed]="isCommon()" (click)="chooseCommon(null)">
+                  <span class="name">{{ t('raise.commonArea') }}</span>
+                </button>
+              </div>
+              @if (isCommon()) {
+                <p class="sublegend">{{ t('raise.towerLabel') }}</p>
+                <div class="chips">
+                  <button type="button" class="chip press" [attr.aria-pressed]="isCommon(null)" (click)="chooseCommon(null)">{{ t('raise.wholeSociety') }}</button>
+                  @for (tower of towers(); track tower.id) {
+                    <button type="button" class="chip press" [attr.aria-pressed]="isCommon(tower.id)" (click)="chooseCommon(tower.id)">
+                      <span class="num">{{ tower.code }}</span> {{ tower.name }}
+                    </button>
+                  }
+                </div>
+              }
+            </fieldset>
+          </section>
+        }
+
+        @case (3) {
+          <form class="step" [attr.data-direction]="direction()" aria-labelledby="describe-title" (submit)="$event.preventDefault(); submit()" novalidate>
+            <h1 id="describe-title">{{ t('raise.describeTitle') }}</h1>
+
+            <label class="label" for="title">{{ t('raise.titleLabel') }}</label>
+            <input id="title" class="field" type="text" maxlength="150" autocomplete="off" enterkeyhint="next"
+                   [value]="title()" (input)="title.set($any($event.target).value)" aria-describedby="title-help" required />
+            <p class="help" id="title-help">{{ t('raise.titleHelp') }}</p>
+
+            <label class="label" for="details">{{ t('raise.detailsLabel') }}</label>
+            <textarea id="details" class="field" rows="4" maxlength="2000"
+                      [value]="details()" (input)="details.set($any($event.target).value)" aria-describedby="details-help"></textarea>
+            <p class="help" id="details-help">{{ t('raise.detailsHelp') }}</p>
+
+            @if (error()) {
+              <p class="error" role="alert">{{ t(error()!) }}</p>
+            }
+            @if (submitting() && photos().length) {
+              <p class="help" aria-live="polite">{{ t('raise.uploading', { done: uploaded(), total: photos().length }) }}</p>
+            }
+          </form>
+        }
+      }
+    </main>
+
+    <footer class="actions">
+      @if (step() > 1) {
+        <button hlmBtn variant="outline" size="xl" type="button" (click)="back()" [disabled]="submitting()">{{ t('raise.back') }}</button>
+      }
+      @switch (step()) {
+        @case (1) {
+          <button hlmBtn size="xl" type="button" class="grow" (click)="next()" [disabled]="preparing() > 0">
+            {{ photos().length ? t('raise.next') : t('raise.skip') }}
+          </button>
+        }
+        @case (2) {
+          <button hlmBtn size="xl" type="button" class="grow" (click)="next()" [disabled]="!whereChosen()">{{ t('raise.next') }}</button>
+        }
+        @case (3) {
+          <button hlmBtn size="xl" type="button" class="grow" (click)="submit()" [disabled]="!titleValid() || submitting()">
+            @if (submitting()) {
+              <hlm-spinner aria-hidden="true" />
+            }
+            {{ t('raise.submit') }}
+          </button>
+        }
+      }
+    </footer>
+  } @else {
+    <main class="body done" aria-labelledby="done-title">
+      <h1 id="done-title">{{ t('raise.doneTitle') }}</h1>
+      <app-complaint-card
+        [complaint]="raised()!"
+        [categoryName]="categoryNameOf(raised()!.categoryId)"
+        [towerName]="towerNameOf(raised()!.towerId)"
+        [where]="flatLabelOf(raised()!.flatId)" />
+      @if (failedPhotos() > 0) {
+        <p class="error" role="status">{{ t('raise.photosFailed', { failed: failedPhotos(), total: photos().length }) }}</p>
+      }
+      <a hlmBtn size="xl" routerLink="/complaints" class="w-full">{{ t('raise.view') }}</a>
+    </main>
+  }
+</div>

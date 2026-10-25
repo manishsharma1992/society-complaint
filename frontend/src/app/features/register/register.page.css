@@ -1,0 +1,103 @@
+/* Hallmark · shape: app screen · theme: Atelier · the full stamp heads src/styles.css */
+/* waive 26b: the buttons are shared hlmBtn controls, whose pressed state lives in libs/ui; the choices press via .press */
+/* Signing up: the same full-screen task as raising a complaint, one decision per step, the action low */
+:host { display: block; }
+
+.sheet { min-height: 100dvh; max-width: 40rem; margin-inline: auto; display: flex; flex-direction: column; }
+.bar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); min-height: 64px; padding-inline: var(--gutter); }
+.society { font-family: var(--font-display); font-size: var(--text-lg); color: var(--color-ink); }
+
+.progress { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2xs); padding-inline: var(--gutter); }
+.progress span { height: 3px; background: var(--color-paper-3); }
+.progress span.on { background: var(--color-brand); }
+.count { padding: var(--space-xs) var(--gutter) 0; font-size: var(--text-sm); color: var(--color-ink-muted); }
+
+.body { flex: 1; padding: var(--space-lg) var(--gutter); display: grid; gap: var(--space-sm); align-content: start; }
+
+/* each step slides in from the side the person is heading to */
+.pane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  transition: opacity var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out);
+  @starting-style { opacity: 0; transform: translateX(16px); }
+}
+.pane[data-direction='back'] { @starting-style { opacity: 0; transform: translateX(-16px); } }
+
+h1 { font-size: var(--text-2xl); max-width: none; text-wrap: balance; overflow-wrap: break-word; min-width: 0; }
+.lead { color: var(--color-ink-2); }
+.help { font-size: var(--text-sm); color: var(--color-ink-muted); display: flex; align-items: center; gap: var(--space-xs); }
+.error { font-size: var(--text-sm); color: var(--color-error); }
+.notice { padding: var(--space-md); color: var(--color-ink-2); }
+.label { font-weight: 500; color: var(--color-ink); margin-top: var(--space-xs); }
+
+.field {
+  width: 100%;
+  min-height: 52px;
+  padding: var(--space-sm);
+  border: var(--rule-hair) solid var(--color-ink-muted);
+  border-radius: var(--radius-pill);
+  background: var(--color-stock);
+  color: var(--color-ink);
+  font-size: var(--text-md);
+  transition: border-color var(--dur-short) var(--ease-out);
+}
+.field:focus-visible { outline: none; border-color: var(--color-focus); box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-focus) 22%, transparent); }
+
+fieldset { border: 0; margin: var(--space-sm) 0 0; padding: 0; min-width: 0; }
+legend { font-weight: 500; color: var(--color-ink); margin-bottom: var(--space-xs); }
+.chips { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+.grid { display: grid; gap: var(--space-xs); }
+.grid.floors { grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); }
+.grid.flats { grid-template-columns: repeat(auto-fill, minmax(min(100%, 7.5rem), 1fr)); }
+
+.chip, .choice {
+  min-height: 48px;
+  padding-inline: var(--space-sm);
+  border: var(--rule-hair) solid var(--color-ink-muted);
+  border-radius: var(--radius-pill);
+  background: var(--color-stock);
+  color: var(--color-ink);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color var(--dur-short) var(--ease-out), border-color var(--dur-short) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+}
+.grid .chip { padding-inline: var(--space-2xs); }
+.chip[aria-pressed='true'], .choice[aria-checked='true'] {
+  border-color: var(--color-brand);
+  box-shadow: inset 0 0 0 1px var(--color-brand);
+  background: color-mix(in oklab, var(--color-lime) 28%, var(--color-stock));
+}
+.chip:focus-visible, .choice:focus-visible, .text-btn:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+.choices { display: grid; gap: var(--space-xs); }
+.choice { min-height: 64px; display: grid; gap: 2px; padding: var(--space-xs) var(--space-sm); text-align: start; white-space: normal; }
+.choice .sub { font-size: var(--text-sm); color: var(--color-ink-muted); }
+
+.actions {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--gutter) calc(var(--space-sm) + env(safe-area-inset-bottom));
+  background: color-mix(in oklab, var(--color-paper) 88%, transparent);
+  backdrop-filter: blur(16px);
+  border-top: var(--rule-hair) solid var(--color-rule);
+}
+.grow { flex: 1; }
+
+.waiting { gap: var(--space-md); }
+.facts { margin: 0; padding: var(--space-xs) var(--space-md); }
+.facts > div { display: flex; justify-content: space-between; gap: var(--space-sm); padding-block: var(--space-xs); }
+dt { color: var(--color-ink-muted); }
+dd { margin: 0; color: var(--color-ink); }
+.text-btn { justify-self: center; min-height: 44px; padding: 0 var(--space-sm); border: 0; background: none; color: var(--color-brand-deep); font-size: var(--text-md); cursor: pointer; }
+
+@media (prefers-reduced-transparency: reduce) {
+  .actions { background: var(--color-paper); backdrop-filter: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pane { transition: opacity var(--dur-short) linear; @starting-style { opacity: 0; transform: none; } }
+  .pane[data-direction='back'] { @starting-style { opacity: 0; transform: none; } }
+}

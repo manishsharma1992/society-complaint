@@ -1,0 +1,135 @@
+/* Hallmark · shape: app screen · theme: Atelier · the full stamp heads src/styles.css */
+/* Sign-in: the residents' own complex as a matted print beside the card; one primary action per step */
+:host { display: block; }
+
+.page {
+  min-height: 100dvh;
+  max-width: 1120px;
+  margin-inline: auto;
+  padding: 0 var(--gutter) var(--space-xl);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  min-height: 64px;
+}
+
+.wordmark { display: flex; flex-direction: column; line-height: 1.1; }
+.society { font-family: var(--font-display); font-size: var(--text-lg); color: var(--color-ink); }
+.residents { font-size: var(--text-sm); color: var(--color-ink-muted); }
+
+.layout {
+  display: grid;
+  gap: var(--space-lg);
+  padding-top: var(--space-sm);
+}
+
+/* the print: a photograph on a cotton mat, a wall label beneath */
+.print { margin: 0; padding: var(--space-sm); }
+.mat { aspect-ratio: 16 / 10; overflow: hidden; }
+.mat img { width: 100%; height: 100%; object-fit: cover; filter: sepia(0.18) saturate(0.92) contrast(0.96); }
+figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2xs) var(--space-sm);
+  padding-top: var(--space-xs);
+  font-size: var(--text-sm);
+  color: var(--color-ink);
+}
+.muted { color: var(--color-ink-muted); }
+
+.card { padding: var(--space-lg); }
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  transition: opacity var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out);
+  @starting-style {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+h1 { font-size: var(--text-2xl); max-width: none; text-wrap: balance; }
+.lead { color: var(--color-ink-2); margin-bottom: var(--space-xs); }
+
+.label { font-weight: 500; color: var(--color-ink); }
+
+.phone {
+  display: flex;
+  align-items: stretch;
+  min-height: 52px;
+  /* a field's edge must reach 3:1 against the card */
+  border: var(--rule-hair) solid var(--color-ink-muted);
+  border-radius: var(--radius-pill);
+  background: var(--color-stock);
+  transition: border-color var(--dur-short) var(--ease-out), box-shadow var(--dur-short) var(--ease-out);
+}
+.phone:focus-within { border-color: var(--color-focus); box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-focus) 22%, transparent); }
+.phone.invalid { border-color: var(--color-error); }
+.prefix {
+  display: grid;
+  place-items: center;
+  padding-inline: var(--space-sm);
+  border-right: var(--rule-hair) solid var(--color-rule);
+  color: var(--color-ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+.phone input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  padding-inline: var(--space-sm);
+  font-size: var(--text-lg);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink);
+}
+.phone input:focus-visible { outline: none; }
+
+.help { font-size: var(--text-sm); color: var(--color-ink-muted); }
+.error { min-height: 1.5em; font-size: var(--text-sm); color: var(--color-error); }
+
+.secondary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-xs);
+}
+.link {
+  min-height: 44px;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--color-brand-deep);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.link:active { transform: scale(0.97); }
+.link:disabled { color: var(--color-ink-muted); cursor: default; }
+
+@media (min-width: 60rem) {
+  .layout {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: center;
+    gap: var(--space-xl);
+    padding-top: var(--space-xl);
+  }
+  .mat { aspect-ratio: 4 / 5; }
+  .card { padding: var(--space-xl); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step { transition: opacity var(--dur-short) linear; @starting-style { opacity: 0; transform: none; } }
+  .link:active { transform: none; }
+}

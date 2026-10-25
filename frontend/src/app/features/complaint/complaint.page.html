@@ -1,0 +1,196 @@
+<ng-container *transloco="let t">
+  <button type="button" class="back press" (click)="back()">
+    <ng-icon name="lucideChevronLeft" aria-hidden="true" />
+    {{ t('raise.back') }}
+  </button>
+
+  @switch (state()) {
+    @case ('loading') {
+      <div class="skeleton stock" aria-busy="true">
+        <span class="bar w30"></span>
+        <span class="bar w80 tall"></span>
+        <span class="bar w60"></span>
+        <span class="bar w50"></span>
+      </div>
+    }
+    @case ('missing') {
+      <div class="message" role="alert">
+        <h1>{{ t('detail.missingTitle') }}</h1>
+        <p>{{ t('detail.missingBody') }}</p>
+      </div>
+    }
+    @case ('error') {
+      <div class="message" role="alert">
+        <p>{{ t('detail.error') }}</p>
+        <button hlmBtn variant="outline" size="lg" type="button" (click)="load()">{{ t('home.retry') }}</button>
+      </div>
+    }
+    @default {
+      @if (complaint(); as c) {
+        <div class="layout">
+          <div class="main">
+            <h1 class="visually-hidden">{{ c.title }}</h1>
+            <app-complaint-card
+              [complaint]="c"
+              [categoryName]="categoryName()"
+              [towerName]="towerName()"
+              [where]="c.flatId ? flatLabels()[c.flatId] ?? null : null" />
+
+            @if (c.description) {
+              <p class="description">{{ c.description }}</p>
+            }
+
+            @if (nextStep() || mayReject()) {
+              <section class="act stock" aria-labelledby="act-title">
+                @if (rejecting()) {
+                  <h2 id="act-title">{{ t('act.rejectTitle') }}</h2>
+                  <label class="label" for="reason">{{ t('act.reasonLabel') }}</label>
+                  <textarea id="reason" class="field" rows="3" maxlength="500"
+                            [value]="reason()" (input)="reason.set($any($event.target).value)" aria-describedby="reason-help"></textarea>
+                  <p class="help" id="reason-help">{{ t('act.reasonHelp') }}</p>
+                  <div class="row">
+                    <button hlmBtn variant="outline" size="lg" type="button" (click)="rejecting.set(false)" [disabled]="acting()">{{ t('act.keep') }}</button>
+                    <button hlmBtn variant="destructive" size="lg" type="button" (click)="reject()" [disabled]="!reasonValid() || acting()">{{ t('act.reject') }}</button>
+                  </div>
+                } @else {
+                  @switch (nextStep()) {
+                    @case ('assign') {
+                      <h2 id="act-title">{{ t('act.assignTitle') }}</h2>
+                      @if (staff().length) {
+                        <div class="choices" role="radiogroup" [attr.aria-labelledby]="'act-title'">
+                          @for (person of staff(); track person.id) {
+                            <button type="button" role="radio" class="choice press" [attr.aria-checked]="chosenStaff() === person.id" (click)="chosenStaff.set(person.id)">
+                              {{ person.name }}
+                            </button>
+                          }
+                        </div>
+                        <button hlmBtn size="xl" type="button" class="w-full" (click)="assign()" [disabled]="chosenStaff() === null || acting()">
+                          @if (acting()) { <hlm-spinner aria-hidden="true" /> }
+                          {{ chosenStaff() === null ? t('act.assign') : t('act.assignTo', { name: who(chosenStaff()).name }) }}
+                        </button>
+                      } @else {
+                        <p>{{ t('act.noStaff') }}</p>
+                      }
+                    }
+                    @case ('start') {
+                      <h2 id="act-title">{{ t('act.startTitle') }}</h2>
+                      <p>{{ t('act.startBody') }}</p>
+                      <button hlmBtn size="xl" type="button" class="w-full" (click)="start()" [disabled]="acting()">
+                        @if (acting()) { <hlm-spinner aria-hidden="true" /> }
+                        {{ t('act.start') }}
+                      </button>
+                    }
+                    @case ('resolve') {
+                      <h2 id="act-title">{{ t('act.resolveTitle') }}</h2>
+                      <label class="label" for="note">{{ t('act.noteLabel') }}</label>
+                      <textarea id="note" class="field" rows="3" maxlength="500"
+                                [value]="resolveNote()" (input)="resolveNote.set($any($event.target).value)" aria-describedby="note-help"></textarea>
+                      <p class="help" id="note-help">{{ t('act.noteHelp') }}</p>
+                      <button hlmBtn size="xl" type="button" class="w-full" (click)="resolve()" [disabled]="acting()">
+                        @if (acting()) { <hlm-spinner aria-hidden="true" /> }
+                        {{ t('act.resolve') }}
+                      </button>
+                    }
+                    @case ('close') {
+                      <h2 id="act-title">{{ t('detail.fixedTitle') }}</h2>
+                      <p>{{ raisedIt() ? t('detail.fixedBody') : t('act.closeForResident') }}</p>
+                      <button hlmBtn size="xl" type="button" class="w-full" (click)="close()" [disabled]="acting()">
+                        @if (acting()) { <hlm-spinner aria-hidden="true" /> }
+                        {{ raisedIt() ? t('detail.closeIt') : t('act.close') }}
+                      </button>
+                    }
+                  }
+                  @if (mayReject()) {
+                    <button type="button" class="text-btn press" (click)="rejecting.set(true)">{{ t('act.rejectLink') }}</button>
+                  }
+                }
+                @if (actionError()) {
+                  <p class="error" role="alert">{{ t('act.failed') }}</p>
+                }
+              </section>
+            }
+
+            @if (c.photos.length) {
+              <section aria-labelledby="photos-title">
+                <h2 id="photos-title">{{ t('detail.photos') }}</h2>
+                <ul class="photos" role="list">
+                  @for (photo of c.photos; track photo.url; let i = $index) {
+                    <li>
+                      <button type="button" class="photo press" (click)="view(i)" [attr.aria-label]="t('detail.openPhoto', { n: i + 1 })">
+                        <img [src]="photo.url" alt="" loading="lazy" />
+                      </button>
+                    </li>
+                  }
+                </ul>
+              </section>
+            }
+          </div>
+
+          <div class="side">
+            <section aria-labelledby="history-title">
+              <h2 id="history-title">{{ t('detail.history') }}</h2>
+              <ol class="history ruled" role="list">
+                @for (change of history(); track $index) {
+                  <li>
+                    <p class="what">{{ t('status.' + change.toStatus) }}</p>
+                    <p class="meta">{{ t(who(change.changedBy).key, { name: who(change.changedBy).name }) }}, {{ when(change.changedAt) }}</p>
+                    @if (change.note) {
+                      <p class="note">{{ change.note }}</p>
+                    }
+                  </li>
+                }
+              </ol>
+            </section>
+
+            <section aria-labelledby="comments-title">
+              <h2 id="comments-title">{{ t('detail.comments') }}</h2>
+              @if (c.comments.length) {
+                <ol class="comments ruled" role="list">
+                  @for (comment of c.comments; track comment.sequence) {
+                    <li>
+                      <p class="meta">
+                        <span class="author">{{ t(who(comment.authorId).key, { name: who(comment.authorId).name }) }}</span>, {{ when(comment.postedAt) }}
+                      </p>
+                      <p class="text">{{ comment.text }}</p>
+                    </li>
+                  }
+                </ol>
+              } @else {
+                <p class="muted">{{ t('detail.noComments') }}</p>
+              }
+
+              @if (ongoing()) {
+                <form class="composer" (submit)="$event.preventDefault(); send()" novalidate>
+                  <label class="label" for="comment">{{ t('detail.addComment') }}</label>
+                  <textarea id="comment" class="field" rows="3" maxlength="1000"
+                            [value]="draft()" (input)="draft.set($any($event.target).value)" aria-describedby="comment-help"></textarea>
+                  <p class="help" id="comment-help">{{ t('detail.commentHelp') }}</p>
+                  @if (commentError()) {
+                    <p class="error" role="alert">{{ t(commentError()!) }}</p>
+                  }
+                  <button hlmBtn variant="outline" size="lg" type="submit" [disabled]="!draftValid() || sending()">
+                    @if (sending()) {
+                      <hlm-spinner aria-hidden="true" />
+                    }
+                    {{ t('detail.send') }}
+                  </button>
+                </form>
+              } @else {
+                <p class="muted">{{ t('detail.commentsOff') }}</p>
+              }
+            </section>
+          </div>
+        </div>
+
+        <dialog #viewer class="viewer" (close)="openPhoto.set(null)" [attr.aria-label]="t('detail.photos')">
+          @if (openPhoto() !== null) {
+            <img [src]="c.photos[openPhoto()!].url" [alt]="t('detail.photoOf', { n: openPhoto()! + 1, total: c.photos.length })" />
+          }
+          <button type="button" class="viewer-close press" (click)="closeViewer()" [attr.aria-label]="t('detail.closePhoto')">
+            <ng-icon name="lucideX" aria-hidden="true" />
+          </button>
+        </dialog>
+      }
+    }
+  }
+</ng-container>

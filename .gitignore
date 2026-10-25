@@ -1,0 +1,22 @@
+# Secrets
+.env
+*.env
+
+# Build output
+target/
+
+# IDE
+.idea/
+*.iml
+env.*
+env.dms
+
+# Generated, rebuilt on demand
+graphify-out/
+frontend/.hallmark/shots/
+
+# OS
+.DS_Store
+
+# Nx workspace cache (Spartan CLI)
+frontend/.nx/

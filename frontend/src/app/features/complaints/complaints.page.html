@@ -1,0 +1,36 @@
+<ng-container *transloco="let t">
+  <div class="head">
+    <h1>{{ t('home.title') }}</h1>
+    @if (canRaise()) {
+      <a hlmBtn size="xl" routerLink="/raise" class="raise desktop">
+        <ng-icon name="lucidePlus" aria-hidden="true" />
+        {{ t('home.raise') }}
+      </a>
+    }
+  </div>
+
+  @if (user()?.status !== 'ACTIVE') {
+    <div class="notice stock" role="status">
+      <p>{{ t('account.' + user()?.status, { reason: user()?.rejectionReason ?? '' }) }}</p>
+      @if (user()?.status !== 'PENDING') {
+        <a hlmBtn size="lg" routerLink="/register">{{ t('account.register') }}</a>
+      }
+    </div>
+  }
+
+  <app-complaint-list [complaints]="complaints()" [state]="state()" (retry)="load()">
+    <div class="empty">
+      <h2>{{ t('home.emptyTitle') }}</h2>
+      <p>{{ t('home.emptyBody') }}</p>
+    </div>
+  </app-complaint-list>
+
+  @if (canRaise()) {
+    <div class="dock">
+      <a hlmBtn size="xl" routerLink="/raise" class="raise w-full">
+        <ng-icon name="lucidePlus" aria-hidden="true" />
+        {{ t('home.raise') }}
+      </a>
+    </div>
+  }
+</ng-container>

@@ -1,0 +1,49 @@
+/* Hallmark · shape: app screen · theme: Atelier · the full stamp heads src/styles.css */
+/* waive 26b: every control here is a shared hlmBtn, whose pressed state (scale 0.97) lives in libs/ui */
+:host { display: block; padding-bottom: var(--space-xl); }
+
+.head { padding-block: var(--space-sm) var(--space-md); display: grid; gap: var(--space-2xs); }
+h1 { font-size: var(--text-2xl); text-wrap: balance; }
+.lead { color: var(--color-ink-2); }
+
+.people { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-md); }
+.person { padding: var(--space-md); display: grid; gap: var(--space-sm); }
+.person h2 { font-size: var(--text-lg); font-weight: var(--serif-small); text-wrap: balance; overflow-wrap: break-word; min-width: 0; }
+
+.facts { margin: 0; font-size: var(--text-sm); }
+.facts > div { display: flex; justify-content: space-between; gap: var(--space-sm); padding-block: var(--space-xs); }
+dt { color: var(--color-ink-muted); }
+dd { margin: 0; color: var(--color-ink); }
+dd a { color: inherit; }
+dd a:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+
+.row { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+.grow { flex: 1; }
+.outcome { color: var(--color-ink-2); }
+[data-decided='ACTIVE'] .outcome { color: var(--color-brand-deep); }
+.label { font-weight: 500; color: var(--color-ink); }
+.help { font-size: var(--text-sm); color: var(--color-ink-muted); }
+.error { font-size: var(--text-sm); color: var(--color-error); }
+.field {
+  width: 100%;
+  padding: var(--space-sm);
+  border: var(--rule-hair) solid var(--color-ink-muted);
+  border-radius: var(--radius-pill);
+  background: var(--color-stock);
+  color: var(--color-ink);
+  font-size: var(--text-md);
+  line-height: 1.5;
+  resize: vertical;
+  transition: border-color var(--dur-short) var(--ease-out);
+}
+.field:focus-visible { outline: none; border-color: var(--color-focus); box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-focus) 22%, transparent); }
+
+.skeleton { padding: var(--space-md); display: grid; gap: var(--space-sm); }
+.bar { display: block; height: 0.9em; border-radius: var(--radius-pill); background: var(--color-paper-3); }
+.w30 { width: 30%; } .w50 { width: 50%; } .w60 { width: 60%; }
+.message { padding: var(--space-xl) 0; display: grid; gap: var(--space-md); justify-items: start; color: var(--color-ink-2); }
+.message h2 { font-size: var(--text-xl); }
+
+@media (min-width: 48rem) {
+  .people { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

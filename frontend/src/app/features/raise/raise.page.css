@@ -1,0 +1,179 @@
+/* Hallmark · shape: app screen · theme: Atelier · the full stamp heads src/styles.css */
+/* waive F5: the remove control sits on a photograph of any colour; the dark disc keeps the cross legible on all of them */
+/* A full-screen task: it rises over the tab bar like a sheet, each step is one decision, the action sits low */
+:host { display: block; }
+
+.sheet {
+  min-height: 100dvh;
+  max-width: 40rem;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  transition: opacity var(--dur-long) var(--ease-out), transform var(--dur-long) var(--ease-out);
+  @starting-style {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+.bar { display: flex; align-items: center; justify-content: space-between; min-height: 56px; padding-inline: var(--gutter); }
+.text-btn { min-height: 44px; padding: 0; background: none; border: 0; color: var(--color-brand-deep); font-size: var(--text-md); cursor: pointer; white-space: nowrap; }
+.text-btn:active { transform: scale(0.97); }
+.step { font-size: var(--text-sm); color: var(--color-ink-muted); }
+
+.progress { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2xs); padding-inline: var(--gutter); }
+.progress span { height: 3px; background: var(--color-paper-3); transform-origin: left; }
+.progress span.on { background: var(--color-brand); }
+
+.confirm { margin: var(--space-md) var(--gutter) 0; padding: var(--space-md); display: grid; gap: var(--space-sm); }
+.confirm-actions { display: flex; gap: var(--space-xs); flex-wrap: wrap; }
+
+.body { flex: 1; padding: var(--space-lg) var(--gutter) var(--space-lg); }
+
+/* one step at a time; it slides in from the side the person is heading to */
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  color: inherit;
+  font-size: inherit;
+  transition: opacity var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out);
+  @starting-style { opacity: 0; transform: translateX(16px); }
+}
+.step[data-direction='back'] { @starting-style { opacity: 0; transform: translateX(-16px); } }
+
+h1 { font-size: var(--text-2xl); max-width: none; text-wrap: balance; }
+.lead { color: var(--color-ink-2); }
+.help { font-size: var(--text-sm); color: var(--color-ink-muted); }
+.error { font-size: var(--text-sm); color: var(--color-error); }
+
+/* photos */
+.thumbs { list-style: none; margin: var(--space-xs) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-xs); }
+.thumb { position: relative; aspect-ratio: 1; overflow: hidden; background: var(--color-paper-3); border-radius: var(--radius-card); }
+.thumb img { width: 100%; height: 100%; object-fit: cover; animation: settle var(--dur-short) var(--ease-out); }
+@keyframes settle { from { opacity: 0; transform: scale(0.96); } }
+.thumb.pending { display: grid; place-items: center; color: var(--color-ink-muted); }
+.remove {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.remove ng-icon { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: color-mix(in oklab, var(--color-ink) 72%, transparent); color: var(--color-paper); font-size: 16px; }
+.remove:active { transform: scale(0.94); }
+
+.pick { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-xs); margin-top: var(--space-xs); }
+.pick-btn {
+  position: relative;
+  min-height: 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  text-align: center;
+  border: var(--rule-hair) solid var(--color-ink-muted);
+  border-radius: var(--radius-pill);
+  background: var(--color-stock);
+  color: var(--color-ink);
+  cursor: pointer;
+}
+.pick-btn ng-icon { font-size: 26px; color: var(--color-brand-deep); }
+.pick-btn:focus-within { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.pick-btn:active { transform: scale(0.97); }
+.pick-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+/* choices: tap, never type */
+fieldset { border: 0; margin: var(--space-sm) 0 0; padding: 0; min-width: 0; }
+legend { font-weight: 500; color: var(--color-ink); margin-bottom: var(--space-xs); }
+.sublegend { margin: var(--space-sm) 0 var(--space-xs); font-size: var(--text-sm); color: var(--color-ink-2); }
+.choices { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xs); }
+.choices.categories { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.choice {
+  min-height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+  padding: var(--space-xs) var(--space-sm);
+  text-align: start;
+  border: var(--rule-hair) solid var(--color-ink-muted);
+  border-radius: var(--radius-pill);
+  background: var(--color-stock);
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: background-color var(--dur-short) var(--ease-out), border-color var(--dur-short) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+}
+.choice .sub { font-size: var(--text-sm); color: var(--color-ink-muted); }
+.choice[aria-pressed='true'] { border-color: var(--color-brand); box-shadow: inset 0 0 0 1px var(--color-brand); background: color-mix(in oklab, var(--color-lime) 28%, var(--color-stock)); }
+.choice:active { transform: scale(0.97); }
+
+.chips { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+.chip {
+  min-height: 44px;
+  padding-inline: var(--space-sm);
+  border: var(--rule-hair) solid var(--color-ink-muted);
+  border-radius: var(--radius-pill);
+  background: var(--color-stock);
+  color: var(--color-ink);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color var(--dur-short) var(--ease-out), border-color var(--dur-short) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+}
+.chip[aria-pressed='true'] { border-color: var(--color-brand); box-shadow: inset 0 0 0 1px var(--color-brand); background: color-mix(in oklab, var(--color-lime) 28%, var(--color-stock)); }
+.chip:active { transform: scale(0.97); }
+
+/* text entry */
+.label { font-weight: 500; color: var(--color-ink); margin-top: var(--space-xs); }
+.field {
+  width: 100%;
+  min-height: 52px;
+  padding: var(--space-sm);
+  border: var(--rule-hair) solid var(--color-ink-muted);
+  border-radius: var(--radius-pill);
+  background: var(--color-stock);
+  color: var(--color-ink);
+  font-size: var(--text-md);
+  transition: border-color var(--dur-short) var(--ease-out);
+}
+textarea.field { resize: vertical; line-height: 1.5; }
+.field:focus-visible { outline: none; border-color: var(--color-focus); box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-focus) 22%, transparent); }
+
+/* the decision sits low, within reach of the thumb */
+.actions {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--gutter) calc(var(--space-sm) + env(safe-area-inset-bottom));
+  background: color-mix(in oklab, var(--color-paper) 88%, transparent);
+  backdrop-filter: blur(16px);
+  border-top: var(--rule-hair) solid var(--color-rule);
+}
+.grow { flex: 1; }
+
+.done { display: grid; gap: var(--space-md); align-content: start; }
+
+@media (prefers-reduced-transparency: reduce) {
+  .actions { background: var(--color-paper); backdrop-filter: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet, .step { transition: opacity var(--dur-short) linear; @starting-style { opacity: 0; transform: none; } }
+  .step[data-direction='back'] { @starting-style { opacity: 0; transform: none; } }
+  .thumb img { animation: none; }
+  .choice:active, .chip:active, .pick-btn:active, .remove:active, .text-btn:active { transform: none; }
+}
+
+@media (min-width: 40rem) {
+  .choices.categories { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .thumbs { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+}

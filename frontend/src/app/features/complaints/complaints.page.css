@@ -1,0 +1,26 @@
+/* Hallmark · shape: app screen · theme: Atelier · the full stamp heads src/styles.css */
+:host { display: block; padding-bottom: 88px; } /* room for the docked action */
+
+.head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding-block: var(--space-sm) var(--space-md); }
+h1 { font-size: var(--text-2xl); text-wrap: balance; }
+.desktop { display: none; }
+
+.notice { padding: var(--space-md); margin-bottom: var(--space-md); color: var(--color-ink-2); display: grid; gap: var(--space-sm); justify-items: start; }
+
+.empty { padding: var(--space-xl) 0; display: grid; gap: var(--space-md); color: var(--color-ink-2); }
+.empty h2 { font-size: var(--text-xl); }
+
+/* the one primary action, docked low for the thumb, above the tab bar */
+.dock {
+  position: fixed;
+  inset: auto 0 calc(57px + env(safe-area-inset-bottom));
+  z-index: var(--z-sticky);
+  padding: var(--space-sm) var(--gutter);
+  background: linear-gradient(to top, var(--color-paper) 70%, transparent);
+}
+
+@media (min-width: 60rem) {
+  :host { padding-bottom: 0; }
+  .dock { display: none; }
+  .desktop { display: inline-flex; }
+}

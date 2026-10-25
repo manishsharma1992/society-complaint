@@ -1,0 +1,96 @@
+<main class="page" *transloco="let t">
+  <header class="bar">
+    <p class="wordmark">
+      <span class="society">{{ t('app.society') }}</span>
+      <span class="residents">{{ t('app.residents') }}</span>
+    </p>
+    <app-language-switch />
+  </header>
+
+  <div class="layout">
+    <figure class="print stock">
+      <div class="mat">
+        <img src="images/towers-courtyard.jpg" width="1200" height="875" [alt]="t('login.photoAlt')" fetchpriority="high" />
+      </div>
+      <figcaption>
+        <span>{{ t('app.place') }}</span>
+        <span class="muted">{{ t('app.road') }}</span>
+      </figcaption>
+    </figure>
+
+    <section class="card stock" aria-labelledby="login-title">
+      @if (step() === 'phone') {
+        <form class="step" (submit)="$event.preventDefault(); sendCode()" novalidate>
+          <h1 id="login-title">{{ t('login.title') }}</h1>
+          <p class="lead">{{ t('login.lead') }}</p>
+
+          <label class="label" for="phone">{{ t('login.phoneLabel') }}</label>
+          <div class="phone" [class.invalid]="error()">
+            <span class="prefix" aria-hidden="true">+91</span>
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              inputmode="numeric"
+              autocomplete="tel-national"
+              maxlength="14"
+              [value]="phone()"
+              (input)="onPhoneInput($any($event.target).value)"
+              [attr.aria-invalid]="error() ? 'true' : null"
+              aria-describedby="phone-help phone-error"
+              required />
+          </div>
+          <p class="help" id="phone-help">{{ t('login.phoneHelp') }}</p>
+          <p class="error" id="phone-error" role="alert">{{ error() ? t(error()!) : '' }}</p>
+
+          <button hlmBtn size="xl" class="w-full" type="submit" [disabled]="busy()">
+            @if (busy()) {
+              <hlm-spinner aria-hidden="true" />
+            }
+            {{ t('login.sendCode') }}
+          </button>
+        </form>
+      } @else {
+        <form class="step" (submit)="$event.preventDefault(); verify()" novalidate>
+          <h1 id="login-title">{{ t('login.codeTitle') }}</h1>
+          <p class="lead">{{ t('login.codeSentTo', { phone: sentTo() }) }}</p>
+
+          <label class="label" for="code">{{ t('login.codeLabel') }}</label>
+          <brn-input-otp
+            hlmInputOtp
+            inputId="code"
+            inputAutocomplete="one-time-code"
+            inputMode="numeric"
+            [length]="6"
+            [autofocus]="true"
+            [value]="code()"
+            (valueChange)="code.set($event); error.set(null)"
+            (completed)="verify()">
+            <div hlmInputOtpGroup>
+              @for (i of [0, 1, 2, 3, 4, 5]; track i) {
+                <hlm-input-otp-slot [index]="i" [forceInvalid]="!!error()" />
+              }
+            </div>
+          </brn-input-otp>
+          <p class="error" role="alert">{{ error() ? t(error()!) : '' }}</p>
+
+          <button hlmBtn size="xl" class="w-full" type="submit" [disabled]="busy() || code().length !== 6">
+            @if (busy()) {
+              <hlm-spinner aria-hidden="true" />
+            }
+            {{ t('login.verify') }}
+          </button>
+
+          <div class="secondary">
+            @if (secondsLeft() > 0) {
+              <p class="muted num" aria-live="polite">{{ t('login.resendIn', { seconds: secondsLeft() }) }}</p>
+            } @else {
+              <button type="button" class="link press" (click)="sendCode()" [disabled]="busy()">{{ t('login.resend') }}</button>
+            }
+            <button type="button" class="link press" (click)="changeNumber()">{{ t('login.changeNumber') }}</button>
+          </div>
+        </form>
+      }
+    </section>
+  </div>
+</main>

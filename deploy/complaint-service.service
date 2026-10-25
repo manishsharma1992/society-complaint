@@ -1,0 +1,27 @@
+[Unit]
+Description=Society Complaint - Complaint Management service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=complaint
+Group=complaint
+# DB_URL, DB_USER, DB_PASSWORD. The file is root-only (chmod 600); systemd reads it before
+# dropping to the complaint user, so the Java process gets the values but cannot read the file.
+EnvironmentFile=/etc/society-complaint/complaint.env
+# app.jar (the one Spring Boot app, all contexts) is a symlink to the current release in /opt/society-complaint/releases.
+# Bound to 127.0.0.1: only Nginx on this machine can reach the service.
+ExecStart=/usr/bin/java -Xms128m -Xmx384m -jar /opt/society-complaint/app.jar --server.address=127.0.0.1 --server.port=8081
+# JVM exits with 143 on SIGTERM (normal systemctl stop)
+SuccessExitStatus=143
+Restart=on-failure
+RestartSec=10
+
+# Hardening: read-only system, private /tmp, no access to home directories
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

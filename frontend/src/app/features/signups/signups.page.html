@@ -1,0 +1,72 @@
+<ng-container *transloco="let t">
+  <div class="head">
+    <h1>{{ t('signups.title') }}</h1>
+    <p class="lead">{{ t('signups.lead') }}</p>
+  </div>
+
+  @switch (state()) {
+    @case ('loading') {
+      <div class="skeleton stock" aria-busy="true"><span class="bar w50"></span><span class="bar w30"></span><span class="bar w60"></span></div>
+    }
+    @case ('error') {
+      <div class="message" role="alert">
+        <p>{{ t('signups.error') }}</p>
+        <button hlmBtn variant="outline" size="lg" type="button" (click)="load()">{{ t('home.retry') }}</button>
+      </div>
+    }
+    @default {
+      @if (pending().length === 0) {
+        <div class="message">
+          <h2>{{ t('signups.emptyTitle') }}</h2>
+          <p>{{ t('signups.emptyBody') }}</p>
+        </div>
+      } @else {
+        <ul class="people" role="list">
+          @for (user of pending(); track user.id) {
+            <li class="person stock" [attr.data-decided]="decided()[user.id]">
+              <h2>{{ user.name }}</h2>
+              <dl class="facts ruled">
+                <div><dt>{{ t('signups.flat') }}</dt><dd class="num">{{ user.claim ? flatLabels()[user.claim.flatId] ?? '…' : '–' }}</dd></div>
+                <div><dt>{{ t('signups.as') }}</dt><dd>{{ user.claim ? t('signups.' + user.claim.occupancy) : '–' }}</dd></div>
+                <div><dt>{{ t('profile.phone') }}</dt><dd class="num"><a [href]="'tel:' + user.phone">{{ user.phone }}</a></dd></div>
+              </dl>
+
+              @switch (decided()[user.id]) {
+                @case ('ACTIVE') {
+                  <p class="outcome" role="status">{{ t('signups.approved') }}</p>
+                }
+                @case ('REJECTED') {
+                  <p class="outcome" role="status">{{ t('signups.rejected') }}</p>
+                }
+                @default {
+                  @if (rejecting() === user.id) {
+                    <label class="label" [for]="'reason-' + user.id">{{ t('signups.reasonLabel') }}</label>
+                    <textarea [id]="'reason-' + user.id" class="field" rows="2" maxlength="500"
+                              [value]="reason()" (input)="reason.set($any($event.target).value)"
+                              [attr.aria-describedby]="'reason-help-' + user.id"></textarea>
+                    <p class="help" [id]="'reason-help-' + user.id">{{ t('signups.reasonHelp') }}</p>
+                    <div class="row">
+                      <button hlmBtn variant="outline" size="lg" type="button" (click)="rejecting.set(null)" [disabled]="busy() === user.id">{{ t('act.keep') }}</button>
+                      <button hlmBtn variant="destructive" size="lg" type="button" (click)="reject(user)" [disabled]="!reasonValid() || busy() === user.id">{{ t('signups.reject') }}</button>
+                    </div>
+                  } @else {
+                    <div class="row">
+                      <button hlmBtn size="lg" type="button" class="grow" (click)="approve(user)" [disabled]="busy() !== null">
+                        @if (busy() === user.id) { <hlm-spinner aria-hidden="true" /> }
+                        {{ t('signups.approve') }}
+                      </button>
+                      <button hlmBtn variant="outline" size="lg" type="button" (click)="startRejecting(user)" [disabled]="busy() !== null">{{ t('signups.notApprove') }}</button>
+                    </div>
+                  }
+                  @if (failed() === user.id) {
+                    <p class="error" role="alert">{{ t('act.failed') }}</p>
+                  }
+                }
+              }
+            </li>
+          }
+        </ul>
+      }
+    }
+  }
+</ng-container>

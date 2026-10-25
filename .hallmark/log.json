@@ -1,0 +1,27 @@
+[
+ {
+  "scope": "app",
+  "shape": "app screen",
+  "theme": "atelier",
+  "axes": "light/roman-serif/brand-green",
+  "nav": "top bar + language switch",
+  "footer": "none (app)",
+  "imagery": "residents own photo as matted print on sign-in",
+  "photos": [
+   "lawn-clubhouse"
+  ],
+  "entry": "sign-in",
+  "signature": "the complaint card, numbered on cotton stock with its ruled status history (sign-in: the matted print of the complex)",
+  "sections": [
+   "sign-in: phone",
+   "sign-in: code"
+  ],
+  "waived": [
+   "48 (Spartan token names mapped onto Hallmark tokens)",
+   "26b (theme base rules)"
+  ],
+  "prompt": "luxury residential society complaint app, Runwal MyCity Dombivli, EN/HI/MR",
+  "date": "2026-10-25",
+  "mode": "build"
+ }
+]
