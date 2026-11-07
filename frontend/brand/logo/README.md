@@ -15,7 +15,7 @@ more societies). The text beside it, "Runwal MyCity / Residents", is the society
 | `mycity-black.svg` | One colour black: fax, stamps, newspaper |
 | `mycity-app-icon.svg`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `maskable-512.png` | White tower on a green tile |
 | `favicon.ico`, `favicon.svg`, `favicon-16/32/48.png` | Browser tab (green small cut) |
-| `site.webmanifest`, `head-snippet.html` | Web app install (copied to `frontend/public/` and `src/index.html`) |
+| `manifest.json`, `head-snippet.html` | Web app install (copied to `frontend/public/` and `src/index.html`) |
 | `mycity-horizontal.svg`, `mycity-horizontal-white.svg` | Symbol + wordmark. **Live text**: convert to outlines before print |
 | `presentation.html`, `board-spec.json` | Presentation board with mockups |
 
