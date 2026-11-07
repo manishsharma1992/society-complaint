@@ -10,7 +10,7 @@
   <link rel="alternate" hreflang="hi" href="https://runwalltdfakepromises.com/hi/">
   <link rel="alternate" hreflang="mr" href="https://runwalltdfakepromises.com/mr/">
   <link rel="alternate" hreflang="x-default" href="https://runwalltdfakepromises.com/">
-  <meta name="theme-color" content="#14612a">
+  <meta name="theme-color" content="#0b120d">
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -27,11 +27,12 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600&family=Tiro+Devanagari+Marathi&display=swap">
-  <link rel="preload" as="image" href="/images/towers-courtyard.jpg" fetchpriority="high">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap">
+  <link rel="preload" as="image" href="/images/skyline.jpg" fetchpriority="high">
   <script type="application/ld+json">{{json_ld}}</script>
   <script>
     document.documentElement.classList.add('js');
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('still');
     // already signed in on this phone: go straight to the app
     try {
       const s = JSON.parse(localStorage.getItem('mycity.session') || 'null');
@@ -39,253 +40,340 @@
     } catch (e) {}
   </script>
   <style>
+    /* Hallmark · shape: scroll story, centred · genre: atmospheric · theme: brand · redesign: full
+     * paper: #0b120d night / #fbfcfa day · accent: #1b8233 · display: Noto Sans · body: Noto Sans + Noto Sans Devanagari · hero: full-screen towers, settling as you scroll · nav: edge-aligned over the photo · footer: two columns, legal line centred · signature: an example post filling in, promised then today, as you scroll
+     * axes: night/sans/green · posture: immersive · contrast: pass · fold: pass · v2.0.0 */
+    /* Hallmark · pre-emit critique: P4 H5 E4 S5 R4 V4 · weakest: E, the residents' own photos are not here yet; the post's photo frame is an honest slot for them */
+    /* Hallmark · dropped #why reasons grid and its four photos · replaced by the post story and the safety band; dropped #name earlier with the split layout */
     :root {
-      --deep: #14612a; --brand: #1b8233; --paper: #f1ede6; --ink: #1f1b16; --ink-2: #4a443b;
-      --light: #ffffff; --on-brand: #ffffff;
-      --display: "Tiro Devanagari Marathi", Georgia, serif; --body: "Mukta", system-ui, sans-serif;
-      --t-display: 12.5vw; --t-h2: clamp(34px, 4.4vw, 64px); --t-lead: clamp(20px, 1.7vw, 24px); --t-body: 18px; --t-small: 15px;
-      --m: 16px; --gap: 88px; --ease: cubic-bezier(.2, .8, .2, 1);
+      --color-night: #0b120d; --color-night-2: #121c15; --color-night-3: #1b281f; --color-on-night: #f2f5f0; --color-on-night-2: #b3c0b6;
+      --color-paper: #fbfcfa; --color-paper-2: #f0f4ee; --color-paper-3: #e3e9e0;
+      --color-ink: #17201a; --color-ink-2: #3c473f; --color-muted: #59655c;
+      --color-accent: #1b8233; --color-accent-press: #14612a; --color-accent-ink: #f7fbf5; --color-accent-glow: #7fd08f; --color-focus: #1b8233;
+      --color-deep: #14612a; --color-on-deep: #f3f8f1; --color-slip: #fbfdfa; --color-dots: #7d887f; --color-unlit: #627266;
+      --color-scrim: rgba(7, 12, 9, 0.55); --color-scrim-strong: rgba(7, 12, 9, 0.78); --color-glass: rgba(242, 245, 240, 0.08);
+      --font-body: "Noto Sans", "Noto Sans Devanagari", system-ui, sans-serif; --font-display: var(--font-body);
+      --text-mega: clamp(2.75rem, 6vw + 1rem, 6.5rem); --text-statement: clamp(1.5rem, 1.4vw + 1rem, 2.25rem); --text-section: clamp(2rem, 2.4vw + 1rem, 3.25rem);
+      --text-title: 1.375rem; --text-lead: clamp(1.125rem, 0.5vw + 1rem, 1.375rem); --text-body: 1.0625rem; --text-small: 0.9375rem;
+      --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px; --space-4xl: 144px;
+      --container: 1120px; --gutter: 32px; --radius-photo: 24px; --radius-panel: 18px; --radius-pill: 999px;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --dur-micro: 120ms; --dur-short: 240ms; --dur-long: 700ms;
     }
-    @media (min-width: 900px) { :root { --t-display: 9vw; --m: 32px; --gap: 160px; } }
-    * { box-sizing: border-box; }
-    html { -webkit-text-size-adjust: 100%; }
-    body { margin: 0; background: var(--paper); color: var(--ink); font: 400 var(--t-body)/1.55 var(--body); }
+    @media (max-width: 40rem) { :root { --gutter: 20px; --space-4xl: 96px; --space-3xl: 64px; } }
+    *, *::before, *::after { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    ::selection { background: var(--color-accent); color: var(--color-accent-ink); }
+    html, body { overflow-x: clip; }
+    html { -webkit-text-size-adjust: 100%; scroll-padding-top: var(--space-lg); scrollbar-color: var(--color-night-3) var(--color-night); }
+    body { margin: 0; background: var(--color-night); color: var(--color-on-night); font: 400 var(--text-body)/1.6 var(--font-body); -webkit-font-smoothing: antialiased; }
+    h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; line-height: 1.08; letter-spacing: -0.025em; text-wrap: balance; overflow-wrap: break-word; min-width: 0; }
+    :lang(hi) :is(h1, h2, h3, .statement p), :lang(mr) :is(h1, h2, h3, .statement p) { letter-spacing: 0; line-height: 1.3; }
+    p { margin: 0; text-wrap: pretty; }
     img { display: block; max-width: 100%; height: auto; }
-    a { color: inherit; }
-    h1, h2, h3 { font-family: var(--display); font-weight: 400; margin: 0; line-height: 1.05; letter-spacing: -0.02em; text-wrap: balance; }
-    h2 { font-size: var(--t-h2); }
-    p { margin: 0; }
-    :focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; }
-    .stage :focus-visible, .why :focus-visible, .join :focus-visible, footer :focus-visible { outline-color: var(--light); }
-    .skip { position: absolute; left: 8px; top: -60px; background: var(--paper); color: var(--ink); padding: 8px 12px; z-index: 10; }
-    .skip:focus { top: 8px; }
+    a { color: inherit; text-underline-offset: 0.18em; }
+    :focus-visible { outline: 2px solid var(--color-accent-glow); outline-offset: 3px; }
+    .light :focus-visible { outline-color: var(--color-focus); }
+    .container { width: 100%; max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
+    .center { text-align: center; }
+    .center > h2, .center > p { margin-inline: auto; }
+    .skip { position: absolute; left: var(--space-xs); top: -60px; background: var(--color-paper); color: var(--color-ink); padding: var(--space-xs) var(--space-sm); z-index: 10; }
+    .skip:focus { top: var(--space-xs); }
 
-    .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 26px; border-radius: 999px;
-      font: 600 var(--t-body)/1 var(--body); text-decoration: none; background: var(--brand); color: var(--on-brand);
-      transition: transform 120ms var(--ease), background-color 160ms ease-out; touch-action: manipulation; }
-    .btn:hover { background: var(--deep); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 28px; border-radius: var(--radius-pill);
+      font: 600 var(--text-body)/1 var(--font-body); text-decoration: none; background: var(--color-accent); color: var(--color-accent-ink);
+      transition: transform var(--dur-micro) var(--ease-out), background-color var(--dur-short) var(--ease-out); touch-action: manipulation; }
+    .btn:hover { background: var(--color-accent-press); }
     .btn:active { transform: scale(0.97); }
-    .btn.on-dark { background: var(--paper); color: var(--ink); }
-    .btn.on-dark:hover { background: #ffffff; }
+    .btn.glass { background: var(--color-glass); color: var(--color-on-night); }
+    .btn.glass:hover { background: var(--color-night-3); }
+    .actions { display: flex; justify-content: center; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-xl); }
 
-    /* the stage: the towers never move, the column scrolls */
-    .stage { position: relative; background: var(--deep); color: var(--light); }
-    nav.top { display: flex; align-items: center; justify-content: flex-end; gap: 4px 18px; flex-wrap: wrap; padding: 8px var(--m); font-size: var(--t-small); }
-    nav.top a { min-height: 44px; display: inline-flex; align-items: center; text-decoration: none; text-underline-offset: 6px; }
-    nav.top a:hover, nav.top a[aria-current] { text-decoration: underline; }
-    nav.top .wide { display: none; }
-    nav.top .act { font-weight: 600; }
-    .pic { position: relative; height: 48svh; margin: 0 12px; overflow: hidden; background: var(--ink); }
-    .pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 900ms ease; }
-    .pic .b { opacity: 0; }
-    .pic.two .b { opacity: 1; }
-    .js .pic .a { animation: drift 9s var(--ease) both; }
-    @keyframes drift { from { transform: scale(1.08); } to { transform: none; } }
-    .hero { position: relative; padding: 0 var(--m) var(--gap); }
-    .hero h1 { position: relative; z-index: 2; font-size: var(--t-display); line-height: .9; white-space: nowrap; margin-top: -3.4vw; letter-spacing: -0.03em; transform-origin: right bottom; }
-    .hero .lead { font-size: var(--t-lead); line-height: 1.35; margin-top: 24px; max-width: 34ch; }
-    .hero .more { margin-top: 12px; max-width: 40ch; }
-    .hero .btn { margin-top: 28px; }
-    .hero .note { margin-top: 14px; font-size: var(--t-small); max-width: 40ch; }
-    .how { padding: 0 var(--m) var(--gap); }
-    .how .intro { margin-top: 16px; max-width: 46ch; }
-    .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 32px 0 24px; }
-    .tabs button { font: 600 var(--t-small)/1 var(--body); min-height: 44px; padding: 0 18px; border: 0; border-radius: 999px; cursor: pointer;
-      background: rgba(246, 243, 238, .12); color: var(--light); transition: background-color 160ms ease-out, transform 120ms var(--ease); }
-    .tabs button:hover { background: rgba(246, 243, 238, .22); }
+    /* nav, over the photograph */
+    .top { position: absolute; inset: 0 0 auto; z-index: 3; }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); flex-wrap: wrap; min-height: 76px; }
+    .brand { display: inline-flex; align-items: center; gap: var(--space-xs); min-height: 44px; text-decoration: none; font-weight: 700; }
+    .brand svg { height: 30px; width: auto; color: var(--color-accent-glow); }
+    .links { display: flex; align-items: center; gap: var(--space-xs) var(--space-md); flex-wrap: wrap; font-size: var(--text-small); }
+    .links a:not(.btn) { min-height: 44px; display: inline-flex; align-items: center; text-decoration: none; color: var(--color-on-night-2); }
+    .links a:not(.btn):hover, .links a[aria-current] { color: var(--color-on-night); text-decoration: underline; }
+    .links .btn { min-height: 40px; padding: 0 var(--space-md); font-size: var(--text-small); }
+
+    /* scene 1: the towers settle as you scroll */
+    .hero { position: relative; }
+    .stick { position: relative; min-height: 100svh; overflow: hidden; display: grid; place-items: center; }
+    .hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; transform: scale(calc(1.18 - 0.18 * var(--p, 0))); will-change: transform; }
+    .hero .shade { position: absolute; inset: 0; background: var(--color-scrim); opacity: calc(0.75 + 0.25 * var(--p, 0)); }
+    .hero .words { position: relative; z-index: 2; padding: 120px var(--gutter) 80px; opacity: calc(1 - 1.4 * var(--p, 0)); transform: translateY(calc(-80px * var(--p, 0))); }
+    .hero h1 { font-size: var(--text-mega); max-width: 14ch; margin-inline: auto; }
+    .hero .lead { font-size: var(--text-lead); color: var(--color-on-night); max-width: 34ch; margin: var(--space-lg) auto 0; }
+
+    /* scene 2: the feeling, word by word */
+    .statement { position: relative; }
+    .statement .stick { background: var(--color-night); }
+    .statement p { font-size: var(--text-statement); font-weight: 600; line-height: 1.25; letter-spacing: -0.015em; max-width: 36ch; margin-inline: auto; padding: var(--space-4xl) var(--gutter); text-align: center; }
+    .w { transition: color 300ms var(--ease-out); }
+    .js:not(.still) .statement .w { color: var(--color-unlit); }
+    .js:not(.still) .statement .w.lit { color: var(--color-on-night); }
+
+    /* scene 3: an example post fills in */
+    .light { background: var(--color-paper); color: var(--color-ink); }
+    .story .stick { align-content: center; padding-block: var(--space-3xl); }
+    .story h2 { font-size: var(--text-section); }
+    .story .intro { color: var(--color-ink-2); max-width: 44ch; margin-top: var(--space-md); }
+    .story-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); align-items: center; margin-top: var(--space-2xl); text-align: start; }
+    .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-lg); }
+    .steps li { transition: opacity var(--dur-short) var(--ease-out); }
+    .js:not(.still) .steps li { opacity: 0.32; }
+    .js:not(.still) .steps li.on { opacity: 1; }
+    .steps h3 { font-size: var(--text-title); margin-bottom: 4px; }
+    .steps p { color: var(--color-ink-2); }
+    .post { background: var(--color-paper-2); border-radius: var(--radius-panel); padding: var(--space-lg); display: grid; gap: var(--space-md); max-width: 460px; width: 100%; justify-self: center; }
+    .post-top { display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); font-size: var(--text-small); color: var(--color-ink-2); }
+    .tag { padding: 4px var(--space-sm); border-radius: var(--radius-pill); background: var(--color-paper-3); }
+    .field { display: grid; gap: 2px; transition: opacity var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out); }
+    .field b { font-size: var(--text-small); color: var(--color-muted); font-weight: 600; }
+    .field span { font-weight: 600; }
+    .frame { aspect-ratio: 4 / 3; border-radius: 12px; background: var(--color-paper-3); display: grid; place-items: center; color: var(--color-muted); font-size: var(--text-small); }
+    .js:not(.still) .post .field { opacity: 0; transform: translateY(8px); }
+    .js:not(.still) .post[data-step="0"] .f1, .js:not(.still) .post[data-step="1"] :is(.f1, .f2),
+    .js:not(.still) .post[data-step="2"] .field { opacity: 1; transform: none; }
+    .status .done { display: none; }
+    .js:not(.still) .post[data-step="2"] .status .wait { display: none; }
+    .js:not(.still) .post[data-step="2"] .status .done { display: inline; color: var(--color-accent-press); }
+
+    /* how it works */
+    section { padding-block: var(--space-4xl); }
+    section.statement, section.story { padding-block: 0; }
+    .band2 { background: var(--color-paper-2); color: var(--color-ink); }
+    h2 { font-size: var(--text-section); max-width: 22ch; }
+    .intro { max-width: 46ch; margin-top: var(--space-md); }
+    .band2 .intro { color: var(--color-ink-2); }
+    .tabs { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 4px; padding: 4px; margin-top: var(--space-xl); border-radius: var(--radius-pill); background: var(--color-paper-3); }
+    .tabs button { font: 600 var(--text-small)/1 var(--font-body); min-height: 44px; padding: 0 var(--space-md); border: 0; border-radius: var(--radius-pill); cursor: pointer;
+      background: transparent; color: var(--color-ink-2); transition: background-color var(--dur-short) var(--ease-out), color var(--dur-short) var(--ease-out), transform var(--dur-micro) var(--ease-out); }
+    .tabs button:hover { color: var(--color-ink); }
     .tabs button:active { transform: scale(0.97); }
-    .tabs button[aria-selected="true"] { background: var(--paper); color: var(--ink); }
-    .slip { width: min(480px, 100%); background: var(--paper); color: var(--ink); padding: 28px 24px 52px; font-variant-numeric: tabular-nums;
-      clip-path: polygon({{zigzag}}); }
-    .js .slip[hidden] { display: none; }
-    .slip.show { animation: rise 420ms var(--ease) both; }
-    @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
-    .slip h3 { font: 600 var(--t-body)/1.3 var(--body); letter-spacing: 0; margin: 28px 0 6px; }
+    .tabs button[aria-selected="true"] { background: var(--color-paper); color: var(--color-ink); }
+    .slips { margin-top: var(--space-xl); display: grid; justify-items: center; gap: var(--space-lg); }
+    .slip { width: min(520px, 100%); text-align: start; background: var(--color-slip); color: var(--color-ink); padding: var(--space-lg) var(--space-lg) 52px;
+      font-variant-numeric: tabular-nums; border-radius: var(--radius-panel) var(--radius-panel) 0 0; clip-path: polygon({{zigzag}}); }
+    .slip.show { animation: rise var(--dur-short) var(--ease-out) both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    .slip h3 { font-size: var(--text-body); letter-spacing: 0; margin: var(--space-lg) 0 4px; }
     .slip h3:first-child { margin-top: 0; }
-    .row { display: grid; grid-template-columns: minmax(0, max-content) minmax(20px, 1fr) max-content; gap: 8px; align-items: baseline; padding: 5px 0; }
-    .dots { overflow: hidden; white-space: nowrap; color: #8c8478; }
+    .row { display: grid; grid-template-columns: minmax(0, max-content) minmax(20px, 1fr) max-content; gap: var(--space-xs); align-items: baseline; padding-block: 4px; }
+    .dots { overflow: hidden; white-space: nowrap; color: var(--color-dots); }
     .dots::before { content: "· · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·"; }
-    .total { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 48px; margin: 24px -24px 0; padding: 8px 24px;
-      background: var(--ink); color: var(--paper); font-weight: 600; }
+    .total { display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); min-height: 48px; margin: var(--space-lg) calc(-1 * var(--space-lg)) 0;
+      padding: var(--space-xs) var(--space-lg); background: var(--color-deep); color: var(--color-on-deep); font-weight: 600; }
 
-    /* why: the heading holds while the reasons pass */
-    .why { background: var(--brand); color: var(--on-brand); padding: var(--gap) var(--m); }
-    .why h2 { position: sticky; top: 0; z-index: 1; background: var(--brand); padding: 12px 0; }
-    .blocks { display: grid; gap: 72px; margin-top: 32px; }
-    .block h3 { font-size: var(--t-lead); line-height: 1.2; margin-bottom: 18px; }
-    .pair { display: grid; gap: 20px; }
-    .pair img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
-    .pair ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; line-height: 1.4; }
+    /* safety: three equal promises the platform keeps */
+    .safe .trio { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); margin-top: var(--space-2xl); }
+    .safe .trio > div { border-radius: var(--radius-panel); background: var(--color-night-2); overflow: hidden; text-align: start; }
+    .safe .trio img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+    .safe .trio .say { padding: var(--space-lg); }
+    .safe h3 { font-size: var(--text-title); margin-bottom: var(--space-sm); }
+    .safe .trio p { color: var(--color-on-night-2); }
 
-    /* questions beside a tall photograph */
-    .faq { padding: var(--gap) var(--m); }
-    .faq .photos { position: relative; margin-bottom: 64px; }
-    .faq .tall { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 70% 50%; }
-    .faq .square { position: absolute; right: -4px; bottom: -40px; width: 38%; aspect-ratio: 1; object-fit: cover; }
-    .facts { list-style: none; margin: 20px 0 36px; padding: 0; display: grid; gap: 6px; }
-    details + details { margin-top: 8px; }
-    summary { min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 16px; cursor: pointer; list-style: none;
-      font-weight: 600; padding: 10px 0; transition: color 160ms ease-out; }
-    summary:hover { color: var(--brand); }
+    /* scene 4: the photograph moves slower than the page */
+    .home { position: relative; height: 85svh; min-height: 520px; overflow: hidden; display: grid; place-items: center; padding: 0; }
+    .home img { position: absolute; inset: -12% 0; width: 100%; height: 124%; object-fit: cover; transform: translateY(calc((var(--p, 0.5) - 0.5) * -16%)); will-change: transform; }
+    .home .shade { position: absolute; inset: 0; background: var(--color-scrim); }
+    .home p { position: relative; z-index: 2; font-size: var(--text-statement); font-weight: 600; line-height: 1.2; max-width: 22ch; text-align: center; padding-inline: var(--gutter); }
+
+    /* questions */
+    .facts { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-xs); margin: var(--space-lg) 0 0; padding: 0; }
+    .facts li { padding: var(--space-xs) var(--space-md); border-radius: var(--radius-pill); background: var(--color-paper-3); font-size: var(--text-small); color: var(--color-ink-2); }
+    .qa { max-width: 760px; margin: var(--space-2xl) auto 0; display: grid; gap: var(--space-sm); text-align: start; }
+    details { background: var(--color-paper-2); border-radius: var(--radius-panel); }
+    summary { min-height: 60px; display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding: var(--space-sm) var(--space-lg);
+      cursor: pointer; list-style: none; font-weight: 600; border-radius: var(--radius-panel); }
     summary::-webkit-details-marker { display: none; }
     summary::after { content: ""; flex: none; width: 9px; height: 9px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
-      transform: rotate(45deg) translate(-2px, -2px); transition: transform 200ms var(--ease); }
-    details[open] summary::after { transform: rotate(225deg); }
-    details p { color: var(--ink-2); padding-bottom: 16px; max-width: 52ch; }
-    .faq .end { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin-top: 40px; }
-    .faq .end a:not(.btn) { min-height: 44px; display: inline-flex; align-items: center; text-underline-offset: 5px; }
+      transform: translateY(-2px) rotate(45deg); transition: transform var(--dur-short) var(--ease-out); }
+    details[open] summary::after { transform: translateY(2px) rotate(225deg); }
+    details p { padding: 0 var(--space-lg) var(--space-lg); color: var(--color-ink-2); max-width: 64ch; }
 
-    /* the last photograph */
-    .join { position: relative; background: var(--deep); color: var(--light); }
-    .join img { width: 100%; height: 70svh; object-fit: cover; filter: brightness(.72); }
-    .join .say { padding: 40px var(--m) 8px; }
-    .join p { margin: 16px 0 28px; max-width: 40ch; }
+    .join { position: relative; overflow: hidden; background: var(--color-deep); color: var(--color-on-deep); }
+    .join > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .join > .shade { position: absolute; inset: 0; background: var(--color-scrim-strong); }
+    .join > .container { position: relative; z-index: 2; }
+    .join h2 { font-size: var(--text-mega); max-width: 14ch; }
+    .join .note { margin-top: var(--space-md); font-size: var(--text-small); }
+    .join .btn { background: var(--color-on-deep); color: var(--color-deep); }
+    .join .btn:hover { background: var(--color-paper-2); }
 
-    footer { background: var(--deep); color: var(--light); }
-    footer > img { width: 100%; height: 50svh; object-fit: cover; object-position: 50% 15%; }
-    .menu-half { padding: 40px var(--m) 32px; }
-    .mark { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--display); font-size: var(--t-lead); }
-    .mark svg { height: 34px; width: auto; color: var(--light); }
-    .menu { list-style: none; margin: 40px 0 0; padding: 0; display: grid; gap: 12px; }
-    .menu a { font-family: var(--display); font-size: var(--t-h2); line-height: 1.1; text-decoration: none; display: inline-block; transition: transform 220ms var(--ease), opacity 220ms ease; }
-    .menu:hover a { opacity: .6; }
-    .menu a:hover, .menu a:focus-visible { opacity: 1; transform: translateX(12px); }
-    .fine { display: grid; gap: 24px; margin-top: 56px; font-size: var(--t-small); }
-    .fine b { display: block; font-weight: 600; margin-bottom: 4px; }
-    .fine a { margin-right: 16px; min-height: 44px; display: inline-flex; align-items: center; }
-    .legal { margin-top: 40px; font-size: var(--t-small); }
+    footer { padding-block: var(--space-2xl) var(--space-xl); font-size: var(--text-small); color: var(--color-on-night-2); }
+    .foot { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); }
+    .foot p { max-width: 44ch; margin-top: var(--space-sm); }
+    .foot nav { display: flex; flex-wrap: wrap; gap: 0 var(--space-lg); }
+    .foot nav a { min-height: 44px; display: inline-flex; align-items: center; }
+    .legal { margin-top: var(--space-xl); text-align: center; }
 
-    @media (min-width: 900px) {
-      nav.top { position: absolute; top: 24px; right: var(--m); z-index: 3; padding: 0; }
-      nav.top .wide { display: inline-flex; }
-      .stage { display: grid; grid-template-columns: 47% 53%; }
-      .pic { position: sticky; top: var(--m); height: calc(100svh - 2 * var(--m)); margin: var(--m) 0 var(--m) var(--m); grid-row: 1 / span 2; }
-      .hero { min-height: 100svh; padding: 38svh var(--m) 0 7%; }
-      .hero h1 { position: absolute; right: var(--m); bottom: 40px; margin: 0; }
-      .how { padding: var(--gap) var(--m) var(--gap) 7%; }
-      .why { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 24px; }
-      .why h2 { grid-column: 1 / 6; align-self: start; top: 32px; padding: 0; }
-      .blocks { grid-column: 7 / 13; gap: 120px; margin-top: 0; }
-      .pair { grid-template-columns: 200px 1fr; gap: 28px; align-items: start; }
-      .pair img { aspect-ratio: 3 / 4; }
-      .block:nth-child(even) .pair { grid-template-columns: 1fr 200px; }
-      .block:nth-child(even) .pair img { order: 2; }
-      .faq { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 24px; padding-top: 0; }
-      .faq .words { grid-column: 1 / 6; grid-row: 1; padding-top: var(--gap); }
-      .faq .photos { grid-column: 7 / 13; grid-row: 1; align-self: start; margin: 0 0 80px; }
-      .faq .tall { aspect-ratio: 3 / 4; }
-      .faq .square { right: auto; left: -40px; bottom: -40px; width: 34%; }
-      .join img { height: 90svh; min-height: 560px; }
-      .join .say { position: absolute; left: 58%; right: var(--m); bottom: 12svh; padding: 0; }
-      footer { display: grid; grid-template-columns: 1fr 1fr; min-height: 90svh; }
-      footer > img { height: 100%; }
-      .menu-half { padding: 80px var(--m) 32px 8%; display: flex; flex-direction: column; }
-      .fine { grid-template-columns: 1fr 1fr; }
-      .legal { margin-top: auto; padding-top: 40px; }
+    @media (min-width: 48rem) {
+      .story-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3xl); }
+      .safe .trio { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-lg); }
+      .foot { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .foot > :last-child { justify-self: end; text-align: end; }
+      .foot > :last-child nav { justify-content: flex-end; }
     }
-    .js [data-rise] { opacity: 0; transform: translateY(24px);
-      transition: opacity 700ms var(--ease) calc(var(--i, 0) * 80ms), transform 700ms var(--ease) calc(var(--i, 0) * 80ms); }
+    /* the scroll scenes get their length only when motion is welcome; otherwise every section is one plain screen */
+    .js:not(.still) .hero { height: 170svh; }
+    .js:not(.still) .statement { height: 200svh; }
+    .js:not(.still) .story { height: 260svh; }
+    .js:not(.still) :is(.hero, .statement, .story) > .stick { position: sticky; top: 0; height: 100svh; min-height: 0; }
+    /* on a phone the post is taller than the screen: the story is a plain section there, everything shown */
+    @media (max-width: 47.99rem) {
+      .js:not(.still) .story { height: auto; }
+      .js:not(.still) .story > .stick { position: relative; height: auto; }
+      .js:not(.still) .story .steps li { opacity: 1; }
+      .js:not(.still) .story .post .field { opacity: 1; transform: none; }
+      .story-grid { margin-top: var(--space-xl); gap: var(--space-xl); }
+    }
+    .js [data-rise] { opacity: 0; transform: translateY(20px); transition: opacity var(--dur-long) var(--ease-out), transform var(--dur-long) var(--ease-out); }
     .js [data-rise].in { opacity: 1; transform: none; }
     @media (prefers-reduced-motion: reduce) {
       .js [data-rise] { opacity: 1; transform: none; transition: none; }
-      .js .pic .a, .slip.show { animation: none; }
-      .pic img, .menu a, .btn, .tabs button { transition: none; }
+      .hero img, .home img { transform: none; }
+      .hero .words { opacity: 1; transform: none; }
+      .slip.show { animation: none; }
+      .btn, .tabs button, summary::after, .w, .steps li, .field { transition: none; }
     }
   </style>
 </head>
 <body>
   <a class="skip" href="#main">{{skip}}</a>
-  <main id="main">
-    <div class="stage">
-      <nav class="top" aria-label="{{language}}">
-        <a class="wide" href="#how">{{nav_how}}</a>
-        <a class="wide" href="#faq">{{nav_faq}}</a>
+  <header class="top">
+    <div class="container nav">
+      <a class="brand" href="{{path}}">{{logo}}<span>Runwal MyCity</span></a>
+      <nav class="links" aria-label="{{language}}">
         <a href="/" hreflang="en" lang="en"{{cur_en}}>English</a>
         <a href="/hi/" hreflang="hi" lang="hi"{{cur_hi}}>हिन्दी</a>
         <a href="/mr/" hreflang="mr" lang="mr"{{cur_mr}}>मराठी</a>
-        <a class="act" href="/login">{{nav_signin}}</a>
+        <a class="btn" href="/login">{{nav_signin}}</a>
       </nav>
-      <div class="pic">
-        <img class="a" src="/images/towers-courtyard.jpg" width="1200" height="875" alt="{{alt_towers}}" fetchpriority="high">
-        <img class="b" src="/images/playground.jpg" width="1200" height="875" alt="{{alt_playground}}" loading="lazy">
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="hero" data-scene="hero">
+      <div class="stick">
+        <img src="/images/skyline.jpg" width="1200" height="675" alt="{{alt_skyline}}" fetchpriority="high">
+        <div class="shade"></div>
+        <div class="words center">
+          <h1>{{h1}}</h1>
+          <p class="lead">{{lead}}</p>
+          <div class="actions">
+            <a class="btn" href="/login">{{cta_voice}}</a>
+            <a class="btn glass" href="#how">{{nav_how}}</a>
+          </div>
+        </div>
       </div>
-      <section class="hero" aria-labelledby="name">
-        <h1 id="name">{{h1}}</h1>
-        <p class="lead" data-rise>{{lead}}</p>
-        <p class="more" data-rise>{{lead_2}}</p>
-        <a class="btn on-dark" href="/login" data-rise>{{cta_signin}}</a>
-        <p class="note" data-rise>{{signin_note}}</p>
-      </section>
-      <section class="how" id="how" aria-labelledby="how-title">
-        <h2 id="how-title" data-rise>{{how_title}}</h2>
-        <p class="intro" data-rise>{{how_intro}}</p>
-        <div class="tabs" role="tablist" aria-label="{{how_title}}" data-rise>
+    </div>
+
+    <section class="statement" data-scene="words" aria-label="{{h1}}">
+      <div class="stick"><p>{{statement}}</p></div>
+    </section>
+
+    <section class="story light" data-scene="story" aria-labelledby="story-title">
+      <div class="stick">
+        <div class="container center">
+          <h2 id="story-title">{{story_title}}</h2>
+          <p class="intro">{{story_intro}}</p>
+          <div class="story-grid">
+            <ol class="steps">
+              <li class="on"><h3>{{s1_t}}</h3><p>{{s1_d}}</p></li>
+              <li><h3>{{s2_t}}</h3><p>{{s2_d}}</p></li>
+              <li><h3>{{s3_t}}</h3><p>{{s3_d}}</p></li>
+            </ol>
+            <div class="post" data-step="0">
+              <div class="post-top"><span class="tag">{{card_title}}</span><span class="status"><span class="wait">{{card_status}}</span><span class="done">{{card_published}}</span></span></div>
+              <div class="field f1"><b>{{card_promised_l}}</b><span>{{card_promised}}</span><b>{{card_source_l}}</b><span>{{card_source}}</span></div>
+              <div class="field f2"><b>{{card_today_l}}</b><div class="frame">{{card_photo}}</div></div>
+              <div class="field f3"><b>{{card_seen_l}}</b><span>{{card_seen}}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band2 light" id="how" aria-labelledby="how-title">
+      <div class="container center" data-rise>
+        <h2 id="how-title">{{how_title}}</h2>
+        <p class="intro">{{how_intro}}</p>
+        <div class="tabs" role="tablist" aria-label="{{how_title}}">
           <button type="button" role="tab" id="tab-complaint" aria-controls="slip-complaint" aria-selected="true">{{tab_complaint}}</button>
           <button type="button" role="tab" id="tab-feed" aria-controls="slip-feed" aria-selected="false" tabindex="-1">{{tab_feed}}</button>
           <button type="button" role="tab" id="tab-staff" aria-controls="slip-staff" aria-selected="false" tabindex="-1">{{tab_staff}}</button>
         </div>
-        <div data-rise>
+        <div class="slips">
           {{slips}}
         </div>
-      </section>
-    </div>
-
-    <section class="why" id="why" aria-labelledby="why-title">
-      <h2 id="why-title">{{why_title}}</h2>
-      <div class="blocks">
-        {{blocks}}
       </div>
     </section>
 
-    <section class="faq" id="faq" aria-labelledby="faq-title">
-      <div class="words">
-        <h2 id="faq-title" data-rise>{{faq_title}}</h2>
-        <ul class="facts" data-rise>
+    <section class="safe" id="why" aria-labelledby="safe-title">
+      <div class="container center" data-rise>
+        <h2 id="safe-title">{{nav_why}}</h2>
+        <div class="trio">
+          <div><img src="/images/podium-seating.jpg" width="1200" height="675" alt="{{alt_podium}}" loading="lazy"><div class="say"><h3>{{p1_t}}</h3><p>{{p1_d}}</p></div></div>
+          <div><img src="/images/lawn-clubhouse.jpg" width="1200" height="587" alt="{{alt_clubhouse}}" loading="lazy"><div class="say"><h3>{{p2_t}}</h3><p>{{p2_d}}</p></div></div>
+          <div><img src="/images/playground.jpg" width="1200" height="875" alt="{{alt_playground}}" loading="lazy"><div class="say"><h3>{{p3_t}}</h3><p>{{p3_d}}</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="home" data-scene="drift" aria-label="{{band_line}}">
+      <img src="/images/garden.jpg" width="1200" height="675" alt="{{alt_garden}}" loading="lazy">
+      <div class="shade"></div>
+      <p>{{band_line}}</p>
+    </section>
+
+    <section class="light" id="faq" aria-labelledby="faq-title">
+      <div class="container center" data-rise>
+        <h2 id="faq-title">{{faq_title}}</h2>
+        <ul class="facts">
           <li>{{fact_1}}</li>
           <li>{{fact_2}}</li>
           <li>{{fact_3}}</li>
         </ul>
-        <div data-rise>
+        <div class="qa">
           <details><summary>{{q1}}</summary><p>{{a1}}</p></details>
           <details><summary>{{q2}}</summary><p>{{a2}}</p></details>
           <details><summary>{{q3}}</summary><p>{{a3}}</p></details>
           <details><summary>{{q4}}</summary><p>{{a4}}</p></details>
           <details><summary>{{q5}}</summary><p>{{a5}}</p></details>
         </div>
-        <div class="end" data-rise>
-          <a class="btn" href="/login">{{cta_signin}}</a>
-          <a href="#how">{{faq_link}}</a>
-        </div>
-      </div>
-      <div class="photos" data-rise>
-        <img class="tall" src="/images/lawn-clubhouse.jpg" width="1200" height="587" alt="{{alt_clubhouse}}" loading="lazy">
-        <img class="square" src="/images/playground.jpg" width="1200" height="875" alt="{{alt_playground}}" loading="lazy">
       </div>
     </section>
 
     <section class="join" aria-labelledby="join-title">
-      <img src="/images/garden.jpg" width="1200" height="675" alt="{{alt_garden}}" loading="lazy">
-      <div class="say">
-        <h2 id="join-title" data-rise>{{join_title}}</h2>
-        <p data-rise>{{join_text}}</p>
-        <a class="btn on-dark" href="/login" data-rise>{{cta_signin}}</a>
+      <img src="/images/towers-courtyard.jpg" width="1200" height="875" alt="{{alt_towers}}" loading="lazy">
+      <div class="shade"></div>
+      <div class="container center" data-rise>
+        <h2 id="join-title">{{join_title}}</h2>
+        <p class="intro">{{join_text}}</p>
+        <div class="actions"><a class="btn" href="/login">{{cta_signin}}</a></div>
+        <p class="note">{{signin_note}}</p>
       </div>
     </section>
   </main>
 
   <footer>
-    <img src="/images/towers-courtyard.jpg" width="1200" height="875" alt="{{alt_towers}}" loading="lazy">
-    <div class="menu-half">
-      <a class="mark" href="{{path}}">{{logo}}<span>Runwal MyCity</span></a>
-      <ul class="menu">
-        <li><a href="#how">{{nav_how}}</a></li>
-        <li><a href="#why">{{nav_why}}</a></li>
-        <li><a href="#faq">{{nav_faq}}</a></li>
-        <li><a href="/login">{{nav_signin}}</a></li>
-      </ul>
-      <div class="fine">
-        <div><b>{{foot_lang}}</b><a href="/" lang="en">English</a><a href="/hi/" lang="hi">हिन्दी</a><a href="/mr/" lang="mr">मराठी</a></div>
-        <div><b>{{foot_about}}</b>{{footer_independent}}</div>
+    <div class="container">
+      <div class="foot">
+        <div>
+          <a class="brand" href="{{path}}">{{logo}}<span>Runwal MyCity</span></a>
+          <p>{{footer_independent}}</p>
+        </div>
+        <div>
+          <nav aria-label="{{foot_lang}}">
+            <a href="/" lang="en">English</a><a href="/hi/" lang="hi">हिन्दी</a><a href="/mr/" lang="mr">मराठी</a>
+          </nav>
+          <nav aria-label="{{nav_how}}">
+            <a href="#how">{{nav_how}}</a><a href="#why">{{nav_why}}</a><a href="#faq">{{nav_faq}}</a><a href="/login">{{nav_signin}}</a>
+          </nav>
+        </div>
       </div>
       <p class="legal">{{footer_place}}</p>
     </div>
@@ -313,36 +401,51 @@
     });
     tabs.slice(1).forEach((t) => { document.getElementById(t.getAttribute('aria-controls')).hidden = true; });
 
-    // entrances: the parts of each section rise in turn, once
+    // entrances for the plain sections
     const parts = document.querySelectorAll('[data-rise]');
     if ('IntersectionObserver' in window) {
       const seen = new IntersectionObserver((entries) => entries.forEach((e) => {
         if (e.isIntersecting) { e.target.classList.add('in'); seen.unobserve(e.target); }
-      }), { rootMargin: '0px 0px -8% 0px' });
-      document.querySelectorAll('main section, footer').forEach((s) =>
-        s.querySelectorAll('[data-rise]').forEach((el, i) => el.style.setProperty('--i', i)));
+      }), { rootMargin: '0px 0px -6% 0px' });
       parts.forEach((el) => seen.observe(el));
-      // the fixed photograph changes when the steps arrive
-      const pic = document.querySelector('.pic');
-      new IntersectionObserver(([e]) => pic.classList.toggle('two', e.isIntersecting), { threshold: 0.25 })
-        .observe(document.getElementById('how'));
     } else {
       parts.forEach((el) => el.classList.add('in'));
     }
 
-    // signature: the name settles a little as the first screen leaves
-    const name = document.getElementById('name');
-    const calm = matchMedia('(prefers-reduced-motion: reduce)');
-    let ticking = false;
-    addEventListener('scroll', () => {
-      if (ticking || calm.matches) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const p = Math.min(1, scrollY / innerHeight);
-        name.style.transform = `scale(${1 - 0.07 * p})`;
-        ticking = false;
-      });
-    }, { passive: true });
+    // the scroll scenes: each reads how far through it the reader is (0 to 1) and draws from that
+    if (!document.documentElement.classList.contains('still')) {
+      const scenes = [...document.querySelectorAll('[data-scene]')];
+      const words = [...document.querySelectorAll('.statement .w')];
+      const steps = [...document.querySelectorAll('.steps li')];
+      const post = document.querySelector('.post');
+      const clamp = (v) => Math.min(1, Math.max(0, v));
+      let queued = false;
+      function draw() {
+        queued = false;
+        const vh = innerHeight;
+        for (const s of scenes) {
+          const r = s.getBoundingClientRect();
+          if (r.bottom < -vh || r.top > 2 * vh) continue;
+          const kind = s.dataset.scene;
+          const p = kind === 'drift' ? clamp((vh - r.top) / (vh + r.height)) : clamp(-r.top / Math.max(1, r.height - vh));
+          s.style.setProperty('--p', p.toFixed(4));
+          if (kind === 'words') {
+            const lit = Math.ceil(clamp(p * 1.3) * words.length);
+            words.forEach((w, i) => w.classList.toggle('lit', i < lit));
+          } else if (kind === 'story') {
+            const step = Math.min(2, Math.floor(p * 3));
+            if (post.dataset.step !== String(step)) {
+              post.dataset.step = step;
+              steps.forEach((li, i) => li.classList.toggle('on', i === step));
+            }
+          }
+        }
+      }
+      const ask = () => { if (!queued) { queued = true; requestAnimationFrame(draw); } };
+      addEventListener('scroll', ask, { passive: true });
+      addEventListener('resize', ask);
+      draw();
+    }
   </script>
 </body>
 </html>

@@ -64,9 +64,9 @@ WEB=/var/www/society-complaint
 STAGE=$(mktemp -d)
 tar -xzf "/tmp/$BUNDLE" -C "$STAGE"
 rm -f "/tmp/$BUNDLE"
-# new files first and index.html last, so nobody gets a page whose scripts are not there yet; files of the
+# new files first (the homepage's hi/ and mr/ index.html files included) and the app's index.html last, so nobody gets a page whose scripts are not there yet; files of the
 # previous release stay a week for tabs still open on it
-(cd "$STAGE" && find . -type f ! -name index.html -exec install -D -m 644 {} "$WEB/{}" \;)
+(cd "$STAGE" && find . -type f ! -path ./index.html -exec install -D -m 644 {} "$WEB/{}" \;)
 install -m 644 "$STAGE/index.html" "$WEB/index.html"
 rm -rf "$STAGE"
 find "$WEB" -type f -mtime +7 -delete
