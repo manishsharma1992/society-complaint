@@ -248,7 +248,10 @@
     "start": "Start shift",
     "end": "End shift",
     "failed": "That did not work. Check your connection and try again.",
-    "myReport": "My performance"
+    "myReport": "My performance",
+    "inside": "Recorded inside the society.",
+    "outside": "Recorded {{km}} km from the society: your admin will review this.",
+    "noLocation": "No location was recorded: your admin will review this."
   },
   "report": {
     "title": "Staff report",
@@ -293,6 +296,78 @@
       "h": "{{n}} h",
       "min": "{{n}} min"
     },
-    "footnote": "Times are medians from assignment. \"On time\" is the share of fixed complaints resolved within their SLA. Shift hours cover the whole society; a shift counts for at most 16 hours."
+    "footnote": "Times are medians from assignment. \"On time\" is the share of fixed complaints resolved within their SLA. Shift hours cover the whole society; a shift counts for at most 16 hours.",
+    "reviewShifts": "Review shifts"
+  },
+  "clock": {
+    "startTitle": "Start shift",
+    "endTitle": "End shift",
+    "cancel": "Cancel",
+    "tryAgain": "Try again",
+    "noCamera": "The camera could not be opened. Allow camera access for this site in your browser settings: a selfie is needed to start or end a shift.",
+    "cameraLabel": "Front camera",
+    "previewAlt": "Your selfie",
+    "take": "Take selfie",
+    "retake": "Take again",
+    "useStart": "Start shift with this selfie",
+    "useEnd": "End shift with this selfie",
+    "locating": "Finding your location…",
+    "located": "Location found (within about {{meters}} m).",
+    "noLocation": "No location: allow location access, or go on without it and your admin will review the shift.",
+    "notice": {
+      "intro": "To confirm shifts are worked at the society, starting and ending a shift records:",
+      "selfie": "a selfie taken now with the front camera,",
+      "location": "where your phone is at that moment (only then, never in between),",
+      "who": "seen only by the society admin, the tower admins and you,",
+      "kept": "deleted after 90 days. Your shift times are kept for the yearly review.",
+      "ok": "I understand"
+    }
+  },
+  "shifts": {
+    "back": "← Staff report",
+    "title": "Review shifts",
+    "lead": "Check that the selfies show the staff member and that they were at the society, then confirm or dispute each shift.",
+    "range": "Period",
+    "show": "Show",
+    "ranges": {
+      "today": "Today",
+      "week": "Last 7 days",
+      "month": "This month"
+    },
+    "shows": {
+      "attention": "Needs attention",
+      "unreviewed": "Not reviewed",
+      "all": "All shifts"
+    },
+    "loading": "Loading shifts…",
+    "failed": "The shifts could not be loaded.",
+    "emptyTitle": "Nothing to review",
+    "emptyBody": "No shifts match this period and filter.",
+    "decision": {
+      "CONFIRMED": "Confirmed",
+      "DISPUTED": "Disputed"
+    },
+    "onDuty": "On duty",
+    "notReviewed": "Not reviewed",
+    "now": "now",
+    "hours": "{{hours}} h",
+    "start": "Start",
+    "end": "End",
+    "selfieAlt": "Selfie of {{name}}",
+    "selfieDeleted": "Selfie deleted after 90 days.",
+    "inside": "Inside the society ({{meters}} m from the centre)",
+    "outside": "{{km}} km from the society",
+    "noLocation": "No location",
+    "accuracy": "Phone accuracy ±{{meters}} m",
+    "map": "Open in maps",
+    "stillOn": "Still on shift.",
+    "noEvidence": "No selfie or location (recorded before they were required).",
+    "reviewedBy": "{{name}}, {{time}}",
+    "confirm": "Confirm",
+    "dispute": "Dispute",
+    "reason": "Why is this shift disputed?",
+    "sendDispute": "Dispute shift",
+    "reviewFailed": "The review could not be saved. Try again.",
+    "ownShift": "Your own shift: another admin reviews it."
   }
 }

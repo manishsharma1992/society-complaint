@@ -9,7 +9,7 @@
       <span>{{ t('report.period') }}</span>
       <select [value]="preset()" (change)="preset.set($any($event.target).value)">
         @for (p of presets; track p) {
-          <option [value]="p">{{ t('report.preset.' + p) }}</option>
+          <option [value]="p" [selected]="p === preset()">{{ t('report.preset.' + p) }}</option>
         }
       </select>
     </label>
@@ -28,7 +28,7 @@
         <span>{{ t('report.tower') }}</span>
         <select [value]="towerId() ?? ''" (change)="onTower($any($event.target).value)">
           @if (roles.isSocietyAdmin()) {
-            <option value="">{{ t('report.allTowers') }}</option>
+            <option value="" [selected]="towerId() === null">{{ t('report.allTowers') }}</option>
           }
           @for (tower of towerChoices(); track tower.id) {
             <option [value]="tower.id" [selected]="tower.id === towerId()">{{ tower.code }} · {{ tower.name }}</option>
@@ -40,7 +40,7 @@
       <span>{{ t('report.sortBy') }}</span>
       <select [value]="sortKey()" (change)="sortBy($any($event.target).value)">
         @for (key of sortKeys; track key) {
-          <option [value]="key">{{ t('report.col.' + key) }}</option>
+          <option [value]="key" [selected]="key === sortKey()">{{ t('report.col.' + key) }}</option>
         }
       </select>
     </label>
@@ -66,7 +66,10 @@
     @case ('ready') {
       @if (seesEveryone()) {
         <section class="on-duty" [attr.aria-label]="t('report.onDuty')">
-          <h2>{{ t('report.onDuty') }} <span class="num count">{{ onDuty().length }}</span></h2>
+          <div class="on-duty-head">
+            <h2>{{ t('report.onDuty') }} <span class="num count">{{ onDuty().length }}</span></h2>
+            <a routerLink="/shifts" class="review-link">{{ t('report.reviewShifts') }}</a>
+          </div>
           @if (onDuty().length === 0) {
             <p class="muted">{{ t('report.nobodyOnDuty') }}</p>
           } @else {

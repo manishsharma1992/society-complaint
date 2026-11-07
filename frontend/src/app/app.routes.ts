@@ -18,6 +18,7 @@ export const routes: Routes = [
       { path: 'jobs', canActivate: [staffOnly], data: { queue: 'jobs' }, loadComponent: () => import('./features/queue/queue.page') },
       { path: 'assign', canActivate: [adminOnly], data: { queue: 'assign' }, loadComponent: () => import('./features/queue/queue.page') },
       { path: 'staff', canActivate: [adminOrStaff], loadComponent: () => import('./features/staff-report/staff-report.page') },
+      { path: 'shifts', canActivate: [adminOnly], loadComponent: () => import('./features/shifts/shifts.page') },
       { path: 'signups', canActivate: [societyAdminOnly], loadComponent: () => import('./features/signups/signups.page') },
       { path: 'profile', loadComponent: () => import('./features/profile/profile.page') },
     ],

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { Observable, forkJoin, map, of } from 'rxjs';
@@ -59,7 +60,7 @@ export const slaShare = (p: StaffPerformance) => (p.resolved === 0 ? null : p.re
  */
 @Component({
   selector: 'app-staff-report-page',
-  imports: [TranslocoDirective, HlmButtonImports],
+  imports: [TranslocoDirective, HlmButtonImports, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './staff-report.page.html',
   styleUrl: './staff-report.page.css',

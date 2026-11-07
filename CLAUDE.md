@@ -304,6 +304,14 @@ After writing the rules, verify the messages: add one deliberate violation, run 
   period and assigned to them (counts, median time to start and to fix, share fixed within SLA) plus their current
   backlog. Society admin sees everyone, a tower admin only their tower, staff only themselves. The Angular screen
   joins it with shift hours from `workforce`; no cross-context call on the server. A shift counts for at most 16 h.
+- Shift evidence (`workforce`): clocking in and out needs a live front-camera selfie (never from the gallery) and
+  sends the phone's location at that moment. Locations come from the browser, not photo metadata (the app strips
+  EXIF). The server checks the location against the society's site (`workforce.sites.<id>` in application.yml:
+  Runwal MyCity 19.186062, 73.074812, 300 m); outside or missing is flagged for review, never refused. Selfie keys
+  `shifts/{societyId}/{staffId}/{issuedAtMillis}-{uuid}.jpg` must be the staff member's own and at most 10 minutes
+  old. Tower admins and the society admin confirm or dispute ended shifts by comparing the selfies (no automatic
+  face matching); nobody reviews their own shift. Selfies and coordinates are deleted 90 days after the shift
+  started (nightly job); times, site checks and reviews stay. Nginx allows `geolocation` and `camera` for self.
 
 ## Public Feed (`feed` context)
 

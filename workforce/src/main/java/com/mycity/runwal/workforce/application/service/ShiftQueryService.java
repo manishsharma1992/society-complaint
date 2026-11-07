@@ -3,11 +3,13 @@ package com.mycity.runwal.workforce.application.service;
 import com.mycity.runwal.shared.ddd.annotation.ApplicationService;
 import com.mycity.runwal.shared.id.SocietyId;
 import com.mycity.runwal.workforce.application.port.CurrentActor;
+import com.mycity.runwal.workforce.application.port.SelfieStorage;
 import com.mycity.runwal.workforce.application.query.MyShiftsQuery;
 import com.mycity.runwal.workforce.application.query.OnDutyQuery;
 import com.mycity.runwal.workforce.application.query.ShiftHoursQuery;
 import com.mycity.runwal.workforce.application.query.ShiftHoursView;
 import com.mycity.runwal.workforce.application.query.ShiftView;
+import com.mycity.runwal.workforce.application.query.ShiftsQuery;
 import com.mycity.runwal.workforce.domain.model.actor.Actor;
 import com.mycity.runwal.workforce.domain.model.shift.Period;
 import com.mycity.runwal.workforce.domain.model.shift.Shift;
@@ -29,13 +31,15 @@ public class ShiftQueryService {
     private final ShiftRepository shifts;
     private final CurrentActor currentActor;
     private final WorkforceAccessPolicy accessPolicy;
+    private final SelfieStorage selfies;
     private final Clock clock;
 
     public ShiftQueryService(ShiftRepository shifts, CurrentActor currentActor, WorkforceAccessPolicy accessPolicy,
-                             Clock clock) {
+                             SelfieStorage selfies, Clock clock) {
         this.shifts = shifts;
         this.currentActor = currentActor;
         this.accessPolicy = accessPolicy;
+        this.selfies = selfies;
         this.clock = clock;
     }
 
@@ -51,7 +55,7 @@ public class ShiftQueryService {
         return shifts.findOverlapping(societyId, period.from(), period.to()).stream()
                 .filter(shift -> shift.staffId().equals(actor.userId()))
                 .sorted(Comparator.comparing(Shift::startedAt).reversed())
-                .map(shift -> ShiftView.of(shift, now))
+                .map(shift -> ShiftView.of(shift, now, selfies))
                 .toList();
     }
 
@@ -64,7 +68,22 @@ public class ShiftQueryService {
         Instant now = clock.instant();
         return shifts.findAllOpen(societyId).stream()
                 .sorted(Comparator.comparing(Shift::startedAt))
-                .map(shift -> ShiftView.of(shift, now))
+                .map(shift -> ShiftView.of(shift, now, selfies))
+                .toList();
+    }
+
+    /** Every staff member's shifts in the period, newest first, with their evidence and review (admins). */
+    @Transactional(readOnly = true)
+    public List<ShiftView> list(ShiftsQuery query) {
+        SocietyId societyId = new SocietyId(query.societyId());
+        if (!accessPolicy.maySeeAllShifts(currentActor.actor(), societyId)) {
+            throw new ActionNotAllowedException("Only the society admin or a tower admin can review shifts");
+        }
+        Period period = new Period(query.from(), query.to());
+        Instant now = clock.instant();
+        return shifts.findOverlapping(societyId, period.from(), period.to()).stream()
+                .sorted(Comparator.comparing(Shift::startedAt).reversed())
+                .map(shift -> ShiftView.of(shift, now, selfies))
                 .toList();
     }
 

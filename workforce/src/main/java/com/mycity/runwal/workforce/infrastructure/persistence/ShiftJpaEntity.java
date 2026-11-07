@@ -24,4 +24,52 @@ class ShiftJpaEntity {
 
     @Column(name = "ended_at")
     Instant endedAt;
+
+    @Column(name = "start_selfie_key", length = 200)
+    String startSelfieKey;
+
+    @Column(name = "start_latitude")
+    Double startLatitude;
+
+    @Column(name = "start_longitude")
+    Double startLongitude;
+
+    @Column(name = "start_accuracy_m")
+    Double startAccuracyMeters;
+
+    @Column(name = "start_placement", length = 20)
+    String startPlacement;
+
+    @Column(name = "start_distance_m")
+    Long startDistanceMeters;
+
+    @Column(name = "end_selfie_key", length = 200)
+    String endSelfieKey;
+
+    @Column(name = "end_latitude")
+    Double endLatitude;
+
+    @Column(name = "end_longitude")
+    Double endLongitude;
+
+    @Column(name = "end_accuracy_m")
+    Double endAccuracyMeters;
+
+    @Column(name = "end_placement", length = 20)
+    String endPlacement;
+
+    @Column(name = "end_distance_m")
+    Long endDistanceMeters;
+
+    @Column(name = "review_decision", length = 20)
+    String reviewDecision;
+
+    @Column(name = "reviewer_id")
+    Long reviewerId;
+
+    @Column(name = "reviewed_at")
+    Instant reviewedAt;
+
+    @Column(name = "review_reason", length = 500)
+    String reviewReason;
 }

@@ -28,6 +28,11 @@ class InMemoryShifts implements ShiftRepository {
     }
 
     @Override
+    public Optional<Shift> findById(SocietyId societyId, ShiftId id) {
+        return Optional.ofNullable(shifts.get(id)).filter(s -> s.societyId().equals(societyId));
+    }
+
+    @Override
     public Optional<Shift> findOpen(SocietyId societyId, UserId staffId) {
         return shifts.values().stream()
                 .filter(s -> s.societyId().equals(societyId) && s.staffId().equals(staffId) && s.isOpen())
@@ -45,6 +50,15 @@ class InMemoryShifts implements ShiftRepository {
                 .filter(s -> s.societyId().equals(societyId) && s.startedAt().isBefore(to)
                         && s.endedAt().map(end -> end.isAfter(from)).orElse(true))
                 .sorted(Comparator.comparing(Shift::startedAt))
+                .toList();
+    }
+
+    @Override
+    public List<Shift> findHoldingEvidenceStartedBefore(Instant cutoff, int limit) {
+        return shifts.values().stream()
+                .filter(s -> s.startedAt().isBefore(cutoff) && s.holdsPersonalEvidence())
+                .sorted(Comparator.comparing(Shift::startedAt))
+                .limit(limit)
                 .toList();
     }
 }

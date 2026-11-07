@@ -43,3 +43,12 @@ photos:
   region: ${PHOTO_BUCKET_REGION:ap-southeast-1}
   access-key: ${PHOTO_ACCESS_KEY}
   secret-key: ${PHOTO_SECRET_KEY}
+
+# Where each society's grounds are: staff clocking in or out further than radius-meters from this point are flagged
+# for an admin's review (never refused). Society 1 = Runwal MyCity, Betwade, Dombivli (plus code 7JFM53PF+CW).
+workforce:
+  sites:
+    1:
+      latitude: 19.186062
+      longitude: 73.074812
+      radius-meters: 300

@@ -8,6 +8,7 @@ import com.mycity.runwal.workforce.domain.model.shift.ShiftRepository;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -26,41 +27,38 @@ class ShiftRepositoryAdapter implements ShiftRepository {
 
     @Override
     public void save(Shift shift) {
-        jpaRepository.save(toEntity(shift));
+        jpaRepository.save(ShiftMapper.toEntity(shift));
+    }
+
+    @Override
+    public Optional<Shift> findById(SocietyId societyId, ShiftId id) {
+        return jpaRepository.findByIdAndSocietyId(id.value(), societyId.value()).map(ShiftMapper::toDomain);
     }
 
     @Override
     public Optional<Shift> findOpen(SocietyId societyId, UserId staffId) {
         return jpaRepository.findBySocietyIdAndStaffIdAndEndedAtIsNull(societyId.value(), staffId.value())
-                .map(ShiftRepositoryAdapter::toDomain);
+                .map(ShiftMapper::toDomain);
     }
 
     @Override
     public List<Shift> findAllOpen(SocietyId societyId) {
         return jpaRepository.findBySocietyIdAndEndedAtIsNull(societyId.value()).stream()
-                .map(ShiftRepositoryAdapter::toDomain)
+                .map(ShiftMapper::toDomain)
                 .toList();
     }
 
     @Override
     public List<Shift> findOverlapping(SocietyId societyId, Instant from, Instant to) {
         return jpaRepository.findOverlapping(societyId.value(), from, to).stream()
-                .map(ShiftRepositoryAdapter::toDomain)
+                .map(ShiftMapper::toDomain)
                 .toList();
     }
 
-    private static ShiftJpaEntity toEntity(Shift shift) {
-        ShiftJpaEntity entity = new ShiftJpaEntity();
-        entity.id = shift.id().value();
-        entity.societyId = shift.societyId().value();
-        entity.staffId = shift.staffId().value();
-        entity.startedAt = shift.startedAt();
-        entity.endedAt = shift.endedAt().orElse(null);
-        return entity;
-    }
-
-    private static Shift toDomain(ShiftJpaEntity entity) {
-        return Shift.reconstitute(new ShiftId(entity.id), new SocietyId(entity.societyId),
-                new UserId(entity.staffId), entity.startedAt, entity.endedAt);
+    @Override
+    public List<Shift> findHoldingEvidenceStartedBefore(Instant cutoff, int limit) {
+        return jpaRepository.findHoldingEvidenceStartedBefore(cutoff, PageRequest.of(0, limit)).stream()
+                .map(ShiftMapper::toDomain)
+                .toList();
     }
 }

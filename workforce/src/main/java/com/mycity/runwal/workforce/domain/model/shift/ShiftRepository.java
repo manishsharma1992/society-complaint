@@ -14,6 +14,8 @@ public interface ShiftRepository {
 
     void save(Shift shift);
 
+    Optional<Shift> findById(SocietyId societyId, ShiftId id);
+
     /** The staff member's shift that has not ended yet, if any. */
     Optional<Shift> findOpen(SocietyId societyId, UserId staffId);
 
@@ -22,4 +24,7 @@ public interface ShiftRepository {
 
     /** Shifts of the society that started before {@code to} and had not ended by {@code from}, oldest first. */
     List<Shift> findOverlapping(SocietyId societyId, Instant from, Instant to);
+
+    /** Shifts of any society, started before {@code cutoff}, that still hold selfies or locations; oldest first. */
+    List<Shift> findHoldingEvidenceStartedBefore(Instant cutoff, int limit);
 }

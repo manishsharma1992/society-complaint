@@ -9,7 +9,7 @@
 
   <artifactId>workforce</artifactId>
   <name>workforce</name>
-  <description>Workforce context (supporting): maintenance staff shifts (clock in / clock out). A library; the app module runs it.</description>
+  <description>Workforce context (supporting): maintenance staff shifts (clock in / clock out with selfie and location, reviewed by admins). A library; the app module runs it.</description>
 
   <dependencies>
     <dependency>
@@ -37,6 +37,29 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-oauth2-jose</artifactId>
+    </dependency>
+    <!-- shift selfies live in the private photo bucket (S3-compatible Lightsail Object Storage) -->
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>s3</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>software.amazon.awssdk</groupId>
+          <artifactId>netty-nio-client</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>software.amazon.awssdk</groupId>
+          <artifactId>apache-client</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>software.amazon.awssdk</groupId>
+          <artifactId>apache5-client</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>url-connection-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.postgresql</groupId>

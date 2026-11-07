@@ -1,0 +1,133 @@
+<ng-container *transloco="let t">
+  <div class="head">
+    <a routerLink="/staff" class="back">{{ t('shifts.back') }}</a>
+    <h1>{{ t('shifts.title') }}</h1>
+    <p class="lead">{{ t('shifts.lead') }}</p>
+  </div>
+
+  <div class="filters">
+    <label class="field">
+      <span>{{ t('shifts.range') }}</span>
+      <select [value]="range()" (change)="range.set($any($event.target).value)">
+        @for (r of ranges; track r) {
+          <option [value]="r" [selected]="r === range()">{{ t('shifts.ranges.' + r) }}</option>
+        }
+      </select>
+    </label>
+    <label class="field">
+      <span>{{ t('shifts.show') }}</span>
+      <select [value]="show()" (change)="show.set($any($event.target).value)">
+        @for (s of shows; track s) {
+          <option [value]="s" [selected]="s === show()">{{ t('shifts.shows.' + s) }}</option>
+        }
+      </select>
+    </label>
+  </div>
+
+  @switch (state()) {
+    @case ('loading') {
+      <p class="muted" aria-busy="true">{{ t('shifts.loading') }}</p>
+    }
+    @case ('error') {
+      <div class="notice" role="alert">
+        <p>{{ t('shifts.failed') }}</p>
+        <button hlmBtn variant="outline" size="lg" type="button" (click)="load()">{{ t('report.retry') }}</button>
+      </div>
+    }
+    @case ('ready') {
+      @if (visible().length === 0) {
+        <div class="notice">
+          <h2>{{ t('shifts.emptyTitle') }}</h2>
+          <p>{{ t('shifts.emptyBody') }}</p>
+        </div>
+      }
+      <ul class="list">
+        @for (shift of visible(); track shift.id) {
+          <li class="shift stock" [class.flagged]="shift.needsAttention">
+            <div class="top">
+              <h2>{{ nameOf(shift.staffId) }}</h2>
+              @if (shift.review; as review) {
+                <span class="badge" [class.ok]="review.decision === 'CONFIRMED'" [class.bad]="review.decision === 'DISPUTED'">
+                  {{ t('shifts.decision.' + review.decision) }}
+                </span>
+              } @else if (shift.endedAt === null) {
+                <span class="badge on">{{ t('shifts.onDuty') }}</span>
+              } @else {
+                <span class="badge">{{ t('shifts.notReviewed') }}</span>
+              }
+            </div>
+            <p class="times num">
+              {{ when(shift.startedAt) }} → {{ shift.endedAt ? when(shift.endedAt) : t('shifts.now') }}
+              · {{ t('shifts.hours', { hours: hours(shift.minutesCounted) }) }}
+            </p>
+
+            <div class="evidence">
+              @for (side of ['start', 'end']; track side) {
+                @let e = side === 'start' ? shift.start : shift.end;
+                <div class="clock">
+                  <h3>{{ t('shifts.' + side) }}</h3>
+                  @if (e) {
+                    @if (e.selfieUrl) {
+                      <a [href]="e.selfieUrl" target="_blank" rel="noopener" class="selfie">
+                        <img [src]="e.selfieUrl" [alt]="t('shifts.selfieAlt', { name: nameOf(shift.staffId) })" loading="lazy" width="120" height="160" />
+                      </a>
+                    } @else {
+                      <p class="muted small">{{ t('shifts.selfieDeleted') }}</p>
+                    }
+                    <p class="place" [class.warn]="e.placement !== 'INSIDE'">
+                      @switch (e.placement) {
+                        @case ('INSIDE') { {{ t('shifts.inside', { meters: e.distanceMeters }) }} }
+                        @case ('OUTSIDE') { {{ t('shifts.outside', { km: km(e.distanceMeters) }) }} }
+                        @case ('NO_LOCATION') { {{ t('shifts.noLocation') }} }
+                      }
+                    </p>
+                    @if (e.accuracyMeters !== null) {
+                      <p class="muted small">{{ t('shifts.accuracy', { meters: round(e.accuracyMeters) }) }}</p>
+                    }
+                    @if (mapUrl(e); as url) {
+                      <a [href]="url" target="_blank" rel="noopener" class="map">{{ t('shifts.map') }}</a>
+                    }
+                  } @else if (side === 'end' && shift.endedAt === null) {
+                    <p class="muted small">{{ t('shifts.stillOn') }}</p>
+                  } @else {
+                    <p class="warn small">{{ t('shifts.noEvidence') }}</p>
+                  }
+                </div>
+              }
+            </div>
+
+            @if (shift.review; as review) {
+              <p class="muted small">
+                {{ t('shifts.reviewedBy', { name: nameOf(review.reviewerId), time: when(review.reviewedAt) }) }}
+                @if (review.reason) { — “{{ review.reason }}” }
+              </p>
+            }
+
+            @if (shift.endedAt !== null && !isMine(shift)) {
+              @if (disputing() === shift.id) {
+                <label class="field reason">
+                  <span>{{ t('shifts.reason') }}</span>
+                  <textarea rows="3" maxlength="500" [value]="reason()" (input)="reason.set($any($event.target).value)"></textarea>
+                </label>
+                <div class="actions">
+                  <button hlmBtn size="lg" type="button" [disabled]="saving() === shift.id || !reason().trim()" (click)="sendDispute(shift)">{{ t('shifts.sendDispute') }}</button>
+                  <button hlmBtn variant="ghost" size="lg" type="button" (click)="disputing.set(null)">{{ t('clock.cancel') }}</button>
+                </div>
+              } @else {
+                <div class="actions">
+                  <button hlmBtn size="lg" type="button" [disabled]="saving() === shift.id" (click)="confirm(shift)">{{ t('shifts.confirm') }}</button>
+                  <button hlmBtn variant="outline" size="lg" type="button" [disabled]="saving() === shift.id" (click)="startDispute(shift)">{{ t('shifts.dispute') }}</button>
+                </div>
+              }
+              @if (failed() === shift.id) {
+                <p class="warn small" role="alert">{{ t('shifts.reviewFailed') }}</p>
+              }
+            } @else if (isMine(shift)) {
+              <p class="muted small">{{ t('shifts.ownShift') }}</p>
+            }
+          </li>
+        }
+      </ul>
+    }
+  }
+</ng-container>
