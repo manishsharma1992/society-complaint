@@ -19,6 +19,11 @@ public record Actor(UserId userId, boolean active, Set<ActorRole> roles) {
         roles = Set.copyOf(roles);
     }
 
+    /** Any part at all in the society (resident, staff or admin). */
+    public boolean belongsTo(SocietyId societyId) {
+        return roles.stream().anyMatch(role -> role.societyId().equals(societyId));
+    }
+
     public boolean has(ActorRole.Part part, SocietyId societyId) {
         return roles.contains(new ActorRole(part, societyId));
     }

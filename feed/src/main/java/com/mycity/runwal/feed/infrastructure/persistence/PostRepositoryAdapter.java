@@ -9,6 +9,7 @@ import com.mycity.runwal.shared.id.SocietyId;
 import com.mycity.runwal.shared.id.UserId;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.PageRequest;
@@ -50,6 +51,17 @@ class PostRepositoryAdapter implements PostRepository {
     @Override
     public List<Post> findBySociety(SocietyId societyId, List<PostStatus> statuses, int page, int size) {
         return jpaRepository.search(societyId.value(), statuses, PageRequest.of(page, size)).stream()
+                .map(PostMapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Post> findPublishedIn(Collection<SocietyId> societyIds, int page, int size) {
+        if (societyIds.isEmpty()) {
+            return List.of();
+        }
+        return jpaRepository.findPublishedIn(societyIds.stream().map(SocietyId::value).toList(), PostStatus.PUBLISHED,
+                        PageRequest.of(page, size)).stream()
                 .map(PostMapper::toDomain)
                 .toList();
     }

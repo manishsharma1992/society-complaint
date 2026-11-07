@@ -26,6 +26,13 @@ interface PostJpaRepository extends JpaRepository<PostJpaEntity, Long> {
 
     @Query("""
             select p from PostJpaEntity p
+            where p.societyId in :societyIds and p.status = :published
+            order by p.publishedAt desc, p.id desc""")
+    List<PostJpaEntity> findPublishedIn(@Param("societyIds") Collection<Long> societyIds,
+                                        @Param("published") PostStatus published, Pageable pageable);
+
+    @Query("""
+            select p from PostJpaEntity p
             where p.societyId = :societyId and p.authorId = :authorId
             order by p.submittedAt desc, p.id desc""")
     List<PostJpaEntity> findByAuthor(@Param("societyId") long societyId, @Param("authorId") long authorId,

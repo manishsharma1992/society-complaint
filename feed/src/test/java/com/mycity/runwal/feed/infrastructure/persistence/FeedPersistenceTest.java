@@ -64,6 +64,25 @@ class FeedPersistenceTest {
     }
 
     @Test
+    void findsPublishedPostsOfSeveralSocietiesNewestFirst() {
+        Post older = newPost("older0000001");
+        older.publish(MODERATOR, NOW.minusSeconds(60));
+        Post newer = newPost("newer0000001");
+        newer.publish(MODERATOR, NOW);
+        Post pending = newPost("pending00001");
+        posts.save(older);
+        posts.save(newer);
+        posts.save(pending);
+        entityManager.flush();
+        entityManager.clear();
+
+        assertThat(posts.findPublishedIn(List.of(RUNWAL, new SocietyId(2)), 0, 10))
+                .extracting(p -> p.slug().value()).containsExactly("newer0000001", "older0000001");
+        assertThat(posts.findPublishedIn(List.of(new SocietyId(2)), 0, 10)).isEmpty();
+        assertThat(posts.findPublishedIn(List.of(), 0, 10)).isEmpty();
+    }
+
+    @Test
     void savesAndReloadsAPostWithItsModerationLogAndReports() {
         Post post = newPost("abcdefgh2345");
         posts.save(post);

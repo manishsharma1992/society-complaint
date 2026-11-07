@@ -52,3 +52,8 @@ workforce:
       latitude: 19.186062
       longitude: 73.074812
       radius-meters: 300
+
+# The signed-in feed shows published posts from the viewer's society and every society within this many metres
+# that has the Feed add-on on.
+feed:
+  nearby-meters: 10000

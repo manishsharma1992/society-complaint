@@ -8,6 +8,7 @@ import com.mycity.runwal.feed.domain.model.post.PostStatus;
 import com.mycity.runwal.shared.id.SocietyId;
 import com.mycity.runwal.shared.id.UserId;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -43,6 +44,14 @@ final class InMemoryPosts implements PostRepository {
     public List<Post> findBySociety(SocietyId societyId, List<PostStatus> statuses, int page, int size) {
         return posts.values().stream()
                 .filter(p -> p.societyId().equals(societyId) && statuses.contains(p.status()))
+                .skip((long) page * size).limit(size).toList();
+    }
+
+    @Override
+    public List<Post> findPublishedIn(Collection<SocietyId> societyIds, int page, int size) {
+        return posts.values().stream()
+                .filter(p -> societyIds.contains(p.societyId()) && p.status() == PostStatus.PUBLISHED)
+                .sorted(Comparator.comparing((Post p) -> p.publishedAt().orElseThrow()).reversed())
                 .skip((long) page * size).limit(size).toList();
     }
 
