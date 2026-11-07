@@ -13,6 +13,7 @@
     <module>core</module>
     <module>residency</module>
     <module>identity</module>
+    <module>feed</module>
     <module>app</module>
   </modules>
 
@@ -22,6 +23,7 @@
     <spring-boot.version>4.0.9</spring-boot.version>
     <archunit.version>1.5.1</archunit.version>
     <aws-sdk.version>2.55.10</aws-sdk.version>
+    <metadata-extractor.version>2.21.0</metadata-extractor.version>
   </properties>
 
   <dependencyManagement>
@@ -40,6 +42,11 @@
         <version>${aws-sdk.version}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.drewnoakes</groupId>
+        <artifactId>metadata-extractor</artifactId>
+        <version>${metadata-extractor.version}</version>
       </dependency>
       <dependency>
         <groupId>com.tngtech.archunit</groupId>
@@ -64,6 +71,11 @@
       <dependency>
         <groupId>com.mycity.runwal</groupId>
         <artifactId>identity</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.mycity.runwal</groupId>
+        <artifactId>feed</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

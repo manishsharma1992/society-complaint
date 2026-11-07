@@ -13,7 +13,8 @@ import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * Every request needs a valid login token ("Authorization: Bearer ...", issued by the Identity context),
- * except requesting and verifying a login code. What a user may do is decided inside each context.
+ * except requesting and verifying a login code and the read-only public feed (published posts, and reporting
+ * them). What a user may do is decided inside each context.
  * Stateless: no sessions or cookies, so no CSRF protection is needed.
  */
 @Configuration
@@ -25,7 +26,7 @@ class WebSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/identity/login/**", "/error").permitAll()
+                        .requestMatchers("/identity/login/**", "/feed/public/**", "/feed/share/**", "/error").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(resourceServer -> resourceServer.jwt(Customizer.withDefaults()))
                 .build();

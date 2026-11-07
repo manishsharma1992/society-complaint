@@ -33,6 +33,7 @@ final class ArchitectureConventions {
     static final String INFRASTRUCTURE = BASE_PACKAGE + "..infrastructure..";
     static final String INFRASTRUCTURE_PERSISTENCE = BASE_PACKAGE + "..infrastructure.persistence..";
     static final String INFRASTRUCTURE_CLIENT = BASE_PACKAGE + "..infrastructure.client..";
+    static final String INFRASTRUCTURE_MEDIA = BASE_PACKAGE + "..infrastructure.media..";
 
     static final String INTERFACES = BASE_PACKAGE + "..interfaces..";
     static final String INTERFACES_REST = BASE_PACKAGE + "..interfaces.rest..";

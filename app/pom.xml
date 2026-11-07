@@ -24,6 +24,10 @@
       <groupId>com.mycity.runwal</groupId>
       <artifactId>identity</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.mycity.runwal</groupId>
+      <artifactId>feed</artifactId>
+    </dependency>
     <!-- checks the login token on every request -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

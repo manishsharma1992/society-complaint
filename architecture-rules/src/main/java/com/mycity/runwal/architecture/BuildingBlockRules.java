@@ -35,7 +35,7 @@ public final class BuildingBlockRules {
     private static final String JPA_ENTITY = "jakarta.persistence.Entity";
     private static final String SPRING_DATA_REPOSITORY = "org.springframework.data.repository.Repository";
     private static final String PAST_TENSE_NAME =
-            ".*(ed|Sent|Built|Made|Done|Undone|Taken|Given|Withdrawn|Written|Held|Paid|Begun)";
+            ".*(ed|Sent|Built|Made|Done|Undone|Taken|Given|Withdrawn|Written|Held|Paid|Begun|Hidden)";
 
     private static final ArchCondition<JavaClass> BE_NAMED_AFTER_AN_AGGREGATE_ROOT_IN_THE_SAME_PACKAGE =
             new ArchCondition<>("be named <AggregateRoot>Repository after an @AggregateRoot in the same package") {
