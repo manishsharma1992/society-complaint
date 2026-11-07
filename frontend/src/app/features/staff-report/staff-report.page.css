@@ -75,10 +75,11 @@ h2 { font-size: var(--text-lg); }
   th, td { padding: var(--space-xs) var(--space-xs); text-align: end; border-bottom: var(--rule-hair) solid var(--color-rule); }
   td { white-space: nowrap; }
   /* headers wrap onto two lines so every column fits; all sit on the same baseline */
-  thead th { font-size: var(--text-sm); font-weight: 500; line-height: 1.25; color: var(--color-ink-muted); vertical-align: bottom; padding-block: var(--space-xs); }
+  thead th { font-size: var(--text-sm); font-weight: 500; line-height: 1.25; color: var(--color-ink-muted); vertical-align: bottom; padding-block: var(--space-sm); }
   thead th:first-child, tbody th { text-align: start; }
   tbody th { font-weight: 500; color: var(--color-ink); min-width: 9rem; }
-  thead button { all: unset; cursor: pointer; display: inline-block; padding-block: var(--space-2xs); }
+  /* the sort buttons add no padding of their own, so sortable and plain headers share one baseline */
+  thead button { all: unset; cursor: pointer; display: inline; }
   thead button:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
   thead th[aria-sort] button { color: var(--color-ink); }
   thead th[aria-sort='ascending'] button::after { content: ' ↑'; }
