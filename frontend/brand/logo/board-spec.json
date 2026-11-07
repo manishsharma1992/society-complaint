@@ -1,0 +1,29 @@
+{
+  "brand": "Runwal MyCity Residents",
+  "tagline": "Where residents are heard",
+  "brief": "A residents' app for a housing society in Dombivli: complaints to maintenance, a moderated feed of documented problems, staff shifts. The mark must belong to the residents (not the builder), work at 16 px, in one colour, and in English, Hindi and Marathi.",
+  "adjectives": ["trustworthy", "civic", "calm", "ours"],
+  "criteria": "Success: understood without explanation, clear at 16 px, works in one colour, independent of the developer's brand.",
+  "industry": "consumer-app",
+  "mockups": ["app-icon", "favicon-tab", "website", "signage", "badge", "social"],
+  "nav": ["Feed", "Complaints", "Profile"],
+  "brand_color": "#1B8233",
+  "greyscale": false,
+  "designer": "Claude for Runwal MyCity residents",
+  "round": 2,
+  "concepts": [
+    {
+      "name": "Speaking tower",
+      "symbol": "mycity-symbol.svg",
+      "lockup": "mycity-horizontal.svg",
+      "idea": "A residents' tower that is also a speech bubble: the building speaks up.",
+      "rationale": [
+        "Both halves of the app in one shape: where you live, and your voice",
+        "Silhouette and bubble tail survive at 16 px; a simplified cut keeps the windows crisp",
+        "Distinct from round speech-bubble marks and from the developer's logo"
+      ]
+    }
+  ],
+  "recommendation": "Speaking tower in brand green #1B8233 with open windows; white on green for the app icon.",
+  "next_steps": ["Outline the wordmark for print", "Have the mark checked for trademark conflicts", "Use it in the GitHub wiki and on society notices"]
+}

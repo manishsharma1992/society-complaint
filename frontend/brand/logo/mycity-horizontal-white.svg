@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 256">
+  <title>Runwal MyCity Residents — horizontal lockup (live text: convert to outlines before print)</title>
+  <path fill="#ffffff" fill-rule="evenodd" d="M92 24 H164 A20 20 0 0 1 184 44 V188 A20 20 0 0 1 164 208 H126 L92 238 V208 A20 20 0 0 1 72 188 V44 A20 20 0 0 1 92 24 Z M96 56 h24 v24 h-24 Z M136 56 h24 v24 h-24 Z M96 100 h24 v24 h-24 Z M136 100 h24 v24 h-24 Z M96 144 h24 v24 h-24 Z M136 144 h24 v24 h-24 Z"/>
+  <text x="220" y="132" font-family="'Tiro Devanagari Marathi', Georgia, serif" font-size="92" fill="#ffffff">Runwal MyCity</text>
+  <text x="224" y="200" font-family="Mukta, 'Helvetica Neue', Arial, sans-serif" font-size="56" fill="#DDE8DF">Residents</text>
+</svg>

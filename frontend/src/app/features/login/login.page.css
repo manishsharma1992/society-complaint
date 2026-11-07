@@ -17,6 +17,8 @@
   min-height: 64px;
 }
 
+.brand { display: flex; align-items: center; gap: 10px; }
+.mark { height: 38px; }
 .wordmark { display: flex; flex-direction: column; line-height: 1.1; }
 .society { font-family: var(--font-display); font-size: var(--text-lg); color: var(--color-ink); }
 .residents { font-size: var(--text-sm); color: var(--color-ink-muted); }

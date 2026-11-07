@@ -8,6 +8,7 @@ import { HlmInputOtpImports } from '@spartan-ng/helm/input-otp';
 import { HlmSpinnerImports } from '@spartan-ng/helm/spinner';
 import { SessionStore } from '../../core/session';
 import { LanguageSwitch } from '../../shared/language-switch';
+import { LogoMark } from '../../shared/logo-mark';
 
 type Step = 'phone' | 'code';
 
@@ -17,7 +18,7 @@ type Step = 'phone' | 'code';
  */
 @Component({
   selector: 'app-login-page',
-  imports: [TranslocoDirective, BrnInputOtp, HlmInputOtpImports, HlmButtonImports, HlmSpinnerImports, LanguageSwitch],
+  imports: [TranslocoDirective, BrnInputOtp, HlmInputOtpImports, HlmButtonImports, HlmSpinnerImports, LanguageSwitch, LogoMark],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './login.page.html',
   styleUrl: './login.page.css',

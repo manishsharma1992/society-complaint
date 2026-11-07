@@ -7,6 +7,7 @@ import { Roles } from '../../core/roles';
 import { SessionStore } from '../../core/session';
 import { SocietyStore } from '../../core/society';
 import { LanguageSwitch } from '../../shared/language-switch';
+import { LogoMark } from '../../shared/logo-mark';
 
 /**
  * The signed-in frame. Phones: a top bar and a bottom tab bar (tabs navigate, never act), translucent so content
@@ -14,16 +15,19 @@ import { LanguageSwitch } from '../../shared/language-switch';
  */
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, TranslocoDirective, NgIcon, LanguageSwitch],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, TranslocoDirective, NgIcon, LanguageSwitch, LogoMark],
   providers: [provideIcons({ lucideInbox, lucideListChecks, lucideNewspaper, lucideUserRound, lucideUserRoundCheck, lucideWrench })],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="shell" *transloco="let t">
       <a class="skip" href="#main">{{ t('home.title') }}</a>
       <header class="top">
-        <a routerLink="/" class="wordmark">
-          <span class="society">{{ t('app.society') }}</span>
-          <span class="residents">{{ t('app.residents') }}</span>
+        <a routerLink="/" class="brand">
+          <app-logo-mark class="mark" />
+          <span class="wordmark">
+            <span class="society">{{ t('app.society') }}</span>
+            <span class="residents">{{ t('app.residents') }}</span>
+          </span>
         </a>
         <nav class="top-nav" [attr.aria-label]="t('nav.main')">
           @for (tab of tabs(); track tab.path) {
@@ -62,7 +66,9 @@ import { LanguageSwitch } from '../../shared/language-switch';
       justify-content: space-between;
       gap: var(--space-md);
     }
-    .wordmark { display: flex; flex-direction: column; line-height: 1.1; text-decoration: none; }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; min-height: 44px; }
+    .mark { height: 38px; }
+    .wordmark { display: flex; flex-direction: column; line-height: 1.1; }
     .society { font-family: var(--font-display); font-size: var(--text-lg); color: var(--color-ink); }
     .residents { font-size: var(--text-sm); color: var(--color-ink-muted); }
     .top-nav { display: none; }
