@@ -29,7 +29,8 @@ h1 { font-size: var(--text-2xl); text-wrap: balance; }
 .notice h2 { font-size: var(--text-xl); }
 
 .list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-md); }
-.shift { padding: var(--space-md); display: grid; gap: var(--space-sm); }
+/* cards in one row share a height; their contents stay at the top */
+.shift { padding: var(--space-md); display: grid; gap: var(--space-sm); align-content: start; }
 .shift.flagged { box-shadow: var(--shadow-card), inset 4px 0 0 var(--color-error); }
 .top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); }
 .top h2 { font-size: var(--text-lg); }
