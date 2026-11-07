@@ -26,6 +26,7 @@ export const routes: Routes = [
       { path: 'settings', canActivate: [settingsAccess], loadComponent: () => import('./features/settings/settings.page') },
       { path: 'signups', canActivate: [societyAdminOnly], loadComponent: () => import('./features/signups/signups.page') },
       { path: 'profile', loadComponent: () => import('./features/profile/profile.page') },
+      { path: 'help', loadComponent: () => import('./features/help/help.page') },
     ],
   },
   { path: '**', redirectTo: '' },

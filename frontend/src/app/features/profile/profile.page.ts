@@ -39,6 +39,7 @@ import { LanguageSwitch } from '../../shared/language-switch';
         </div>
         <div><dt>{{ t('profile.language') }}</dt><dd><app-language-switch /></dd></div>
       </dl>
+      <a routerLink="/help" class="help">{{ t('help.link') }}</a>
       @if (manage().length > 0) {
         <nav class="manage" [attr.aria-label]="t('profile.manage')">
           <h2>{{ t('profile.manage') }}</h2>
@@ -61,6 +62,7 @@ import { LanguageSwitch } from '../../shared/language-switch';
     dd { margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-xs); color: var(--color-ink); }
     .muted { color: var(--color-ink-muted); }
     .sign-out { margin-top: var(--space-md); }
+    .help { min-height: 48px; display: inline-flex; align-items: center; margin-bottom: var(--space-lg); color: var(--color-brand-deep); font-weight: 500; }
     .manage { margin-bottom: var(--space-xl); }
     .manage h2 { font-size: var(--text-lg); margin-bottom: var(--space-xs); }
     .manage ul { list-style: none; margin: 0; padding: 0; }

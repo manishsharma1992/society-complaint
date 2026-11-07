@@ -502,5 +502,86 @@
     "notAvailable": "Not available to this society yet.",
     "failed": "The change could not be saved. Try again.",
     "note": "Switching an add-on off hides it for everyone in the society. Nothing is deleted: switching it on again brings everything back."
+  },
+  "help": {
+    "link": "How to use the app",
+    "title": "How to use the app",
+    "lead": "Short guides for what you can do here. Tap a topic to open it.",
+    "more": "Still stuck? Ask your society office or tower admin.",
+    "start": {
+      "title": "Getting started",
+      "1": "Sign in with your mobile number: we send a 6-digit code by SMS. It signs you in as soon as you type the last digit.",
+      "2": "The first time, tell us your name and your flat (tower, floor, flat; owner or tenant) and send it for approval. The society admin checks it, usually within a day.",
+      "3": "Choose English, हिन्दी or मराठी at the top of any screen. The app remembers it on this phone.",
+      "4": "Use the tabs at the bottom (or at the top on a computer). Your profile, this help and sign out are under Profile."
+    },
+    "feed": {
+      "title": "Reading the feed",
+      "1": "The feed shows problems residents of your society and nearby societies have documented, after a moderator has checked them.",
+      "2": "Posts show \"Verified resident\" and the society, and the tower only if the writer chose to. Names are never shown.",
+      "3": "Tap a post to see every photo. If it names a person, shares private details or is not factual, use \"Report this post\". Three reports hide it until a moderator looks."
+    },
+    "post": {
+      "title": "Writing a post",
+      "1": "On the feed, tap \"New post\". Read the rules first: facts only, what was promised and what exists, no names or faces of people.",
+      "2": "Write what the problem is and the details: where, since when, and what the brochure or agreement promised.",
+      "3": "Add up to 5 photos. The app removes their location data before sending. Choose whether to show your tower.",
+      "4": "Tap \"Send for review\". Nobody sees it until a moderator publishes it. Follow it, and the moderator's reason if it is not published, under \"My posts\"."
+    },
+    "complaint": {
+      "title": "Raising and following a complaint",
+      "1": "Under Complaints, tap \"Raise a complaint\". Add photos if you can: they help staff see the problem before they come.",
+      "2": "Choose the kind of problem and where it is: your flat, or a common area (a tower or the whole society). Then describe it.",
+      "3": "Follow it on its page: who it is assigned to, every step under \"What happened\", and comments. Add a comment if something changes.",
+      "4": "When staff mark it resolved, check the fix. If the problem is gone, tap \"Yes, it is fixed. Close it\". If not, add a comment."
+    },
+    "jobs": {
+      "title": "Doing your jobs (staff)",
+      "1": "Jobs lists the complaints assigned to you, the most urgent first.",
+      "2": "Open a job and tap \"Start work\" when you begin, so the resident knows it is being handled.",
+      "3": "When done, tap \"Mark as resolved\" and say what was done (for example: replaced the tap washer). You can add a photo of the fix."
+    },
+    "shift": {
+      "title": "Starting and ending your shift (staff)",
+      "1": "On Jobs, tap \"Start shift\" when you begin work. The first time, the app explains what it records.",
+      "2": "Take a selfie with the front camera. The app also records where your phone is at that moment, and only then.",
+      "3": "Tap \"End shift\" when you finish, with a new selfie. If you were outside the society or your location was off, your admin will look at it.",
+      "4": "\"My performance\" shows your complaints, how fast you fixed them, and your shift hours."
+    },
+    "assign": {
+      "title": "Assigning complaints (admins)",
+      "1": "\"To assign\" lists new complaints, the most urgent first. Tower admins see their own tower.",
+      "2": "Open one and choose who should fix it. The staff member sees it under Jobs at once.",
+      "3": "If it is not a real problem, use \"Reject this complaint\" and give the reason; the resident sees it."
+    },
+    "review": {
+      "title": "Staff report and shifts (admins)",
+      "1": "Profile, Manage, Staff report: per staff member, complaints assigned and fixed, how fast, how many on time, and shift hours.",
+      "2": "Profile, Manage, Review shifts: compare both selfies with the staff member and check where they were. Flagged shifts have a red edge.",
+      "3": "Tap \"Confirm\", or \"Dispute\" with a reason. You cannot review your own shift."
+    },
+    "moderate": {
+      "title": "Moderating the feed (society admin)",
+      "1": "The feed shows how many posts wait for review; tap it, or go to Profile, Manage, Feed moderation.",
+      "2": "Publish posts that follow the rules. For others, choose \"Do not publish\" and give a reason: the writer sees it.",
+      "3": "\"Hidden by reports\" lists posts that readers reported three times. Publish them again or remove them."
+    },
+    "signups": {
+      "title": "Approving sign-ups (society admin)",
+      "1": "Sign-ups lists people who registered for a flat, with their name, flat and mobile number.",
+      "2": "Check they live there, then approve, or choose \"Do not approve\" and give the reason they will see."
+    },
+    "addons": {
+      "title": "Turning parts of the app on or off",
+      "1": "Profile, Manage, Add-ons: switch the Feed or Complaints on or off for everyone in the society.",
+      "2": "Switching off hides it; nothing is deleted. Switching it on again brings everything back."
+    },
+    "privacy": {
+      "title": "Your privacy",
+      "1": "Only your name, mobile number and flat are kept. Other residents see names, never mobile numbers.",
+      "2": "Feed posts never show who wrote them.",
+      "3": "Photos are resized and their location data removed on your phone before upload.",
+      "4": "Staff selfies and shift locations are deleted after 90 days."
+    }
   }
 }
