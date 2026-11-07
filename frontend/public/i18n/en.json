@@ -36,7 +36,8 @@
     "assign": "To assign",
     "jobs": "Jobs",
     "signups": "Sign-ups",
-    "staff": "Staff"
+    "staff": "Staff",
+    "feed": "Feed"
   },
   "home": {
     "title": "Complaints",
@@ -123,7 +124,15 @@
     "noFlats": "No flat linked yet.",
     "roles": "Role",
     "signOut": "Sign out",
-    "language": "Language"
+    "language": "Language",
+    "manage": "Manage",
+    "links": {
+      "moderation": "Feed moderation",
+      "staff": "Staff report",
+      "shifts": "Review shifts",
+      "signups": "Sign-ups",
+      "settings": "Add-ons"
+    }
   },
   "role": {
     "RESIDENT": "Resident",
@@ -369,5 +378,129 @@
     "sendDispute": "Dispute shift",
     "reviewFailed": "The review could not be saved. Try again.",
     "ownShift": "Your own shift: another admin reviews it."
+  },
+  "feed": {
+    "title": "What's happening",
+    "lead": "Problems residents of this society and nearby ones have documented, checked by a moderator before they appear.",
+    "verified": "Verified resident",
+    "newPost": "New post",
+    "firstPost": "Write the first post",
+    "myPosts": "My posts",
+    "moderation": "Moderation",
+    "waiting": "{{count}} waiting for review",
+    "loading": "Loading…",
+    "more": "Show more",
+    "failed": "The feed could not be loaded.",
+    "emptyTitle": "Nothing here yet",
+    "emptyBody": "When a resident documents a problem and a moderator publishes it, it appears here.",
+    "notApproved": "The feed opens once the society has approved your sign-up.",
+    "photoCount": "{{count}} photos"
+  },
+  "post": {
+    "back": "← Feed",
+    "missingTitle": "This post is not available",
+    "missingBody": "It may have been hidden for review, or it is from a society outside your area.",
+    "photoAlt": "Photo {{n}} of {{total}}",
+    "report": "Report this post",
+    "reportHint": "If it names a person, shares private details or is not factual, tell the moderators.",
+    "reportReason": "What is wrong with this post?",
+    "sendReport": "Send report",
+    "reported": "Thank you. A moderator will look at it.",
+    "reportFailed": "The report could not be sent. Try again."
+  },
+  "newPost": {
+    "title": "New post",
+    "policyTitle": "Before you post",
+    "policyIntro": "Posts document problems so they get fixed. A moderator checks every post against these rules:",
+    "policy": {
+      "facts": "Stick to facts: what, where (tower or common area) and when.",
+      "promise": "Say what was promised (brochure, agreement, approved plan) and what exists instead.",
+      "people": "No names, faces, phone numbers or other personal details of employees or private people.",
+      "tone": "No abusive language, no threats, and no accusations of crimes you cannot prove.",
+      "review": "Nothing is shown until a moderator publishes it; posts that break these rules are not published.",
+      "anonymous": "Others see \"Verified resident\" and, only if you choose, your tower. Never your name."
+    },
+    "policyAgree": "I have read these rules and my post follows them.",
+    "continue": "Continue",
+    "what": "What is the problem?",
+    "whatPlaceholder": "e.g. Clubhouse gym promised in the brochure is missing",
+    "details": "Details",
+    "detailsPlaceholder": "Where exactly, since when, and what was promised (page of the brochure, clause of the agreement)…",
+    "photos": "Photos (up to {{max}})",
+    "camera": "Take photo",
+    "gallery": "Choose photos",
+    "preparing": "Preparing photos…",
+    "photoAlt": "Photo {{n}}",
+    "removePhoto": "Remove photo {{n}}",
+    "photoFailed": "A photo could not be read. Try another one.",
+    "showTower": "Show my tower ({{tower}}) on the post",
+    "send": "Send for review",
+    "sending": "Sending…",
+    "failed": "The post could not be sent. Check your connection and try again.",
+    "reviewNote": "A moderator reviews your post before anyone else can see it."
+  },
+  "myPosts": {
+    "title": "My posts",
+    "sent": "Sent. A moderator will review it before it appears in the feed.",
+    "empty": "You have not posted anything yet.",
+    "photos": "{{count}} photos",
+    "reason": "Moderator: {{reason}}",
+    "open": "Open in feed",
+    "status": {
+      "PENDING_REVIEW": "Waiting for review",
+      "PUBLISHED": "Published",
+      "REJECTED": "Not published",
+      "HIDDEN": "Hidden for review",
+      "REMOVED": "Removed"
+    }
+  },
+  "moderation": {
+    "title": "Moderation",
+    "lead": "Publish posts that follow the content policy. Every decision and its reason is kept in the moderation log.",
+    "queue": {
+      "PENDING_REVIEW": "Waiting for review",
+      "HIDDEN": "Hidden by reports"
+    },
+    "empty": {
+      "PENDING_REVIEW": "No posts are waiting for review.",
+      "HIDDEN": "No posts have been hidden by reports."
+    },
+    "noTower": "No tower shown",
+    "reports": "{{count}} reports",
+    "publish": "Publish",
+    "restore": "Publish again",
+    "reject": "Do not publish",
+    "remove": "Remove",
+    "reasonFor": {
+      "reject": "Why is it not published? The author sees this.",
+      "remove": "Why is it removed? The author sees this.",
+      "hide": "Why is it hidden?"
+    },
+    "confirm": {
+      "reject": "Do not publish",
+      "remove": "Remove post",
+      "hide": "Hide post"
+    },
+    "failed": "The decision could not be saved. Try again."
+  },
+  "settings": {
+    "back": "← Profile",
+    "title": "Add-ons",
+    "lead": "Choose which parts of the app {{society}} uses.",
+    "addOn": {
+      "FEED": {
+        "name": "Feed",
+        "about": "Residents document problems; moderated posts from this society and nearby ones. The home page when on."
+      },
+      "COMPLAINTS": {
+        "name": "Complaints",
+        "about": "Residents raise complaints; admins assign them to maintenance staff, with staff shifts and the staff report."
+      }
+    },
+    "available": "Available",
+    "on": "On",
+    "notAvailable": "Not available to this society yet.",
+    "failed": "The change could not be saved. Try again.",
+    "note": "Switching an add-on off hides it for everyone in the society. Nothing is deleted: switching it on again brings everything back."
   }
 }

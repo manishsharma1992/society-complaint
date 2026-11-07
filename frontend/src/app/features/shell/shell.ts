@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideChartColumn, lucideInbox, lucideListChecks, lucideUserRound, lucideUserRoundCheck, lucideWrench } from '@ng-icons/lucide';
+import { lucideInbox, lucideListChecks, lucideNewspaper, lucideUserRound, lucideUserRoundCheck, lucideWrench } from '@ng-icons/lucide';
 import { Roles } from '../../core/roles';
 import { SessionStore } from '../../core/session';
+import { SocietyStore } from '../../core/society';
 import { LanguageSwitch } from '../../shared/language-switch';
 
 /**
@@ -14,7 +15,7 @@ import { LanguageSwitch } from '../../shared/language-switch';
 @Component({
   selector: 'app-shell',
   imports: [RouterOutlet, RouterLink, RouterLinkActive, TranslocoDirective, NgIcon, LanguageSwitch],
-  providers: [provideIcons({ lucideChartColumn, lucideInbox, lucideListChecks, lucideUserRound, lucideUserRoundCheck, lucideWrench })],
+  providers: [provideIcons({ lucideInbox, lucideListChecks, lucideNewspaper, lucideUserRound, lucideUserRoundCheck, lucideWrench })],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="shell" *transloco="let t">
@@ -128,22 +129,29 @@ import { LanguageSwitch } from '../../shared/language-switch';
 })
 export default class Shell {
   private readonly roles = inject(Roles);
+  private readonly society = inject(SocietyStore);
 
   constructor() {
     // pick up an approval or a new role given since this login; the saved session stands if this fails
     inject(SessionStore).renew().subscribe({ error: () => {} });
+    this.society.ensure().subscribe();
   }
 
   /**
-   * Each person's own work comes first (five tabs at most). Admins get the staff report as a tab; staff open their
-   * own numbers from their jobs screen, which also keeps an admin who is also staff at five tabs.
+   * The feed first when the society uses it, then each person's own work (five tabs at most). The staff report,
+   * shift review, moderation and add-on settings are under Profile for admins.
    */
-  protected readonly tabs = computed(() => [
-    ...(this.roles.isAdmin() ? [{ path: '/assign', label: 'nav.assign', icon: 'lucideInbox' }] : []),
-    ...(this.roles.isStaff() ? [{ path: '/jobs', label: 'nav.jobs', icon: 'lucideWrench' }] : []),
-    { path: '/complaints', label: 'nav.complaints', icon: 'lucideListChecks' },
-    ...(this.roles.isSocietyAdmin() ? [{ path: '/signups', label: 'nav.signups', icon: 'lucideUserRoundCheck' }] : []),
-    ...(this.roles.isAdmin() && !this.roles.isStaff() ? [{ path: '/staff', label: 'nav.staff', icon: 'lucideChartColumn' }] : []),
-    { path: '/profile', label: 'nav.profile', icon: 'lucideUserRound' },
-  ]);
+  protected readonly tabs = computed(() => {
+    const complaints = this.society.complaintsOn();
+    const tabs = [
+      ...(this.society.feedOn() ? [{ path: '/feed', label: 'nav.feed', icon: 'lucideNewspaper' }] : []),
+      ...(complaints && this.roles.isAdmin() ? [{ path: '/assign', label: 'nav.assign', icon: 'lucideInbox' }] : []),
+      ...(complaints && this.roles.isStaff() ? [{ path: '/jobs', label: 'nav.jobs', icon: 'lucideWrench' }] : []),
+      ...(complaints ? [{ path: '/complaints', label: 'nav.complaints', icon: 'lucideListChecks' }] : []),
+      ...(this.roles.isSocietyAdmin() ? [{ path: '/signups', label: 'nav.signups', icon: 'lucideUserRoundCheck' }] : []),
+      { path: '/profile', label: 'nav.profile', icon: 'lucideUserRound' },
+    ];
+    // an admin who is also staff: sign-ups move under Profile rather than squeezing a sixth tab in
+    return tabs.length > 5 ? tabs.filter((t) => t.path !== '/signups') : tabs;
+  });
 }

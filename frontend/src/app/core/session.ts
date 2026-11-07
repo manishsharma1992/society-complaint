@@ -20,6 +20,8 @@ export interface User {
   roles: Role[];
   claim: { societyId: number; flatId: number; occupancy: 'OWNER' | 'TENANT' } | null;
   rejectionReason: string | null;
+  /** runs the platform: decides which add-ons each society may use */
+  platformOwner?: boolean;
 }
 
 interface Session {

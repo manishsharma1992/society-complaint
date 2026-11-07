@@ -300,6 +300,15 @@ After writing the rules, verify the messages: add one deliberate violation, run 
 - Photos go to object storage, never in the DB; only the object key is stored. At most 5 per complaint, JPEG/PNG/WebP,
   at most 5 MB each (the Angular app resizes and re-encodes them, which also strips EXIF GPS data).
 - Residents' personal data: collect only what's needed (India DPDP Act).
+- Add-ons (Residency owns them): each society has FEED and COMPLAINTS. The platform owner (`app_user.platform_owner`,
+  set in the database only; the demo admin, user 1, for now) makes an add-on available; the society admin switches
+  available ones on or off (`/residency/societies/{id}/add-ons/{addOn}[/availability]`). Each context refuses requests
+  for a society whose add-on is off (an interceptor asking its own port, answered in `integration`); staff shifts
+  and the staff report belong to COMPLAINTS. The web app lands on the feed when it is on, hides off add-ons, and keeps
+  at most five tabs (admin tools live under Profile -> Manage).
+- The feed is the home page and, for now, only for signed-in approved members: published posts from their society
+  and every society within `feed.nearby-meters` (10 km) that uses the feed (`GET /feed/societies/{id}/feed`).
+  `/feed/public/**` and `/feed/share/**` need a login until the legal pages are published.
 - Staff report (`core`, `GET /complaint/societies/{id}/reports/staff`): per staff member, complaints raised in the
   period and assigned to them (counts, median time to start and to fix, share fixed within SLA) plus their current
   backlog. Society admin sees everyone, a tower admin only their tower, staff only themselves. The Angular screen
