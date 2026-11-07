@@ -36,9 +36,20 @@ public class AppUser extends AbstractAggregateRoot {
     private UserStatus status;
     private FlatClaim claim;
     private String rejectionReason;
+    private final boolean platformOwner;
 
     public AppUser(UserId id, PhoneNumber phone, Instant createdAt, String name, UserStatus status, FlatClaim claim,
                    String rejectionReason, List<RoleAssignment> roles) {
+        this(id, phone, createdAt, name, status, claim, rejectionReason, roles, false);
+    }
+
+    /**
+     * @param platformOwner runs the platform itself (above any society): decides which add-ons a society may use.
+     *                      Set in the database only; there is no way to grant it in the app.
+     */
+    public AppUser(UserId id, PhoneNumber phone, Instant createdAt, String name, UserStatus status, FlatClaim claim,
+                   String rejectionReason, List<RoleAssignment> roles, boolean platformOwner) {
+        this.platformOwner = platformOwner;
         this.id = Objects.requireNonNull(id, "id");
         this.phone = Objects.requireNonNull(phone, "phone");
         this.createdAt = Objects.requireNonNull(createdAt, "createdAt");
@@ -126,6 +137,11 @@ public class AppUser extends AbstractAggregateRoot {
             throw new InvalidIdentityException("A name of at most " + MAX_NAME_LENGTH + " characters is needed");
         }
         return fullName.strip();
+    }
+
+    /** Runs the platform (above any society); see the constructor. */
+    public boolean isPlatformOwner() {
+        return platformOwner;
     }
 
     public UserId id() {

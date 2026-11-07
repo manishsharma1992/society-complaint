@@ -14,7 +14,8 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
 /**
- * Signs login tokens (JWT, HS256). Claims: sub = user ID, status, roles as "ROLE:society" or "ROLE:society:tower".
+ * Signs login tokens (JWT, HS256). Claims: sub = user ID, status, roles as "ROLE:society" or "ROLE:society:tower",
+ * platformOwner (true for whoever runs the platform).
  * The app verifies them with the same key.
  */
 public class JwtAccessTokenIssuer implements AccessTokenIssuer {
@@ -33,6 +34,7 @@ public class JwtAccessTokenIssuer implements AccessTokenIssuer {
                 .expiresAt(expiresAt)
                 .claim("status", user.status().name())
                 .claim("roles", roles(user.roles()))
+                .claim("platformOwner", user.isPlatformOwner())
                 .build();
         JwsHeader header = JwsHeader.with(MacAlgorithm.HS256).build();
         return encoder.encode(JwtEncoderParameters.from(header, claims)).getTokenValue();

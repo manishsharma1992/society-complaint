@@ -51,8 +51,7 @@ class ResidencyServicesTest {
     private final List<DomainEvent> published = new ArrayList<>();
     private final FlatRepository flatRepository = new InMemoryFlats();
     private final TowerRepository towerRepository = towers(B2, C4);
-    private final SocietyRepository societyRepository =
-            id -> Optional.of(new Society(SOCIETY, "Runwal MyCity")).filter(s -> s.id().equals(id));
+    private final SocietyRepository societyRepository = new InMemorySocieties(new Society(SOCIETY, "Runwal MyCity"));
     private Actor caller = actor(20, ActorRole.Part.TOWER_ADMIN, 7L);
     private final ResidencyQueryService queries =
             new ResidencyQueryService(societyRepository, towerRepository, flatRepository, () -> caller);

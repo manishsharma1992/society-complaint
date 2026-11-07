@@ -42,9 +42,9 @@ import org.springframework.test.web.servlet.MockMvc;
 class IdentityControllersTest {
 
     private static final UserView PENDING = new UserView(100, "+919876543210", "Manish Sharma", "PENDING", List.of(),
-            new FlatClaimView(1, 667, "OWNER"), null);
+            new FlatClaimView(1, 667, "OWNER"), null, false);
     private static final UserView ACTIVE = new UserView(100, "+919876543210", "Manish Sharma", "ACTIVE",
-            List.of(new RoleView("RESIDENT", 1, null)), new FlatClaimView(1, 667, "OWNER"), null);
+            List.of(new RoleView("RESIDENT", 1, null)), new FlatClaimView(1, 667, "OWNER"), null, false);
 
     @Autowired
     private MockMvc mockMvc;

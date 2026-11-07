@@ -48,6 +48,10 @@ class AppUserJpaEntity {
     @Column(name = "rejection_reason", length = 500)
     String rejectionReason;
 
+    /** Set in the database only (see AppUser); the app never writes it. */
+    @Column(name = "platform_owner", nullable = false, updatable = false)
+    boolean platformOwner;
+
     @Column(name = "created_at", nullable = false)
     Instant createdAt;
 

@@ -3,6 +3,8 @@ package com.mycity.runwal.residency.infrastructure.persistence;
 import com.mycity.runwal.residency.domain.model.flat.Flat;
 import com.mycity.runwal.residency.domain.model.flat.FlatNumber;
 import com.mycity.runwal.residency.domain.model.flat.MembershipSnapshot;
+import com.mycity.runwal.residency.domain.model.society.AddOn;
+import com.mycity.runwal.residency.domain.model.society.GeoPoint;
 import com.mycity.runwal.residency.domain.model.society.Society;
 import com.mycity.runwal.residency.domain.model.tower.Tower;
 import com.mycity.runwal.residency.domain.model.tower.TowerCode;
@@ -21,7 +23,18 @@ final class ResidencyMapper {
     }
 
     static Society toDomain(SocietyJpaEntity entity) {
-        return new Society(new SocietyId(entity.id), entity.name);
+        GeoPoint location = entity.latitude == null ? null : new GeoPoint(entity.latitude, entity.longitude);
+        Set<AddOn> available = entity.addOns.stream().map(row -> AddOn.from(row.addOn)).collect(Collectors.toSet());
+        Set<AddOn> enabled = entity.addOns.stream().filter(row -> row.enabled).map(row -> AddOn.from(row.addOn))
+                .collect(Collectors.toSet());
+        return new Society(new SocietyId(entity.id), entity.name, location, available, enabled);
+    }
+
+    /** Replaces the stored add-on rows with the society's: one per available add-on, saying whether it is on. */
+    static void copyAddOns(Society society, SocietyJpaEntity entity) {
+        entity.addOns.clear();
+        society.availableAddOns().forEach(addOn ->
+                entity.addOns.add(new SocietyJpaEntity.AddOnRow(addOn.name(), society.isOn(addOn))));
     }
 
     static Tower toDomain(TowerJpaEntity entity) {

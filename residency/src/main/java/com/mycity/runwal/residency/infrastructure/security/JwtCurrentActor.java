@@ -40,7 +40,7 @@ class JwtCurrentActor implements CurrentActor {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
         return new Actor(new UserId(Long.parseLong(jwt.getSubject())), "ACTIVE".equals(jwt.getClaimAsString("status")),
-                actorRoles);
+                actorRoles, Boolean.TRUE.equals(jwt.getClaimAsBoolean("platformOwner")));
     }
 
     /** "TOWER_ADMIN:1:7" -> tower admin of tower 7 in society 1; unknown roles are ignored. */

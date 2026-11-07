@@ -8,13 +8,15 @@ import java.util.List;
  *
  * @param name  null until the user registers
  * @param claim the flat the user registered for, or null
+ * @param platformOwner runs the platform: decides which add-ons each society may use
  */
 public record UserView(long id, String phone, String name, String status, List<RoleView> roles, FlatClaimView claim,
-                       String rejectionReason) {
+                       String rejectionReason, boolean platformOwner) {
 
     public static UserView of(AppUser user) {
         return new UserView(user.id().value(), user.phone().value(), user.name().orElse(null), user.status().name(),
                 user.roles().stream().map(RoleView::of).toList(),
-                user.claim().map(FlatClaimView::of).orElse(null), user.rejectionReason().orElse(null));
+                user.claim().map(FlatClaimView::of).orElse(null), user.rejectionReason().orElse(null),
+                user.isPlatformOwner());
     }
 }

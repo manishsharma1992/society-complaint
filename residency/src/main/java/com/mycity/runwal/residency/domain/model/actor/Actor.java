@@ -12,13 +12,24 @@ import java.util.Set;
  * is active, and what part they play in which society (translated from the login token).
  *
  * @param active false while a self sign-up is not yet approved
+ * @param platformOwner runs the platform itself: decides which add-ons a society may use
  */
 @ValueObject
-public record Actor(UserId userId, boolean active, Set<ActorRole> roles) {
+public record Actor(UserId userId, boolean active, Set<ActorRole> roles, boolean platformOwner) {
 
     public Actor {
         Objects.requireNonNull(userId, "userId");
         roles = Set.copyOf(roles);
+    }
+
+    /** Someone who does not run the platform (nearly everyone). */
+    public Actor(UserId userId, boolean active, Set<ActorRole> roles) {
+        this(userId, active, roles, false);
+    }
+
+    /** The society admin of this society. */
+    public boolean isSocietyAdminOf(SocietyId societyId) {
+        return has(ActorRole.Part.SOCIETY_ADMIN, societyId);
     }
 
     public boolean is(UserId user) {

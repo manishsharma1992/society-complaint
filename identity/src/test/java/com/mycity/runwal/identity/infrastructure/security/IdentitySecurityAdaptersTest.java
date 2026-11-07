@@ -47,6 +47,20 @@ class IdentitySecurityAdaptersTest {
     }
 
     @Test
+    void tokenSaysWhetherTheUserRunsThePlatform() {
+        Instant now = Instant.now().truncatedTo(ChronoUnit.SECONDS);
+        AppUser owner = new AppUser(new UserId(1), PHONE, now, "Owner", UserStatus.ACTIVE, null, null,
+                List.of(RoleAssignment.societyWide(Role.SOCIETY_ADMIN, new SocietyId(1))), true);
+        AppUser resident = new AppUser(new UserId(4), PHONE, now, "Resident", UserStatus.ACTIVE, null, null, List.of());
+        JwtAccessTokenIssuer issuer = new JwtAccessTokenIssuer(KEY);
+
+        assertThat(NimbusJwtDecoder.withSecretKey(KEY).build().decode(issuer.issue(owner, now, now.plusSeconds(60)))
+                .getClaimAsBoolean("platformOwner")).isTrue();
+        assertThat(NimbusJwtDecoder.withSecretKey(KEY).build().decode(issuer.issue(resident, now, now.plusSeconds(60)))
+                .getClaimAsBoolean("platformOwner")).isFalse();
+    }
+
+    @Test
     void tokenSignedWithAnotherKeyIsRefused() {
         SecretKey other = new SecretKeySpec("another-key-another-key-another-k".getBytes(StandardCharsets.UTF_8),
                 "HmacSHA256");

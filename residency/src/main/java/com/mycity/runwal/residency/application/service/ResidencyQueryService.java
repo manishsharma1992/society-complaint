@@ -4,7 +4,9 @@ import com.mycity.runwal.residency.application.port.CurrentActor;
 import com.mycity.runwal.residency.application.query.FlatView;
 import com.mycity.runwal.residency.application.query.FlatsOfMemberQuery;
 import com.mycity.runwal.residency.application.query.GetFlatQuery;
+import com.mycity.runwal.residency.application.query.AddOnOnQuery;
 import com.mycity.runwal.residency.application.query.GetSocietyQuery;
+import com.mycity.runwal.residency.application.query.NearbySocietiesQuery;
 import com.mycity.runwal.residency.application.query.ListFlatsQuery;
 import com.mycity.runwal.residency.application.query.ListTowersQuery;
 import com.mycity.runwal.residency.application.query.SocietyView;
@@ -12,6 +14,7 @@ import com.mycity.runwal.residency.application.query.TowerView;
 import com.mycity.runwal.residency.domain.model.actor.Actor;
 import com.mycity.runwal.residency.domain.model.flat.Flat;
 import com.mycity.runwal.residency.domain.model.flat.FlatRepository;
+import com.mycity.runwal.residency.domain.model.society.AddOn;
 import com.mycity.runwal.residency.domain.model.society.SocietyRepository;
 import com.mycity.runwal.residency.domain.model.tower.Tower;
 import com.mycity.runwal.residency.domain.model.tower.TowerRepository;
@@ -50,6 +53,25 @@ public class ResidencyQueryService {
     @Transactional(readOnly = true)
     public Optional<SocietyView> society(GetSocietyQuery query) {
         return societies.findById(new SocietyId(query.societyId())).map(SocietyView::of);
+    }
+
+    /** For other contexts, before they do anything for a society; false for an unknown society. */
+    @Transactional(readOnly = true)
+    public boolean addOnOn(AddOnOnQuery query) {
+        AddOn addOn = AddOn.from(query.addOn());
+        return societies.findById(new SocietyId(query.societyId())).map(s -> s.isOn(addOn)).orElse(false);
+    }
+
+    /** For the feed: neighbours (itself included) that use the add-on; empty for an unknown society. */
+    @Transactional(readOnly = true)
+    public List<SocietyView> nearby(NearbySocietiesQuery query) {
+        AddOn addOn = AddOn.from(query.addOn());
+        return societies.findById(new SocietyId(query.societyId()))
+                .map(home -> societies.findAll().stream()
+                        .filter(other -> other.isOn(addOn) && home.isNear(other, query.meters()))
+                        .map(SocietyView::of)
+                        .toList())
+                .orElse(List.of());
     }
 
     @Transactional(readOnly = true)

@@ -17,6 +17,7 @@ import com.mycity.runwal.residency.application.query.GetFlatQuery;
 import com.mycity.runwal.residency.application.query.GetSocietyQuery;
 import com.mycity.runwal.residency.application.query.ListFlatsQuery;
 import com.mycity.runwal.residency.application.query.ListTowersQuery;
+import com.mycity.runwal.residency.application.query.AddOnView;
 import com.mycity.runwal.residency.application.query.SocietyView;
 import com.mycity.runwal.residency.application.query.TowerView;
 import com.mycity.runwal.residency.application.service.ActionNotAllowedException;
@@ -51,7 +52,8 @@ class ResidencyControllersTest {
 
     @Test
     void societyAndTowersUnderTheResidencyPrefix() throws Exception {
-        given(queryService.society(new GetSocietyQuery(1))).willReturn(Optional.of(new SocietyView(1, "Runwal MyCity")));
+        given(queryService.society(new GetSocietyQuery(1))).willReturn(Optional.of(new SocietyView(1, "Runwal MyCity",
+                19.186062, 73.074812, List.of(new AddOnView("FEED", true, true), new AddOnView("COMPLAINTS", true, false)))));
         given(queryService.towers(new ListTowersQuery(1))).willReturn(List.of(new TowerView(7, "B2", "Radiant", 27)));
 
         mockMvc.perform(get("/residency/societies/1"))

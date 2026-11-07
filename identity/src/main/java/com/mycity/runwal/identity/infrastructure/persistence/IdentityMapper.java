@@ -22,7 +22,7 @@ final class IdentityMapper {
                 new FlatId(entity.claimFlatId), entity.claimOccupancy);
         return new AppUser(new UserId(entity.id), new PhoneNumber(entity.phone), entity.createdAt, entity.name,
                 entity.status, claim, entity.rejectionReason,
-                entity.roles.stream().map(IdentityMapper::toRole).toList());
+                entity.roles.stream().map(IdentityMapper::toRole).toList(), entity.platformOwner);
     }
 
     static AppUserJpaEntity toNewEntity(AppUser user) {

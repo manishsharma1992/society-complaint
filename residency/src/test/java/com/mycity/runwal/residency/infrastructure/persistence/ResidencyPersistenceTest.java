@@ -6,6 +6,8 @@ import com.mycity.runwal.residency.domain.model.flat.Flat;
 import com.mycity.runwal.residency.domain.model.flat.FlatRepository;
 import com.mycity.runwal.residency.domain.model.flat.MembershipSnapshot;
 import com.mycity.runwal.residency.domain.model.flat.MembershipType;
+import com.mycity.runwal.residency.domain.model.society.AddOn;
+import com.mycity.runwal.residency.domain.model.society.Society;
 import com.mycity.runwal.residency.domain.model.society.SocietyRepository;
 import com.mycity.runwal.residency.domain.model.tower.Tower;
 import com.mycity.runwal.residency.domain.model.tower.TowerRepository;
@@ -79,6 +81,23 @@ class ResidencyPersistenceTest {
         // demo resident (identity user 4) owns B2-503
         assertThat(flats.findByMember(RUNWAL, new UserId(4)))
                 .extracting(f -> f.number().label(radiant.code())).containsExactly("B2-503");
+    }
+
+    @Test
+    void runwalMyCityHasItsLocationAndBothAddOnsAndAddOnChangesAreStored() {
+        Society runwal = societies.findById(new SocietyId(1)).orElseThrow();
+        assertThat(runwal.location()).hasValueSatisfying(l -> assertThat(l.latitude()).isEqualTo(19.186062));
+        assertThat(runwal.enabledAddOns()).containsExactlyInAnyOrder(AddOn.FEED, AddOn.COMPLAINTS);
+
+        runwal.switchOff(AddOn.FEED);
+        runwal.withdraw(AddOn.COMPLAINTS);
+        societies.save(runwal);
+        flushAndClear();
+
+        Society loaded = societies.findById(new SocietyId(1)).orElseThrow();
+        assertThat(loaded.availableAddOns()).containsExactly(AddOn.FEED);
+        assertThat(loaded.enabledAddOns()).isEmpty();
+        assertThat(societies.findAll()).extracting(Society::id).contains(new SocietyId(1));
     }
 
     @Test
