@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.mycity.runwal.feed.application.port.FeedAddOn;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import javax.crypto.SecretKey;
@@ -21,6 +22,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,15 +37,27 @@ class WebSecurityConfigTest {
     @Autowired
     private MockMvc mockMvc;
 
+    /** Each context's web config asks its add-on port; the integration adapters behind them are not in this slice. */
+    @MockitoBean
+    private com.mycity.runwal.complaint.application.port.ComplaintsAddOn complaintsAddOn;
+
+    @MockitoBean
+    private com.mycity.runwal.workforce.application.port.ComplaintsAddOn workforceAddOn;
+
+    @MockitoBean
+    private FeedAddOn feedAddOn;
+
     @Test
     void loginEndpointsArePublic() throws Exception {
         mockMvc.perform(get("/identity/login/probe")).andExpect(status().isOk());
     }
 
     @Test
-    void publicFeedReadsAndSharePagesArePublic() throws Exception {
-        mockMvc.perform(get("/feed/public/probe")).andExpect(status().isOk());
-        mockMvc.perform(get("/feed/share/probe")).andExpect(status().isOk());
+    void theFeedNeedsALoginUntilTheLegalPagesArePublished() throws Exception {
+        mockMvc.perform(get("/feed/public/probe")).andExpect(status().isUnauthorized());
+        mockMvc.perform(get("/feed/share/probe")).andExpect(status().isUnauthorized());
+        mockMvc.perform(get("/feed/public/probe").header("Authorization", "Bearer " + token(KEY, Instant.now().plusSeconds(60))))
+                .andExpect(status().isOk());
     }
 
     @Test
