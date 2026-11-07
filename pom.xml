@@ -14,6 +14,7 @@
     <module>residency</module>
     <module>identity</module>
     <module>feed</module>
+    <module>workforce</module>
     <module>app</module>
   </modules>
 
@@ -76,6 +77,11 @@
       <dependency>
         <groupId>com.mycity.runwal</groupId>
         <artifactId>feed</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.mycity.runwal</groupId>
+        <artifactId>workforce</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

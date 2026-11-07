@@ -10,6 +10,7 @@ import com.mycity.runwal.shared.id.SocietyId;
 import com.mycity.runwal.shared.id.TowerId;
 import com.mycity.runwal.shared.id.UserId;
 import jakarta.persistence.EntityManager;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -49,6 +50,16 @@ class ComplaintRepositoryAdapter implements ComplaintRepository {
                                          UserId assignedTo, int page, int size) {
         return jpaRepository.search(societyId.value(), status, towerId == null ? null : towerId.value(),
                         assignedTo == null ? null : assignedTo.value(), PageRequest.of(page, size))
+                .stream()
+                .map(ComplaintMapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Complaint> findAssignedRaisedBetween(SocietyId societyId, TowerId towerId, Instant from, Instant to,
+                                                     int page, int size) {
+        return jpaRepository.searchAssignedRaisedBetween(societyId.value(), towerId == null ? null : towerId.value(),
+                        from, to, PageRequest.of(page, size))
                 .stream()
                 .map(ComplaintMapper::toDomain)
                 .toList();

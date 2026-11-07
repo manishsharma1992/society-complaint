@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 import { signedIn, signedOut } from './core/guards';
-import { Roles, adminOnly, notActive, societyAdminOnly, staffOnly } from './core/roles';
+import { Roles, adminOnly, adminOrStaff, notActive, societyAdminOnly, staffOnly } from './core/roles';
 
 export const routes: Routes = [
   { path: 'login', canActivate: [signedOut], loadComponent: () => import('./features/login/login.page') },
@@ -17,6 +17,7 @@ export const routes: Routes = [
       { path: 'complaints/:id', loadComponent: () => import('./features/complaint/complaint.page') },
       { path: 'jobs', canActivate: [staffOnly], data: { queue: 'jobs' }, loadComponent: () => import('./features/queue/queue.page') },
       { path: 'assign', canActivate: [adminOnly], data: { queue: 'assign' }, loadComponent: () => import('./features/queue/queue.page') },
+      { path: 'staff', canActivate: [adminOrStaff], loadComponent: () => import('./features/staff-report/staff-report.page') },
       { path: 'signups', canActivate: [societyAdminOnly], loadComponent: () => import('./features/signups/signups.page') },
       { path: 'profile', loadComponent: () => import('./features/profile/profile.page') },
     ],

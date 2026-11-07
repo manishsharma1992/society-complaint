@@ -37,6 +37,11 @@ public record Actor(UserId userId, boolean active, Set<ActorRole> roles) {
                 || has(ActorRole.Part.STAFF, societyId);
     }
 
+    /** Maintenance staff of the society (not an admin). */
+    public boolean isStaffIn(SocietyId societyId) {
+        return has(ActorRole.Part.STAFF, societyId);
+    }
+
     public boolean belongsTo(SocietyId societyId) {
         return roles.stream().anyMatch(role -> role.societyId().equals(societyId));
     }

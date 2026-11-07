@@ -2,6 +2,7 @@ package com.mycity.runwal.complaint.infrastructure.persistence;
 
 import com.mycity.runwal.complaint.domain.model.complaint.ComplaintScope;
 import com.mycity.runwal.complaint.domain.model.complaint.ComplaintStatus;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +44,19 @@ interface ComplaintJpaRepository extends JpaRepository<ComplaintJpaEntity, Long>
                                              @Param("commonArea") ComplaintScope commonArea,
                                              @Param("flatIds") Collection<Long> flatIds,
                                              Pageable pageable);
+
+    @Query("""
+            select c from ComplaintJpaEntity c
+            where c.societyId = :societyId
+              and c.assignedTo is not null
+              and (:towerId is null or c.towerId = :towerId)
+              and c.raisedAt >= :from and c.raisedAt < :to
+            order by c.raisedAt desc, c.id desc""")
+    List<ComplaintJpaEntity> searchAssignedRaisedBetween(@Param("societyId") long societyId,
+                                                         @Param("towerId") Long towerId,
+                                                         @Param("from") Instant from,
+                                                         @Param("to") Instant to,
+                                                         Pageable pageable);
 
     @Query(value = "select nextval('complaint.complaint_id_seq')", nativeQuery = true)
     long nextId();

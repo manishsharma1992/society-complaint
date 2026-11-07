@@ -105,6 +105,7 @@ society-complaint/            parent pom (packaging pom), dependency + plugin ma
 ├── identity/                 Identity & Access context: app users (phone + name only), phone + OTP login, self sign-up
 │                             with society approval, scoped roles, JWT login tokens (library jar)
 ├── feed/                     Public Feed context: anonymous, moderated evidence posts (library jar)
+├── workforce/                Workforce context: maintenance staff shifts, clock in / clock out (library jar)
 ├── notification-service/     (later) Push / WhatsApp / SMS
 └── frontend/                 Angular web app, served by Nginx from /var/www/society-complaint
 ```
@@ -119,6 +120,7 @@ All modules above exist except `notification-service`. Add a new module only whe
 | Residency | `residency` | Supporting | Society, Tower, Flat, flat membership |
 | Identity & Access | `identity` | Generic | App users, OTP, scoped roles |
 | Public Feed | `feed` | Supporting | Posts, media evidence, moderation, reports, takedowns |
+| Workforce | `workforce` | Supporting | Staff shifts (clock in / clock out), hours on duty |
 | Notification | `notification-service` | Generic | Outgoing messages |
 
 - Each context has its own model and its own **ubiquitous language** (Evans ch. 2). The same word may mean different things in different contexts; never share entity classes across contexts.
@@ -127,7 +129,7 @@ All modules above exist except `notification-service`. Add a new module only whe
 - Asynchronous integration uses domain events. Later, when needed, publish them reliably with a transactional outbox table per service.
 
 ## Database per service
-- One Neon database, **one Postgres schema per service** (`complaint`, `residency`, `identity`, `feed`, `notification`), each with its own DB role. A service never reads or writes another service's schema.
+- One Neon database, **one Postgres schema per service** (`complaint`, `residency`, `identity`, `feed`, `workforce`, `notification`), each with its own DB role. A service never reads or writes another service's schema.
 - No foreign keys or joins across schemas. Cross-context references are plain ID columns.
 - Each service owns its migrations with Flyway (`src/main/resources/db/migration/<schema>`), run by its own `Flyway`
   bean (`<Context>SchemaConfig` in `infrastructure.persistence`); JPA entities name their schema in `@Table(schema = ...)`.
@@ -298,6 +300,10 @@ After writing the rules, verify the messages: add one deliberate violation, run 
 - Photos go to object storage, never in the DB; only the object key is stored. At most 5 per complaint, JPEG/PNG/WebP,
   at most 5 MB each (the Angular app resizes and re-encodes them, which also strips EXIF GPS data).
 - Residents' personal data: collect only what's needed (India DPDP Act).
+- Staff report (`core`, `GET /complaint/societies/{id}/reports/staff`): per staff member, complaints raised in the
+  period and assigned to them (counts, median time to start and to fix, share fixed within SLA) plus their current
+  backlog. Society admin sees everyone, a tower admin only their tower, staff only themselves. The Angular screen
+  joins it with shift hours from `workforce`; no cross-context call on the server. A shift counts for at most 16 h.
 
 ## Public Feed (`feed` context)
 

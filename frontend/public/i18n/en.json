@@ -35,7 +35,8 @@
     "profile": "Profile",
     "assign": "To assign",
     "jobs": "Jobs",
-    "signups": "Sign-ups"
+    "signups": "Sign-ups",
+    "staff": "Staff"
   },
   "home": {
     "title": "Complaints",
@@ -236,5 +237,62 @@
     "errorFlats": "Could not load the flats of this tower. Try again.",
     "errorGeneric": "Could not send. Check your connection and try again.",
     "errorRefused": "This request could not be accepted. Check the flat and try again."
+  },
+  "shift": {
+    "title": "My shift",
+    "loading": "Checking your shift…",
+    "on": "On shift",
+    "off": "Off shift",
+    "since": "Since {{time}}",
+    "offHint": "Start your shift when you begin work.",
+    "start": "Start shift",
+    "end": "End shift",
+    "failed": "That did not work. Check your connection and try again.",
+    "myReport": "My performance"
+  },
+  "report": {
+    "title": "Staff report",
+    "myTitle": "My performance",
+    "lead": "Complaints raised in the period and assigned to each staff member, how fast they were fixed, and hours on shift.",
+    "period": "Period",
+    "from": "From",
+    "to": "To",
+    "tower": "Tower",
+    "allTowers": "All towers",
+    "sortBy": "Sort by",
+    "preset": {
+      "thisMonth": "This month",
+      "lastMonth": "Last month",
+      "thisYear": "This year",
+      "lastYear": "Last year",
+      "custom": "Choose dates"
+    },
+    "needsDates": "Choose a start and an end date.",
+    "failed": "The report could not be loaded.",
+    "retry": "Try again",
+    "onDuty": "On duty now",
+    "onDutyNow": "On duty now",
+    "nobodyOnDuty": "Nobody is on shift right now.",
+    "since": "since {{time}}",
+    "emptyTitle": "No staff to show",
+    "emptyBody": "Staff appear here once they have the staff role.",
+    "col": {
+      "name": "Name",
+      "assigned": "Assigned",
+      "resolved": "Resolved",
+      "sla": "On time",
+      "toStart": "Time to start",
+      "toResolve": "Time to fix",
+      "open": "Open now",
+      "overdue": "Overdue now",
+      "hours": "Shift hours",
+      "perShift": "Fixed per 8 h"
+    },
+    "unit": {
+      "d": "{{n}} d",
+      "h": "{{n}} h",
+      "min": "{{n}} min"
+    },
+    "footnote": "Times are medians from assignment. \"On time\" is the share of fixed complaints resolved within their SLA. Shift hours cover the whole society; a shift counts for at most 16 hours."
   }
 }

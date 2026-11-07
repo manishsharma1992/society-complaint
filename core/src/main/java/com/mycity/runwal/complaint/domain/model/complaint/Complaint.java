@@ -271,4 +271,22 @@ public class Complaint extends AbstractAggregateRoot {
     public List<StatusChangeSnapshot> history() {
         return history.stream().map(StatusChange::snapshot).toList();
     }
+
+    /** When the complaint first reached this status, if it did. */
+    public Optional<Instant> reachedAt(ComplaintStatus target) {
+        return history.stream().map(StatusChange::snapshot)
+                .filter(change -> change.to() == target)
+                .map(StatusChangeSnapshot::changedAt)
+                .findFirst();
+    }
+
+    /** Resolved no later than it was due (the SLA was met); false while unresolved. */
+    public boolean resolvedWithinSla() {
+        return reachedAt(ComplaintStatus.RESOLVED).map(resolved -> !resolved.isAfter(dueAt)).orElse(false);
+    }
+
+    /** Still waiting for work (assigned or in progress) after it was due. */
+    public boolean isOverdue(Instant now) {
+        return (status == ComplaintStatus.ASSIGNED || status == ComplaintStatus.IN_PROGRESS) && now.isAfter(dueAt);
+    }
 }

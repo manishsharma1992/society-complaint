@@ -5,6 +5,7 @@ import com.mycity.runwal.shared.id.FlatId;
 import com.mycity.runwal.shared.id.SocietyId;
 import com.mycity.runwal.shared.id.TowerId;
 import com.mycity.runwal.shared.id.UserId;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -27,6 +28,14 @@ public interface ComplaintRepository {
      */
     List<Complaint> findBySociety(SocietyId societyId, ComplaintStatus status, TowerId towerId, UserId assignedTo,
                                   int page, int size);
+
+    /**
+     * Complaints raised in [from, to) that were assigned to a staff member, newest first (for the staff report).
+     *
+     * @param towerId only complaints in this tower, or {@code null} for any tower
+     */
+    List<Complaint> findAssignedRaisedBetween(SocietyId societyId, TowerId towerId, Instant from, Instant to,
+                                              int page, int size);
 
     /**
      * What a resident may see, newest first: complaints they raised, complaints about their flats and all

@@ -20,6 +20,20 @@ interface UploadTicket {
   headers: Record<string, string>;
 }
 
+/** One staff member's row of the staff report (complaints raised in the period and assigned to them). */
+export interface StaffPerformance {
+  staffId: number;
+  assigned: number;
+  started: number;
+  resolved: number;
+  rejected: number;
+  medianMinutesToStart: number | null;
+  medianMinutesToResolve: number | null;
+  resolvedWithinSla: number;
+  openNow: number;
+  overdueNow: number;
+}
+
 const BASE = `${API}/complaint/societies/${SOCIETY_ID}`;
 
 @Injectable({ providedIn: 'root' })
@@ -45,6 +59,13 @@ export class ComplaintsApi {
 
   reject(id: number, reason: string): Observable<Complaint> {
     return this.http.post<Complaint>(`${BASE}/complaints/${id}/reject`, { reason });
+  }
+
+  /** Admins see every staff member (a tower admin only for their tower); staff see only themselves. */
+  staffReport(from: string, to: string, towerId: number | null): Observable<StaffPerformance[]> {
+    const params: Record<string, string | number> = { from, to };
+    if (towerId !== null) params['towerId'] = towerId;
+    return this.http.get<StaffPerformance[]>(`${BASE}/reports/staff`, { params });
   }
 
   get(id: number): Observable<Complaint> {

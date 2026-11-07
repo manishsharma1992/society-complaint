@@ -6,6 +6,7 @@ import { Complaint } from '../../core/models';
 import { Roles } from '../../core/roles';
 import { SessionStore } from '../../core/session';
 import { ComplaintList, ListState } from '../../shared/complaint-list';
+import { ShiftCard } from '../../shared/shift-card';
 
 /** jobs: a staff member's assigned and started work. assign: open complaints waiting for an admin. */
 export type Queue = 'jobs' | 'assign';
@@ -13,7 +14,7 @@ export type Queue = 'jobs' | 'assign';
 /** A work queue, most urgent (earliest due) first. */
 @Component({
   selector: 'app-queue-page',
-  imports: [TranslocoDirective, ComplaintList],
+  imports: [TranslocoDirective, ComplaintList, ShiftCard],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ng-container *transloco="let t">
@@ -21,6 +22,9 @@ export type Queue = 'jobs' | 'assign';
         <h1>{{ t('queue.' + queue() + '.title') }}</h1>
         <p class="lead">{{ t('queue.' + queue() + '.lead') }}</p>
       </div>
+      @if (queue() === 'jobs') {
+        <app-shift-card />
+      }
       <app-complaint-list [complaints]="complaints()" [state]="state()" (retry)="load()">
         <div class="empty">
           <h2>{{ t('queue.' + queue() + '.emptyTitle') }}</h2>

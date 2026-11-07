@@ -7,6 +7,7 @@ import com.mycity.runwal.complaint.domain.model.complaint.ComplaintScope;
 import com.mycity.runwal.shared.ddd.annotation.DomainService;
 import com.mycity.runwal.shared.id.FlatId;
 import com.mycity.runwal.shared.id.SocietyId;
+import com.mycity.runwal.shared.id.TowerId;
 import java.util.Set;
 
 /**
@@ -66,6 +67,19 @@ public class ComplaintAccessPolicy {
     public boolean mayAddPhoto(Actor actor, Complaint complaint) {
         return actor.active() && (actor.is(complaint.raisedBy())
                 || complaint.assignedTo().map(actor::is).orElse(false) || manages(actor, complaint));
+    }
+
+    /**
+     * Everyone's performance in the staff report: the society admin for any tower or all towers, a tower admin
+     * only for their own tower ({@code towerId} must be given).
+     */
+    public boolean maySeeStaffReport(Actor actor, SocietyId societyId, TowerId towerId) {
+        return actor.active() && actor.manages(societyId, towerId);
+    }
+
+    /** Staff see their own row of the staff report (and nobody else's). */
+    public boolean maySeeOwnStaffReport(Actor actor, SocietyId societyId) {
+        return actor.active() && actor.isStaffIn(societyId);
     }
 
     private static boolean manages(Actor actor, Complaint complaint) {

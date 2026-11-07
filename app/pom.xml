@@ -28,6 +28,10 @@
       <groupId>com.mycity.runwal</groupId>
       <artifactId>feed</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.mycity.runwal</groupId>
+      <artifactId>workforce</artifactId>
+    </dependency>
     <!-- checks the login token on every request -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

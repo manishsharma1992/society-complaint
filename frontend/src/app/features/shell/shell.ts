@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideInbox, lucideListChecks, lucideUserRound, lucideUserRoundCheck, lucideWrench } from '@ng-icons/lucide';
+import { lucideChartColumn, lucideInbox, lucideListChecks, lucideUserRound, lucideUserRoundCheck, lucideWrench } from '@ng-icons/lucide';
 import { Roles } from '../../core/roles';
 import { SessionStore } from '../../core/session';
 import { LanguageSwitch } from '../../shared/language-switch';
@@ -14,7 +14,7 @@ import { LanguageSwitch } from '../../shared/language-switch';
 @Component({
   selector: 'app-shell',
   imports: [RouterOutlet, RouterLink, RouterLinkActive, TranslocoDirective, NgIcon, LanguageSwitch],
-  providers: [provideIcons({ lucideInbox, lucideListChecks, lucideUserRound, lucideUserRoundCheck, lucideWrench })],
+  providers: [provideIcons({ lucideChartColumn, lucideInbox, lucideListChecks, lucideUserRound, lucideUserRoundCheck, lucideWrench })],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="shell" *transloco="let t">
@@ -134,12 +134,16 @@ export default class Shell {
     inject(SessionStore).renew().subscribe({ error: () => {} });
   }
 
-  /** Each person's own work comes first (five tabs at most, for someone who is both admin and staff). */
+  /**
+   * Each person's own work comes first (five tabs at most). Admins get the staff report as a tab; staff open their
+   * own numbers from their jobs screen, which also keeps an admin who is also staff at five tabs.
+   */
   protected readonly tabs = computed(() => [
     ...(this.roles.isAdmin() ? [{ path: '/assign', label: 'nav.assign', icon: 'lucideInbox' }] : []),
     ...(this.roles.isStaff() ? [{ path: '/jobs', label: 'nav.jobs', icon: 'lucideWrench' }] : []),
     { path: '/complaints', label: 'nav.complaints', icon: 'lucideListChecks' },
     ...(this.roles.isSocietyAdmin() ? [{ path: '/signups', label: 'nav.signups', icon: 'lucideUserRoundCheck' }] : []),
+    ...(this.roles.isAdmin() && !this.roles.isStaff() ? [{ path: '/staff', label: 'nav.staff', icon: 'lucideChartColumn' }] : []),
     { path: '/profile', label: 'nav.profile', icon: 'lucideUserRound' },
   ]);
 }

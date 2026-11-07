@@ -1,0 +1,164 @@
+<ng-container *transloco="let t">
+  <div class="head">
+    <h1>{{ t(seesEveryone() ? 'report.title' : 'report.myTitle') }}</h1>
+    <p class="lead">{{ t('report.lead') }}</p>
+  </div>
+
+  <form class="filters" (submit)="$event.preventDefault()">
+    <label class="field">
+      <span>{{ t('report.period') }}</span>
+      <select [value]="preset()" (change)="preset.set($any($event.target).value)">
+        @for (p of presets; track p) {
+          <option [value]="p">{{ t('report.preset.' + p) }}</option>
+        }
+      </select>
+    </label>
+    @if (preset() === 'custom') {
+      <label class="field">
+        <span>{{ t('report.from') }}</span>
+        <input type="date" [value]="customFrom()" (change)="customFrom.set($any($event.target).value)" />
+      </label>
+      <label class="field">
+        <span>{{ t('report.to') }}</span>
+        <input type="date" [value]="customTo()" (change)="customTo.set($any($event.target).value)" />
+      </label>
+    }
+    @if (seesEveryone()) {
+      <label class="field">
+        <span>{{ t('report.tower') }}</span>
+        <select [value]="towerId() ?? ''" (change)="onTower($any($event.target).value)">
+          @if (roles.isSocietyAdmin()) {
+            <option value="">{{ t('report.allTowers') }}</option>
+          }
+          @for (tower of towerChoices(); track tower.id) {
+            <option [value]="tower.id" [selected]="tower.id === towerId()">{{ tower.code }} · {{ tower.name }}</option>
+          }
+        </select>
+      </label>
+    }
+    <label class="field sort-field">
+      <span>{{ t('report.sortBy') }}</span>
+      <select [value]="sortKey()" (change)="sortBy($any($event.target).value)">
+        @for (key of sortKeys; track key) {
+          <option [value]="key">{{ t('report.col.' + key) }}</option>
+        }
+      </select>
+    </label>
+  </form>
+
+  @switch (state()) {
+    @case ('needsDates') {
+      <p class="notice">{{ t('report.needsDates') }}</p>
+    }
+    @case ('loading') {
+      <div class="kpis" aria-busy="true">
+        @for (i of [1, 2, 3, 4, 5]; track i) {
+          <div class="kpi stock skeleton" aria-hidden="true"></div>
+        }
+      </div>
+    }
+    @case ('error') {
+      <div class="notice" role="alert">
+        <p>{{ t('report.failed') }}</p>
+        <button hlmBtn variant="outline" size="lg" type="button" (click)="load()">{{ t('report.retry') }}</button>
+      </div>
+    }
+    @case ('ready') {
+      @if (seesEveryone()) {
+        <section class="on-duty" [attr.aria-label]="t('report.onDuty')">
+          <h2>{{ t('report.onDuty') }} <span class="num count">{{ onDuty().length }}</span></h2>
+          @if (onDuty().length === 0) {
+            <p class="muted">{{ t('report.nobodyOnDuty') }}</p>
+          } @else {
+            <ul>
+              @for (shift of onDuty(); track shift.id) {
+                <li><span class="dot on" aria-hidden="true"></span>{{ nameOf(shift) }} <span class="muted">{{ t('report.since', { time: since(shift.startedAt) }) }}</span></li>
+              }
+            </ul>
+          }
+        </section>
+      }
+
+      <div class="kpis">
+        <div class="kpi stock"><span class="label">{{ t('report.col.assigned') }}</span><span class="value num">{{ totals().assigned }}</span></div>
+        <div class="kpi stock"><span class="label">{{ t('report.col.resolved') }}</span><span class="value num">{{ totals().resolved }}</span></div>
+        <div class="kpi stock"><span class="label">{{ t('report.col.sla') }}</span><span class="value num">{{ percent(totals().sla) }}</span></div>
+        <div class="kpi stock"><span class="label">{{ t('report.col.overdue') }}</span><span class="value num" [class.alert]="totals().overdue > 0">{{ totals().overdue }}</span></div>
+        <div class="kpi stock"><span class="label">{{ t('report.col.hours') }}</span><span class="value num">{{ hours(totals().minutesWorked) }}</span></div>
+      </div>
+
+      @if (rows().length === 0) {
+        <div class="notice">
+          <h2>{{ t('report.emptyTitle') }}</h2>
+          <p>{{ t('report.emptyBody') }}</p>
+        </div>
+      } @else {
+        <!-- phones and tablets: one card per staff member -->
+        <ul class="cards">
+          @for (row of sorted(); track row.staffId) {
+            <li class="card stock">
+              <div class="who">
+                <span class="dot" [class.on]="row.onDuty" [attr.aria-label]="row.onDuty ? t('report.onDutyNow') : null"></span>
+                <h3>{{ nameOf(row) }}</h3>
+              </div>
+              <dl>
+                <div><dt>{{ t('report.col.assigned') }}</dt><dd class="num">{{ row.perf.assigned }}</dd></div>
+                <div><dt>{{ t('report.col.resolved') }}</dt><dd class="num">{{ row.perf.resolved }}</dd></div>
+                <div><dt>{{ t('report.col.sla') }}</dt><dd class="num">{{ percent(slaOf(row)) }}</dd></div>
+                <div><dt>{{ t('report.col.toStart') }}</dt><dd class="num">{{ duration(row.perf.medianMinutesToStart) }}</dd></div>
+                <div><dt>{{ t('report.col.toResolve') }}</dt><dd class="num">{{ duration(row.perf.medianMinutesToResolve) }}</dd></div>
+                <div><dt>{{ t('report.col.open') }}</dt><dd class="num">{{ row.perf.openNow }}</dd></div>
+                <div><dt>{{ t('report.col.overdue') }}</dt><dd class="num" [class.alert]="row.perf.overdueNow > 0">{{ row.perf.overdueNow }}</dd></div>
+                <div><dt>{{ t('report.col.hours') }}</dt><dd class="num">{{ hours(row.minutesWorked) }}</dd></div>
+                @if (showsPerShift()) {
+                  <div><dt>{{ t('report.col.perShift') }}</dt><dd class="num">{{ perShift(row) }}</dd></div>
+                }
+              </dl>
+            </li>
+          }
+        </ul>
+
+        <!-- monitors: a sortable table -->
+        <div class="table-wrap">
+          <table class="ruled-table">
+            <caption class="sr-only">{{ t('report.title') }}</caption>
+            <thead>
+              <tr>
+                @for (key of ['name', 'assigned', 'resolved', 'sla']; track key) {
+                  <th scope="col" [attr.aria-sort]="ariaSort($any(key))"><button type="button" (click)="sortBy($any(key))">{{ t('report.col.' + key) }}</button></th>
+                }
+                <th scope="col">{{ t('report.col.toStart') }}</th>
+                <th scope="col" [attr.aria-sort]="ariaSort('toResolve')"><button type="button" (click)="sortBy('toResolve')">{{ t('report.col.toResolve') }}</button></th>
+                <th scope="col">{{ t('report.col.open') }}</th>
+                <th scope="col" [attr.aria-sort]="ariaSort('overdue')"><button type="button" (click)="sortBy('overdue')">{{ t('report.col.overdue') }}</button></th>
+                <th scope="col" [attr.aria-sort]="ariaSort('hours')"><button type="button" (click)="sortBy('hours')">{{ t('report.col.hours') }}</button></th>
+                @if (showsPerShift()) {
+                  <th scope="col">{{ t('report.col.perShift') }}</th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of sorted(); track row.staffId) {
+                <tr>
+                  <th scope="row"><span class="dot" [class.on]="row.onDuty" [attr.aria-label]="row.onDuty ? t('report.onDutyNow') : null"></span>{{ nameOf(row) }}</th>
+                  <td class="num">{{ row.perf.assigned }}</td>
+                  <td class="num">{{ row.perf.resolved }}</td>
+                  <td class="num">{{ percent(slaOf(row)) }}</td>
+                  <td class="num">{{ duration(row.perf.medianMinutesToStart) }}</td>
+                  <td class="num">{{ duration(row.perf.medianMinutesToResolve) }}</td>
+                  <td class="num">{{ row.perf.openNow }}</td>
+                  <td class="num" [class.alert]="row.perf.overdueNow > 0">{{ row.perf.overdueNow }}</td>
+                  <td class="num">{{ hours(row.minutesWorked) }}</td>
+                  @if (showsPerShift()) {
+                    <td class="num">{{ perShift(row) }}</td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+      <p class="footnote">{{ t('report.footnote') }}</p>
+    }
+  }
+</ng-container>

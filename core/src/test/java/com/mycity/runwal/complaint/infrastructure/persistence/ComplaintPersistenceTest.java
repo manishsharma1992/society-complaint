@@ -142,6 +142,27 @@ class ComplaintPersistenceTest {
     }
 
     @Test
+    void findsAssignedComplaintsRaisedInAPeriodForTheStaffReport() {
+        Complaint early = raise(ComplaintLocation.commonArea(new TowerId(3)), NOW);
+        Complaint late = raise(ComplaintLocation.commonArea(new TowerId(4)), NOW.plusSeconds(10));
+        Complaint unassigned = raise(ComplaintLocation.commonArea(new TowerId(3)), NOW.plusSeconds(5));
+        early.assignTo(STAFF, ADMIN, NOW.plusSeconds(20));
+        late.assignTo(STAFF, ADMIN, NOW.plusSeconds(20));
+        complaints.save(early);
+        complaints.save(late);
+        complaints.save(unassigned);
+        flushAndClear();
+
+        assertThat(complaints.findAssignedRaisedBetween(SOCIETY, null, NOW, NOW.plusSeconds(60), 0, 10))
+                .extracting(Complaint::id).containsExactly(late.id(), early.id());
+        assertThat(complaints.findAssignedRaisedBetween(SOCIETY, new TowerId(3), NOW, NOW.plusSeconds(60), 0, 10))
+                .extracting(Complaint::id).containsExactly(early.id());
+        assertThat(complaints.findAssignedRaisedBetween(SOCIETY, null, NOW.plusSeconds(1), NOW.plusSeconds(10), 0, 10))
+                .isEmpty();
+        assertThat(complaints.findAssignedRaisedBetween(SOCIETY, null, NOW, NOW.plusSeconds(60), 0, 1)).hasSize(1);
+    }
+
+    @Test
     void commentsAreAppendedAcrossSaves() {
         Complaint complaint = raise(ComplaintLocation.commonArea(new TowerId(3)), NOW);
         complaint.comment(RESIDENT, "Lift stuck again", NOW);

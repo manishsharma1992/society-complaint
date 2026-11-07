@@ -38,3 +38,5 @@ export const notActive: CanActivateFn = () =>
 export const staffOnly: CanActivateFn = () => inject(Roles).isStaff() || inject(Router).createUrlTree(['/']);
 export const adminOnly: CanActivateFn = () => inject(Roles).isAdmin() || inject(Router).createUrlTree(['/']);
 export const societyAdminOnly: CanActivateFn = () => inject(Roles).isSocietyAdmin() || inject(Router).createUrlTree(['/']);
+export const adminOrStaff: CanActivateFn = () =>
+  inject(Roles).isAdmin() || inject(Roles).isStaff() || inject(Router).createUrlTree(['/']);
