@@ -12,6 +12,8 @@ export const routes: Routes = [
     loadComponent: () => import('./features/shell/shell'),
     children: [
       { path: '', pathMatch: 'full', canActivate: [goHome], children: [] },
+      // the public homepage sends signed-in visitors here: on to their own home
+      { path: 'start', pathMatch: 'full', canActivate: [goHome], children: [] },
       { path: 'feed', canActivate: [feedOn], loadComponent: () => import('./features/feed/feed.page') },
       { path: 'feed/new', canActivate: [feedOn, activeOnly], loadComponent: () => import('./features/feed/new-post.page') },
       { path: 'feed/mine', canActivate: [feedOn], loadComponent: () => import('./features/feed/my-posts.page') },
