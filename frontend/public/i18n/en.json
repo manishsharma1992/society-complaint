@@ -169,7 +169,9 @@
     "commentsOff": "This complaint is finished, so comments are closed.",
     "you": "You",
     "person": "{{name}}",
-    "someone": "Someone"
+    "someone": "Someone",
+    "waitingForStaff": "All staff are busy right now. Your complaint is in the queue and will be assigned automatically to the next free staff member who handles it.",
+    "assignedAutomatically": "Assigned automatically"
   },
   "queue": {
     "jobs": {
@@ -506,6 +508,13 @@
     "towers": {
       "title": "Towers using complaints",
       "lead": "Switch off a tower that handles complaints its own way, for example with its own app. Its residents can still report society-wide areas, and it can join any time."
+    },
+    "auto": {
+      "title": "Assign automatically",
+      "about": "Waiting complaints go to a free staff member on shift who handles their category, the most urgent first. Admins can still assign by hand.",
+      "staffTitle": "Who handles what",
+      "staffLead": "Tick the categories each staff member handles. Staff with none are only assigned by hand.",
+      "noStaff": "No staff members yet."
     }
   },
   "help": {

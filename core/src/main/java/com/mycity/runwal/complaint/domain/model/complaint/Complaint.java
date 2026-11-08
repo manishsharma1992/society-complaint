@@ -31,6 +31,8 @@ public class Complaint extends AbstractAggregateRoot {
 
     public static final int MAX_DESCRIPTION_LENGTH = 2000;
     public static final int MAX_NOTE_LENGTH = 500;
+    /** The status note of an assignment the system made; the web app shows it translated. */
+    public static final String ASSIGNED_AUTOMATICALLY = "Assigned automatically";
     public static final int MAX_PHOTOS = 5;
     public static final int MAX_COMMENTS = 200;
 
@@ -108,6 +110,17 @@ public class Complaint extends AbstractAggregateRoot {
         recordEvent(new ComplaintAssigned(id, staffId, assignedBy, at));
     }
 
+    /**
+     * The staff member is free and handles this kind of complaint, so the system gives it to them. The history shows
+     * them as the one it moved for, with {@link #ASSIGNED_AUTOMATICALLY} as the note.
+     */
+    public void assignAutomatically(UserId staffId, Instant at) {
+        Objects.requireNonNull(staffId, "staffId");
+        moveTo(ComplaintStatus.ASSIGNED, staffId, at, ASSIGNED_AUTOMATICALLY);
+        this.assignedTo = staffId;
+        recordEvent(new ComplaintAssigned(id, staffId, staffId, at));
+    }
+
     public void startWork(UserId startedBy, Instant at) {
         moveTo(ComplaintStatus.IN_PROGRESS, startedBy, at, null);
         recordEvent(new ComplaintWorkStarted(id, startedBy, at));
@@ -115,7 +128,7 @@ public class Complaint extends AbstractAggregateRoot {
 
     public void resolve(UserId resolvedBy, Instant at, String resolutionNote) {
         moveTo(ComplaintStatus.RESOLVED, resolvedBy, at, resolutionNote);
-        recordEvent(new ComplaintResolved(id, resolvedBy, at));
+        recordEvent(new ComplaintResolved(id, societyId, resolvedBy, at));
     }
 
     public void close(UserId closedBy, Instant at) {
@@ -128,7 +141,7 @@ public class Complaint extends AbstractAggregateRoot {
             throw new InvalidComplaintException("Rejecting a complaint needs a reason");
         }
         moveTo(ComplaintStatus.REJECTED, rejectedBy, at, reason.strip());
-        recordEvent(new ComplaintRejected(id, rejectedBy, reason.strip(), at));
+        recordEvent(new ComplaintRejected(id, societyId, rejectedBy, reason.strip(), at));
     }
 
     /**

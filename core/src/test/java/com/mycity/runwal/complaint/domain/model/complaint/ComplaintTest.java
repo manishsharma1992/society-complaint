@@ -288,7 +288,7 @@ class ComplaintTest {
             assertThat(complaint.pullDomainEvents()).containsExactly(
                     new ComplaintAssigned(complaint.id(), STAFF, ADMIN, t1),
                     new ComplaintWorkStarted(complaint.id(), STAFF, t2),
-                    new ComplaintResolved(complaint.id(), STAFF, t3),
+                    new ComplaintResolved(complaint.id(), SOCIETY, STAFF, t3),
                     new ComplaintClosed(complaint.id(), RESIDENT, t4));
         }
 
@@ -301,7 +301,7 @@ class ComplaintTest {
             assertThat(complaint.status()).isEqualTo(ComplaintStatus.REJECTED);
             assertThat(complaint.history().get(1).note()).isEqualTo("Duplicate of #12");
             assertThat(complaint.pullDomainEvents())
-                    .containsExactly(new ComplaintRejected(complaint.id(), ADMIN, "Duplicate of #12", RAISED_AT));
+                    .containsExactly(new ComplaintRejected(complaint.id(), SOCIETY, ADMIN, "Duplicate of #12", RAISED_AT));
         }
 
         @Test
@@ -365,5 +365,20 @@ class ComplaintTest {
                 new ComplaintCommented(original.id(), STAFF, 2, RAISED_AT));
         assertThat(restored.photos()).containsExactly(photo("a.jpg"));
         assertThat(restored.comments()).extracting(ComplaintComment::sequence).containsExactly(1, 2);
+    }
+
+    @Test
+    void theSystemAssignsAFreeStaffMemberAndTheHistorySaysSo() {
+        Complaint complaint = raisedComplaint();
+        Instant at = RAISED_AT.plus(Duration.ofMinutes(5));
+
+        complaint.assignAutomatically(STAFF, at);
+
+        assertThat(complaint.status()).isEqualTo(ComplaintStatus.ASSIGNED);
+        assertThat(complaint.assignedTo()).contains(STAFF);
+        assertThat(complaint.history().get(1))
+                .isEqualTo(new StatusChangeSnapshot(2, ComplaintStatus.OPEN, ComplaintStatus.ASSIGNED, STAFF, at,
+                        Complaint.ASSIGNED_AUTOMATICALLY));
+        assertThat(complaint.pullDomainEvents()).containsExactly(new ComplaintAssigned(complaint.id(), STAFF, STAFF, at));
     }
 }

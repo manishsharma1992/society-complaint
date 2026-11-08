@@ -36,6 +36,10 @@
               [towerName]="towerName()"
               [where]="c.flatId ? flatLabels()[c.flatId] ?? null : null" />
 
+            @if (c.status === 'OPEN' && autoAssign()) {
+              <p class="waiting" role="status">{{ t('detail.waitingForStaff') }}</p>
+            }
+
             @if (c.description) {
               <p class="description">{{ c.description }}</p>
             }
@@ -135,7 +139,7 @@
                     <p class="what">{{ t('status.' + change.toStatus) }}</p>
                     <p class="meta">{{ t(who(change.changedBy).key, { name: who(change.changedBy).name }) }}, {{ when(change.changedAt) }}</p>
                     @if (change.note) {
-                      <p class="note">{{ change.note }}</p>
+                      <p class="note">{{ change.note === 'Assigned automatically' ? t('detail.assignedAutomatically') : change.note }}</p>
                     }
                   </li>
                 }

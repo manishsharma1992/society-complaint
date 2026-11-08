@@ -138,3 +138,12 @@ h2 { font-size: var(--text-lg); font-weight: var(--serif-small); margin-bottom: 
   .layout { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-2xl); }
   .photos { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
+
+/* an open complaint waiting for a free staff member (automatic assignment) */
+.waiting {
+  margin: var(--space-md) 0 0;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-card);
+  background: var(--color-stock);
+  color: var(--color-ink-2);
+}

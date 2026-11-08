@@ -34,6 +34,12 @@ export interface StaffPerformance {
   overdueNow: number;
 }
 
+/** Automatic assignment; `staff` lists who handles which categories and is empty for non-admins. */
+export interface AutoAssignment {
+  on: boolean;
+  staff: { staffId: number; categoryIds: number[] }[];
+}
+
 const BASE = `${API}/complaint/societies/${SOCIETY_ID}`;
 
 @Injectable({ providedIn: 'root' })
@@ -70,6 +76,19 @@ export class ComplaintsApi {
 
   get(id: number): Observable<Complaint> {
     return this.http.get<Complaint>(`${BASE}/complaints/${id}`);
+  }
+
+  /** Whether complaints are assigned automatically and, for admins, who handles which categories. */
+  autoAssignment(): Observable<AutoAssignment> {
+    return this.http.get<AutoAssignment>(`${BASE}/auto-assignment`);
+  }
+
+  switchAutoAssignment(on: boolean): Observable<AutoAssignment> {
+    return this.http.put<AutoAssignment>(`${BASE}/auto-assignment`, { on });
+  }
+
+  setStaffCategories(staffId: number, categoryIds: number[]): Observable<AutoAssignment> {
+    return this.http.put<AutoAssignment>(`${BASE}/auto-assignment/staff/${staffId}`, { categoryIds });
   }
 
   /** The categories change rarely: fetched once per visit. */

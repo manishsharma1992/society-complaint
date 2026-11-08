@@ -196,6 +196,13 @@ CODE-xx); every context's `ArchitectureTest` runs them. Read the classes for the
   and back on when they join (`PUT .../add-ons/COMPLAINTS/towers/{towerId}`, society admin; `Society` keeps the
   set). Raising a complaint about such a tower (its flats or its common areas) is refused; society-wide areas and
   complaints already raised are not affected. Only COMPLAINTS works per tower.
+- Automatic assignment (`core`, a switch per society, on for Runwal MyCity): the society admin says which categories
+  each staff member handles (`/complaint/societies/{id}/auto-assignment[/staff/{staffId}]`). When a complaint is
+  raised, resolved or rejected, a shift starts, or the setup changes, `AssignmentPlanner` gives the most urgent
+  waiting complaints to free staff (on shift, no job assigned or in progress, the category, their towers): one job
+  each, one transaction per complaint. Event-driven, never polled (Neon must be able to sleep). On shift comes
+  from Workforce and staff towers from Identity, through ports answered in `integration`. The history note
+  "Assigned automatically" is translated by the web app; residents of an open complaint are told it waits.
 - The feed is the home page and, for now, only for signed-in approved members: published posts from their society
   and every society within `feed.nearby-meters` (10 km) that uses the feed (`GET /feed/societies/{id}/feed`).
   `/feed/public/**` and `/feed/share/**` need a login until the legal pages are published.

@@ -2,8 +2,9 @@ package com.mycity.runwal.complaint.domain.event;
 
 import com.mycity.runwal.complaint.domain.model.complaint.ComplaintId;
 import com.mycity.runwal.shared.ddd.DomainEvent;
+import com.mycity.runwal.shared.id.SocietyId;
 import com.mycity.runwal.shared.id.UserId;
 import java.time.Instant;
 
-public record ComplaintResolved(ComplaintId complaintId, UserId resolvedBy, Instant occurredOn) implements DomainEvent {
+public record ComplaintResolved(ComplaintId complaintId, SocietyId societyId, UserId resolvedBy, Instant occurredOn) implements DomainEvent {
 }

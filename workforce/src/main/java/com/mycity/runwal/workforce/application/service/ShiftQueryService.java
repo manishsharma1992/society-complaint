@@ -10,6 +10,7 @@ import com.mycity.runwal.workforce.application.query.ShiftHoursQuery;
 import com.mycity.runwal.workforce.application.query.ShiftHoursView;
 import com.mycity.runwal.workforce.application.query.ShiftView;
 import com.mycity.runwal.workforce.application.query.ShiftsQuery;
+import com.mycity.runwal.workforce.application.query.StaffOnDutyQuery;
 import com.mycity.runwal.workforce.domain.model.actor.Actor;
 import com.mycity.runwal.workforce.domain.model.shift.Period;
 import com.mycity.runwal.workforce.domain.model.shift.Shift;
@@ -69,6 +70,15 @@ public class ShiftQueryService {
         return shifts.findAllOpen(societyId).stream()
                 .sorted(Comparator.comparing(Shift::startedAt))
                 .map(shift -> ShiftView.of(shift, now, selfies))
+                .toList();
+    }
+
+    /** For other contexts (no caller check): the staff with an open shift, e.g. for automatic assignment. */
+    @Transactional(readOnly = true)
+    public List<Long> staffOnDuty(StaffOnDutyQuery query) {
+        return shifts.findAllOpen(new SocietyId(query.societyId())).stream()
+                .map(shift -> shift.staffId().value())
+                .distinct()
                 .toList();
     }
 

@@ -13,6 +13,7 @@ import com.mycity.runwal.workforce.application.command.ReviewShiftCommand.Decisi
 import com.mycity.runwal.workforce.application.command.StartShiftCommand;
 import com.mycity.runwal.workforce.application.query.MyShiftsQuery;
 import com.mycity.runwal.workforce.application.query.OnDutyQuery;
+import com.mycity.runwal.workforce.application.query.StaffOnDutyQuery;
 import com.mycity.runwal.workforce.application.query.ShiftHoursQuery;
 import com.mycity.runwal.workforce.application.query.ShiftHoursView;
 import com.mycity.runwal.workforce.application.query.ShiftView;
@@ -194,6 +195,7 @@ class ShiftServicesTest {
         for (Actor admin : List.of(ADMIN, TOWER_ADMIN)) {
             as(admin);
             assertThat(queryService.onDuty(new OnDutyQuery(1))).extracting(ShiftView::staffId).containsExactly(31L);
+            assertThat(queryService.staffOnDuty(new StaffOnDutyQuery(1))).as("for other contexts").containsExactly(31L);
             assertThat(queryService.hours(new ShiftHoursQuery(1, DAY_START, DAY_END))).containsExactlyInAnyOrder(
                     new ShiftHoursView(30, 1, 8 * 60, false),
                     new ShiftHoursView(31, 1, 2 * 60, true));

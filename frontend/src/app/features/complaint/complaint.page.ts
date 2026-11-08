@@ -46,6 +46,8 @@ export default class ComplaintPage {
 
   protected readonly state = signal<Load>('loading');
   protected readonly complaint = signal<Complaint | null>(null);
+  /** complaints are assigned automatically: an open one is waiting for a free staff member */
+  protected readonly autoAssign = signal(false);
   protected readonly categoryName = signal<string | null>(null);
   protected readonly towerName = signal<string | null>(null);
   protected readonly flatLabels = this.residency.flatLabels;
@@ -102,6 +104,7 @@ export default class ComplaintPage {
   protected readonly draftValid = computed(() => this.draft().trim().length > 0 && this.draft().trim().length <= 1000);
 
   constructor() {
+    this.api.autoAssignment().subscribe({ next: (a) => this.autoAssign.set(a.on), error: () => this.autoAssign.set(false) });
     effect(() => this.load(Number(this.id())));
     if (this.roles.isAdmin()) {
       this.people.staff().subscribe({ next: (staff) => this.staff.set(staff), error: () => {} });

@@ -82,6 +82,16 @@ public class ComplaintAccessPolicy {
         return actor.active() && actor.isStaffIn(societyId);
     }
 
+    /** Automatic assignment and who handles which categories are the society admin's to decide. */
+    public boolean mayManageAssignment(Actor actor, SocietyId societyId) {
+        return actor.active() && actor.manages(societyId, null);
+    }
+
+    /** Admins see who handles which categories. */
+    public boolean maySeeAssignment(Actor actor, SocietyId societyId) {
+        return actor.active() && (actor.manages(societyId, null) || actor.worksIn(societyId) && !actor.isStaffIn(societyId));
+    }
+
     private static boolean manages(Actor actor, Complaint complaint) {
         return actor.manages(complaint.societyId(), complaint.location().towerId());
     }

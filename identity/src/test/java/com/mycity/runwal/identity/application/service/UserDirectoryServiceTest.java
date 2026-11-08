@@ -1,5 +1,7 @@
 package com.mycity.runwal.identity.application.service;
 
+import com.mycity.runwal.identity.application.query.StaffOfSocietyQuery;
+import com.mycity.runwal.identity.application.query.StaffMemberView;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -83,5 +85,11 @@ class UserDirectoryServiceTest {
         users.save(new AppUser(new UserId(id), PhoneNumber.parse("98765432" + String.format("%02d", id)),
                 Instant.parse("2026-10-25T08:00:00Z"), name, status, null, null,
                 role == null ? List.of() : List.of(role)));
+    }
+
+    @Test
+    void otherContextsGetTheApprovedStaffAndWhereTheyWork() {
+        assertThat(directory.staffOf(new StaffOfSocietyQuery(1))).containsExactlyInAnyOrder(
+                new StaffMemberView(3, List.of()), new StaffMemberView(5, List.of(7L)));
     }
 }

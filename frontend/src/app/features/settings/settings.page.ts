@@ -2,7 +2,9 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { Observable } from 'rxjs';
-import { Tower } from '../../core/models';
+import { AutoAssignment, ComplaintsApi } from '../../core/complaints';
+import { Category, Tower } from '../../core/models';
+import { People, Person } from '../../core/people';
 import { ResidencyApi } from '../../core/residency';
 import { Roles } from '../../core/roles';
 import { AddOn, AddOnName, Society, SocietyStore } from '../../core/society';
@@ -45,6 +47,35 @@ import { AddOn, AddOnName, Society, SocietyStore } from '../../core/society';
                   <span>{{ t('settings.on') }}</span>
                 </label>
               </div>
+              @if (a.addOn === 'COMPLAINTS' && a.on && roles.isSocietyAdmin() && auto(); as auto) {
+                <fieldset class="towers">
+                  <legend>{{ t('settings.auto.title') }}</legend>
+                  <p class="muted small">{{ t('settings.auto.about') }}</p>
+                  <label class="switch">
+                    <input type="checkbox" role="switch" [checked]="auto.on" [disabled]="busyAuto()" (change)="turnAuto($any($event.target))" />
+                    <span>{{ t('settings.on') }}</span>
+                  </label>
+                  @if (auto.on) {
+                    <p class="sub">{{ t('settings.auto.staffTitle') }}</p>
+                    <p class="muted small">{{ t('settings.auto.staffLead') }}</p>
+                    @for (person of staff(); track person.id) {
+                      <div class="staff">
+                        <p class="who">{{ person.name }}</p>
+                        <div class="chips">
+                          @for (category of categories(); track category.id) {
+                            <button type="button" class="chip" [attr.aria-pressed]="handles(auto, person.id, category.id)"
+                                    [disabled]="busyAuto()" (click)="toggleCategory(auto, person.id, category.id)">
+                              {{ t('category.' + category.name) }}
+                            </button>
+                          }
+                        </div>
+                      </div>
+                    } @empty {
+                      <p class="muted small">{{ t('settings.auto.noStaff') }}</p>
+                    }
+                  }
+                </fieldset>
+              }
               @if (a.addOn === 'COMPLAINTS' && a.on && roles.isSocietyAdmin() && towers().length > 0) {
                 <fieldset class="towers">
                   <legend>{{ t('settings.towers.title') }}</legend>
@@ -93,6 +124,14 @@ import { AddOn, AddOnName, Society, SocietyStore } from '../../core/society';
     .tower-list { list-style: none; margin: var(--space-xs) 0 0; padding: 0; display: grid;
       grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: 0 var(--space-md); }
     .num { font-variant-numeric: tabular-nums; font-weight: 600; }
+    .sub { font-weight: 600; margin: var(--space-md) 0 0; }
+    .staff { padding-block: var(--space-sm); }
+    .who { font-weight: 600; margin: 0 0 var(--space-xs); }
+    .chips { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+    .chip { min-height: 44px; padding: 0 var(--space-md); border-radius: var(--radius-pill); border: 1px solid var(--color-rule);
+      background: var(--color-stock); color: var(--color-ink); font: inherit; cursor: pointer; }
+    .chip[aria-pressed='true'] { background: var(--color-brand); border-color: var(--color-brand); color: var(--color-stock); }
+    .chip:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
     @media (min-width: 48rem) { .row { grid-template-columns: 1fr auto; align-items: center; } }
   `,
 })
@@ -102,11 +141,51 @@ export default class SettingsPage {
   protected readonly busy = signal<AddOnName | null>(null);
   protected readonly busyTower = signal<number | null>(null);
   protected readonly towers = signal<Tower[]>([]);
+  protected readonly auto = signal<AutoAssignment | null>(null);
+  protected readonly busyAuto = signal(false);
+  protected readonly staff = signal<Person[]>([]);
+  protected readonly categories = signal<Category[]>([]);
+  private readonly complaints = inject(ComplaintsApi);
   protected readonly failed = signal(false);
 
   constructor() {
     this.store.ensure().subscribe();
     inject(ResidencyApi).towers().subscribe((towers) => this.towers.set(towers));
+    if (this.roles.isSocietyAdmin()) {
+      this.complaints.autoAssignment().subscribe({ next: (a) => this.auto.set(a), error: () => this.auto.set(null) });
+      this.complaints.categories().subscribe((c) => this.categories.set(c));
+      inject(People).staff().subscribe((s) => this.staff.set(s));
+    }
+  }
+
+  protected handles(auto: AutoAssignment, staffId: number, categoryId: number): boolean {
+    return auto.staff.some((s) => s.staffId === staffId && s.categoryIds.includes(categoryId));
+  }
+
+  protected turnAuto(input: HTMLInputElement): void {
+    this.saveAuto(this.complaints.switchAutoAssignment(input.checked), () => (input.checked = !input.checked));
+  }
+
+  protected toggleCategory(auto: AutoAssignment, staffId: number, categoryId: number): void {
+    const current = auto.staff.find((s) => s.staffId === staffId)?.categoryIds ?? [];
+    const next = current.includes(categoryId) ? current.filter((c) => c !== categoryId) : [...current, categoryId];
+    this.saveAuto(this.complaints.setStaffCategories(staffId, next), () => {});
+  }
+
+  private saveAuto(request: Observable<AutoAssignment>, undo: () => void): void {
+    this.busyAuto.set(true);
+    this.failed.set(false);
+    request.subscribe({
+      next: (a) => {
+        this.auto.set(a);
+        this.busyAuto.set(false);
+      },
+      error: () => {
+        this.failed.set(true);
+        this.busyAuto.set(false);
+        undo(); // nothing changed on the server
+      },
+    });
   }
 
   protected turnTower(tower: Tower, input: HTMLInputElement): void {

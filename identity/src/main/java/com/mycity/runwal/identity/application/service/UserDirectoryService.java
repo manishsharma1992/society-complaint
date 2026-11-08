@@ -4,10 +4,13 @@ import com.mycity.runwal.identity.application.port.CurrentUser;
 import com.mycity.runwal.identity.application.query.UserNameView;
 import com.mycity.runwal.identity.application.query.UserNamesQuery;
 import com.mycity.runwal.identity.application.query.UsersWithRoleQuery;
+import com.mycity.runwal.identity.application.query.StaffOfSocietyQuery;
+import com.mycity.runwal.identity.application.query.StaffMemberView;
 import com.mycity.runwal.identity.domain.exception.InvalidIdentityException;
 import com.mycity.runwal.identity.domain.model.user.AppUser;
 import com.mycity.runwal.identity.domain.model.user.AppUserRepository;
 import com.mycity.runwal.identity.domain.model.user.Role;
+import com.mycity.runwal.identity.domain.model.user.RoleAssignment;
 import com.mycity.runwal.identity.domain.model.user.UserStatus;
 import com.mycity.runwal.shared.ddd.annotation.ApplicationService;
 import com.mycity.runwal.shared.id.SocietyId;
@@ -43,6 +46,22 @@ public class UserDirectoryService {
         return users.findAllById(ids).stream()
                 .filter(user -> user.roles().stream().anyMatch(r -> r.societyId().equals(societyId)))
                 .map(UserNameView::of)
+                .toList();
+    }
+
+    /** For other contexts (no caller check): approved staff and the towers they work in. Ids only, no names. */
+    @Transactional(readOnly = true)
+    public List<StaffMemberView> staffOf(StaffOfSocietyQuery query) {
+        SocietyId societyId = new SocietyId(query.societyId());
+        return users.findWithRole(Role.STAFF, societyId).stream()
+                .filter(user -> user.status() == UserStatus.ACTIVE)
+                .map(user -> {
+                    List<RoleAssignment> staffRoles = user.roles().stream()
+                            .filter(r -> r.role() == Role.STAFF && r.societyId().equals(societyId)).toList();
+                    boolean everywhere = staffRoles.stream().anyMatch(r -> r.towerId() == null);
+                    return new StaffMemberView(user.id().value(), everywhere ? List.of()
+                            : staffRoles.stream().map(r -> r.towerId().value()).distinct().sorted().toList());
+                })
                 .toList();
     }
 
