@@ -348,6 +348,87 @@ assert md("A **b** & c\n\n- x\n- y\n\n1. one\n   - sub\n2. two") == (
     "<ol><li>one<ul><li>sub</li></ul></li><li>two</li></ol>")
 
 
+# ---- shared by the homepage and the legal pages: theme, header, footer ----
+THEME = {"en": ("Theme: automatic", "Theme: light", "Theme: dark"),
+         "hi": ("थीम: अपने आप", "थीम: हल्की", "थीम: गहरी"),
+         "mr": ("थीम: आपोआप", "थीम: फिकट", "थीम: गडद")}
+
+ICONS = ('<svg class="i-auto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/>'
+         '<path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg>'
+         '<svg class="i-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">'
+         '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>'
+         '<svg class="i-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true">'
+         '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>')
+
+# runs in <head> before anything paints: a saved choice wins, otherwise the system's (CSS prefers-color-scheme)
+THEME_BOOT = ("try { var m = localStorage.getItem('mycity.theme'); "
+              "if (m === 'light' || m === 'dark') document.documentElement.dataset.theme = m; } catch (e) {}")
+
+SHARED_JS = """
+    (function () {
+      // the header turns into a frosted bar once the page scrolls
+      var top = document.querySelector('.top');
+      var mark = function () { top.classList.toggle('scrolled', scrollY > 8); };
+      addEventListener('scroll', mark, { passive: true }); mark();
+      // the theme button: automatic (the system's setting) -> light -> dark
+      var root = document.documentElement, button = document.querySelector('.theme'), modes = ['auto', 'light', 'dark'];
+      var current = function () { var t = root.dataset.theme; return t === 'light' || t === 'dark' ? t : 'auto'; };
+      var show = function (m) { var label = button.getAttribute('data-label-' + m); button.dataset.mode = m; button.setAttribute('aria-label', label); button.title = label; };
+      show(current());
+      button.addEventListener('click', function () {
+        var m = modes[(modes.indexOf(current()) + 1) % modes.length];
+        if (m === 'auto') delete root.dataset.theme; else root.dataset.theme = m;
+        try { if (m === 'auto') localStorage.removeItem('mycity.theme'); else localStorage.setItem('mycity.theme', m); } catch (e) {}
+        show(m);
+      });
+    })();
+"""
+
+
+def lang_paths(kind):
+    return {"en": "/", "hi": "/hi/", "mr": "/mr/"} if kind == "home" else {"en": "/legal/", "hi": "/hi/legal/", "mr": "/mr/legal/"}
+
+
+def header(lang, t, kind):
+    names = {"en": "English", "hi": "हिन्दी", "mr": "मराठी"}
+    current = ' aria-current="page"'
+    langs = "".join(f'<a href="{href}" hreflang="{l}" lang="{l}"{current if l == lang else ""}>{names[l]}</a>'
+                    for l, href in lang_paths(kind).items())
+    auto, light, dark = (e(x) for x in THEME[lang])
+    photo = " on-photo" if kind == "home" else ""
+    return (f'<a class="skip" href="#main">{e(t["skip"])}</a>\n'
+            f'  <header class="top{photo}"><div class="shell">'
+            f'<a class="brand" href="{t["path"]}" aria-label="Runwal MyCity">{LOGO}<span>Runwal MyCity</span></a>'
+            f'<nav class="tools" aria-label="{e(t["language"])}">{langs}'
+            f'<button type="button" class="theme" data-mode="auto" data-label-auto="{auto}" data-label-light="{light}" data-label-dark="{dark}" '
+            f'aria-label="{auto}" title="{auto}">{ICONS}</button>'
+            f'<a class="btn" href="/login">{e(t["nav_signin"])}</a></nav></div></header>')
+
+
+def footer(lang, t, kind):
+    names = {"en": "English", "hi": "हिन्दी", "mr": "मराठी"}
+    li = lambda href, text, extra="": f'<li><a href="{href}"{extra}>{e(text)}</a></li>'
+    legal_base = "" if kind == "legal" else legal_path(lang)
+    legal = "".join(li(f"{legal_base}#{sid}", title) for sid, title, _ in LEGAL[lang])
+    langs = "".join(li(href, names[l], f' hreflang="{l}" lang="{l}"') for l, href in lang_paths(kind).items())
+    if kind == "home":
+        site = "".join(li(h, t[k]) for h, k in (("#complaints", "nav_app"), ("#how", "nav_how"), ("#why", "nav_why"), ("#faq", "nav_faq"), ("/login", "nav_signin")))
+    else:
+        site = li(t["path"], UI[lang]["back_home"]) + li("/login", t["nav_signin"])
+    updated = f"<span>{e(UPDATED[lang])}</span>" if kind == "legal" else ""
+    return (f'<footer class="site-foot"><div class="shell foot">'
+            f'<div class="about"><a class="brand" href="{t["path"]}">{LOGO}<span>Runwal MyCity</span></a><p>{e(t["footer_independent"])}</p></div>'
+            f'<nav aria-labelledby="f-legal"><h2 class="foot-h" id="f-legal">{e(UI[lang]["legal_title"])}</h2><ul>{legal}</ul></nav>'
+            f'<nav aria-labelledby="f-lang"><h2 class="foot-h" id="f-lang">{e(t["foot_lang"])}</h2><ul>{langs}</ul></nav>'
+            f'<nav aria-labelledby="f-site"><h2 class="foot-h" id="f-site">Runwal MyCity</h2><ul>{site}</ul></nav>'
+            f'</div><div class="base"><div class="shell"><span>{e(t["footer_place"])}</span>{updated}</div></div></footer>')
+
+
+def shared_values(lang, t, kind):
+    return {"shared_css": (HERE / "shared.css").read_text(encoding="utf-8"), "shared_js": SHARED_JS, "theme_boot": THEME_BOOT,
+            "header": header(lang, t, kind), "footer": footer(lang, t, kind)}
+
+
 def render_legal(lang, t):
     page = (HERE / "legal.html").read_text(encoding="utf-8")
     ui = UI[lang]
@@ -363,6 +444,7 @@ def render_legal(lang, t):
               "cur_en": ' aria-current="page"' if lang == "en" else "",
               "cur_hi": ' aria-current="page"' if lang == "hi" else "",
               "cur_mr": ' aria-current="page"' if lang == "mr" else ""}
+    values.update(shared_values(lang, t, "legal"))
     out = re.sub(r"\{\{(\w+)\}\}", lambda m: values[m.group(1)], page)
     assert "{{" not in out, "a placeholder has no text"
     return out
@@ -384,6 +466,7 @@ def render(lang, t):
               "cur_en": ' aria-current="page"' if lang == "en" else "",
               "cur_hi": ' aria-current="page"' if lang == "hi" else "",
               "cur_mr": ' aria-current="page"' if lang == "mr" else ""}
+    values.update(shared_values(lang, t, "home"))
     out = re.sub(r"\{\{(\w+)\}\}", lambda m: values[m.group(1)], page)
     assert "{{" not in out, "a placeholder has no text"
     return out
