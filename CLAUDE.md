@@ -441,7 +441,25 @@ The server has 512 MB today, which is not enough for libvips or ffmpeg next to t
   staff also Jobs; admins also To assign; the society admin also Sign-ups. Users who are not yet approved land on
   sign-up (`/register`). The UI only decides what to offer: the server checks every action.
 - `ng serve` proxies `/api` to the live server (`proxy.conf.json`). Build: `npx ng build` (budgets in angular.json).
-- Deploy: `deploy/deploy.sh frontend` (see deploy/README.md); the backend with `deploy/deploy.sh`.
+- Deploy: `deploy/deploy.sh frontend` (see deploy/README.md); the backend with `deploy/deploy.sh`. It installs every
+  built file before the app's own `./index.html` (only that one is held back, so the homepage's `hi/` and `mr/`
+  `index.html` files ship too). Nginx changes (e.g. `location = /`) need `deploy/deploy.sh setup`.
+- The app's screens carry `<meta name="robots" content="noindex">`: only the public homepage is for search engines.
+
+### Public homepage (`frontend/landing/`)
+- Plain HTML, not Angular, so search engines and link previews read it without JavaScript. Nginx serves
+  `public/home.html` at `/` and `public/hi/index.html`, `public/mr/index.html` at `/hi/`, `/mr/` (hreflang-linked;
+  `robots.txt`, `sitemap.xml` and `og-image.png` sit beside them). Visitors already signed in go to `/start`, which
+  sends them on to their home in the app.
+- Edit `landing/template.html` (layout, styles, script) and the texts in `landing/build_landing.py` (en, hi and mr
+  must have the same keys), then run `python3 frontend/landing/build_landing.py`; commit its outputs.
+- Voice: the residents' (“You paid for a promise.”). It states no fact about the builder itself: claims come only
+  from residents' own moderated posts. The example post on the page is labelled as one.
+- Motion (motion.dev, a frontend dev dependency) drives the scroll scenes; the build copies it to
+  `public/vendor/motion.js`. With reduced motion, or if it fails to load, every section is a plain, visible screen.
+- Font: Noto Sans with Noto Sans Devanagari (Google Fonts), so the three languages match. App screenshots in
+  `public/images/app/<lang>/` were captured from the built app with a mock API and sample data; recapture them
+  when those screens change. Never use the feed's demo posts in them (they contain invented claims).
 
 ## Neon / Spring Boot notes
 - DB credentials come from environment variables (`DB_URL`, `DB_USER`, `DB_PASSWORD`), one set per service. Never commit them.
@@ -450,10 +468,11 @@ The server has 512 MB today, which is not enough for libvips or ffmpeg next to t
 - Expect a short delay on the first query after Neon has been idle.
 - Each Spring Boot service needs roughly 250-400 MB RAM. Set `-Xmx` per service and size the Lightsail plan for the number of running services.
 
-## Where things stand (2026-10-25)
+## Where things stand (2026-11-08)
 Live at https://runwalltdfakepromises.com (web app) and /api (one Spring Boot app, 512 MB Lightsail). Done: all
 contexts with their REST APIs, phone + OTP login, self sign-up with approval, photos, comments, the full complaint
-lifecycle, and the web app for residents, staff and admins in three languages.
+lifecycle, and the web app for residents, staff and admins in three languages. A public homepage at `/`, `/hi/`
+and `/mr/` for search engines; Google Search Console verification (a DNS TXT record) is the owner's step.
 
 ## Next step
 1. Before real residents: SMS through MSG91 (after DLT approval); remove the demo users and `OTP_DEMO_CODE`;
@@ -461,7 +480,9 @@ lifecycle, and the web app for residents, staff and admins in three languages.
    password.
 2. After the demo: decide the Lightsail plan (1 GB or 4 GB), then consider splitting the contexts into services.
 3. Notifications (`notification-service`): tell residents when their complaint changes, staff when work is assigned.
-4. Later hardening: a Content-Security-Policy header (allow the photo bucket's address for images and uploads).
+4. Later hardening: a Content-Security-Policy header (allow the photo bucket's address for images and uploads, and
+   Google Fonts for the homepage). Before the homepage is shared widely: a lawyer reviews it with the domain name,
+   and the society photos (from listing sites) are replaced by residents' own or their rights confirmed.
 5. Public Feed (`feed`), in order: Post aggregate + moderation lifecycle (domain + unit tests) -> post, report and
    moderation APIs with phase 1 images -> public bucket + CDN publish/unpublish -> share endpoint -> frontend
    screens -> legal pages. Phase 2 (server-side compression and video) only after the plan upgrade in step 2.
