@@ -27,14 +27,20 @@ final class ResidencyMapper {
         Set<AddOn> available = entity.addOns.stream().map(row -> AddOn.from(row.addOn)).collect(Collectors.toSet());
         Set<AddOn> enabled = entity.addOns.stream().filter(row -> row.enabled).map(row -> AddOn.from(row.addOn))
                 .collect(Collectors.toSet());
-        return new Society(new SocietyId(entity.id), entity.name, location, available, enabled);
+        Set<TowerId> complaintsOff = entity.complaintsOffTowers.stream().map(TowerId::new).collect(Collectors.toSet());
+        return new Society(new SocietyId(entity.id), entity.name, location, available, enabled, complaintsOff);
     }
 
-    /** Replaces the stored add-on rows with the society's: one per available add-on, saying whether it is on. */
+    /**
+     * Replaces the stored add-on rows with the society's (one per available add-on, saying whether it is on) and the
+     * towers where complaints are off.
+     */
     static void copyAddOns(Society society, SocietyJpaEntity entity) {
         entity.addOns.clear();
         society.availableAddOns().forEach(addOn ->
                 entity.addOns.add(new SocietyJpaEntity.AddOnRow(addOn.name(), society.isOn(addOn))));
+        entity.complaintsOffTowers.clear();
+        society.towersWithoutComplaints().forEach(tower -> entity.complaintsOffTowers.add(tower.value()));
     }
 
     static Tower toDomain(TowerJpaEntity entity) {

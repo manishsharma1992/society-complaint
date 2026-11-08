@@ -8,6 +8,7 @@ import com.mycity.runwal.residency.domain.model.society.AddOn;
 import com.mycity.runwal.residency.domain.model.society.GeoPoint;
 import com.mycity.runwal.residency.domain.model.society.Society;
 import com.mycity.runwal.shared.id.SocietyId;
+import com.mycity.runwal.shared.id.TowerId;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
@@ -68,5 +69,37 @@ class SocietyAddOnsTest {
         assertThat(AddOn.from("COMPLAINTS")).isEqualTo(AddOn.COMPLAINTS);
         assertThatThrownBy(() -> AddOn.from("CHAT")).isInstanceOf(InvalidResidencyException.class);
         assertThatThrownBy(() -> new GeoPoint(100, 0)).isInstanceOf(InvalidResidencyException.class);
+    }
+
+    @Test
+    void aTowerWithItsOwnComplaintAppCanBeLeftOutAndJoinLater() {
+        TowerId b2 = new TowerId(5);
+        TowerId c1 = new TowerId(7);
+        Society society = new Society(new SocietyId(1), "Runwal MyCity", RUNWAL,
+                Set.of(AddOn.COMPLAINTS), Set.of(AddOn.COMPLAINTS));
+
+        society.switchOffInTower(AddOn.COMPLAINTS, b2);
+        assertThat(society.isOnInTower(AddOn.COMPLAINTS, b2)).isFalse();
+        assertThat(society.isOnInTower(AddOn.COMPLAINTS, c1)).isTrue();
+        assertThat(society.isOn(AddOn.COMPLAINTS)).as("still on for the society").isTrue();
+        assertThat(society.towersWithoutComplaints()).containsExactly(b2);
+
+        society.switchOnInTower(AddOn.COMPLAINTS, b2);
+        assertThat(society.isOnInTower(AddOn.COMPLAINTS, b2)).isTrue();
+        assertThat(society.towersWithoutComplaints()).isEmpty();
+    }
+
+    @Test
+    void noTowerHasComplaintsWhileTheSocietyHasThemOff() {
+        Society society = new Society(new SocietyId(1), "Runwal MyCity", RUNWAL,
+                Set.of(AddOn.COMPLAINTS), Set.of(), Set.of());
+        assertThat(society.isOnInTower(AddOn.COMPLAINTS, new TowerId(5))).isFalse();
+    }
+
+    @Test
+    void onlyComplaintsCanBeSwitchedPerTower() {
+        Society society = new Society(new SocietyId(1), "Runwal MyCity", RUNWAL, Set.of(AddOn.FEED), Set.of(AddOn.FEED));
+        assertThatThrownBy(() -> society.switchOffInTower(AddOn.FEED, new TowerId(5)))
+                .isInstanceOf(InvalidResidencyException.class).hasMessageContaining("Only complaints");
     }
 }

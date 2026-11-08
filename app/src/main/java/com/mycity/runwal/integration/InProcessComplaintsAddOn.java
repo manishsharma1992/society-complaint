@@ -1,9 +1,11 @@
 package com.mycity.runwal.integration;
 
 import com.mycity.runwal.complaint.application.port.ComplaintsAddOn;
+import com.mycity.runwal.residency.application.query.AddOnOnInTowerQuery;
 import com.mycity.runwal.residency.application.query.AddOnOnQuery;
 import com.mycity.runwal.residency.application.service.ResidencyQueryService;
 import com.mycity.runwal.shared.id.SocietyId;
+import com.mycity.runwal.shared.id.TowerId;
 import org.springframework.stereotype.Component;
 
 /** Answers Complaint Management's "is my add-on on?" from Residency, where each society's add-ons are kept. */
@@ -19,5 +21,10 @@ class InProcessComplaintsAddOn implements ComplaintsAddOn {
     @Override
     public boolean isOnFor(SocietyId societyId) {
         return residency.addOnOn(new AddOnOnQuery(societyId.value(), "COMPLAINTS"));
+    }
+
+    @Override
+    public boolean isOnIn(SocietyId societyId, TowerId towerId) {
+        return residency.addOnOnInTower(new AddOnOnInTowerQuery(societyId.value(), "COMPLAINTS", towerId.value()));
     }
 }

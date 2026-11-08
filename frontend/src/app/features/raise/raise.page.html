@@ -86,7 +86,7 @@
             <fieldset>
               <legend>{{ t('raise.locationLabel') }}</legend>
               <div class="choices">
-                @for (flat of myFlats(); track flat.id) {
+                @for (flat of openFlats(); track flat.id) {
                   <button type="button" class="choice press" [attr.aria-pressed]="isFlat(flat.id)" (click)="chooseFlat(flat.id)">
                     <span class="name">{{ t('raise.myFlat', { label: flat.label }) }}</span>
                   </button>
@@ -99,12 +99,15 @@
                 <p class="sublegend">{{ t('raise.towerLabel') }}</p>
                 <div class="chips">
                   <button type="button" class="chip press" [attr.aria-pressed]="isCommon(null)" (click)="chooseCommon(null)">{{ t('raise.wholeSociety') }}</button>
-                  @for (tower of towers(); track tower.id) {
+                  @for (tower of openTowers(); track tower.id) {
                     <button type="button" class="chip press" [attr.aria-pressed]="isCommon(tower.id)" (click)="chooseCommon(tower.id)">
                       <span class="num">{{ tower.code }}</span> {{ tower.name }}
                     </button>
                   }
                 </div>
+              }
+              @for (flat of closedFlats(); track flat.id) {
+                <p class="help">{{ t('raise.handledOutside', { label: flat.label }) }}</p>
               }
             </fieldset>
           </section>

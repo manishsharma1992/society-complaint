@@ -1,5 +1,8 @@
 package com.mycity.runwal.complaint.application.service;
 
+import com.mycity.runwal.shared.id.TowerId;
+import com.mycity.runwal.complaint.application.port.ComplaintsAddOn;
+import java.util.HashSet;
 import static com.mycity.runwal.complaint.application.service.TestActors.SOCIETY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -37,6 +40,7 @@ class RaiseComplaintServiceTest {
     private final InMemoryComplaints complaints = new InMemoryComplaints();
     private final List<DomainEvent> published = new ArrayList<>();
     private final TestActors.Switchable caller = new TestActors.Switchable(TestActors.resident(10));
+    private final TowersOff towersOff = new TowersOff();
     private final RaiseComplaintService service = new RaiseComplaintService(
             complaints,
             categories(new ComplaintCategory(new ComplaintCategoryId(5), SOCIETY, "Lift", Duration.ofHours(4), true)),
@@ -46,6 +50,7 @@ class RaiseComplaintServiceTest {
             caller,
             published::addAll,
             new FakePhotoStorage(),
+            towersOff,
             Clock.fixed(NOW, ZoneOffset.UTC));
 
     @Test
@@ -132,5 +137,34 @@ class RaiseComplaintServiceTest {
                 return List.of(categories).stream().filter(c -> c.belongsTo(societyId) && c.isActive()).toList();
             }
         };
+    }
+
+    @Test
+    void aTowerThatHandlesComplaintsItsOwnWayGetsNoNewOnes() {
+        towersOff.ids.add(3L);
+
+        assertThatThrownBy(() -> service.raise(command("FLAT", 1204L, null, 5)))
+                .isInstanceOf(ActionNotAllowedException.class).hasMessageContaining("outside this app");
+        assertThatThrownBy(() -> service.raise(command("COMMON_AREA", null, 3L, 5)))
+                .isInstanceOf(ActionNotAllowedException.class);
+        assertThat(service.raise(command("COMMON_AREA", null, null, 5)).scope())
+                .as("society-wide areas such as the clubhouse stay open").isEqualTo("COMMON_AREA");
+        assertThat(service.raise(command("COMMON_AREA", null, 4L, 5)).towerId()).isEqualTo(4L);
+    }
+
+    /** The Complaints add-on is on for the society, and off for the towers listed here. */
+    private static final class TowersOff implements ComplaintsAddOn {
+
+        private final Set<Long> ids = new HashSet<>();
+
+        @Override
+        public boolean isOnFor(SocietyId societyId) {
+            return true;
+        }
+
+        @Override
+        public boolean isOnIn(SocietyId societyId, TowerId towerId) {
+            return !ids.contains(towerId.value());
+        }
     }
 }

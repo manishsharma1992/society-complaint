@@ -19,6 +19,8 @@ export interface Society {
   latitude: number | null;
   longitude: number | null;
   addOns: AddOn[];
+  /** towers that handle complaints their own way while complaints are on for the rest of the society */
+  complaintsOffInTowers: number[];
 }
 
 const BASE = `${API}/residency/societies/${SOCIETY_ID}`;
@@ -52,6 +54,16 @@ export class SocietyStore {
 
   switch(addOn: AddOnName, on: boolean): Observable<Society> {
     return this.http.put<Society>(`${BASE}/add-ons/${addOn}`, { on }).pipe(tap((s) => this.society.set(s)));
+  }
+
+  /** The society admin leaves a tower out of complaints (it has its own way) or brings it on board. */
+  switchComplaintsInTower(towerId: number, on: boolean): Observable<Society> {
+    return this.http.put<Society>(`${BASE}/add-ons/COMPLAINTS/towers/${towerId}`, { on }).pipe(tap((s) => this.society.set(s)));
+  }
+
+  /** Complaints are on and this tower has not been left out. */
+  complaintsOnIn(towerId: number): boolean {
+    return this.complaintsOn() && !(this.society()?.complaintsOffInTowers ?? []).includes(towerId);
   }
 
   private isOn(name: AddOnName): boolean {

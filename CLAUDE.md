@@ -192,6 +192,10 @@ CODE-xx); every context's `ArchitectureTest` runs them. Read the classes for the
   for a society whose add-on is off (an interceptor asking its own port, answered in `integration`); staff shifts
   and the staff report belong to COMPLAINTS. The web app lands on the feed when it is on, hides off add-ons, and keeps
   at most five tabs (admin tools live under Profile -> Manage).
+- COMPLAINTS can also be switched off for single towers that handle complaints their own way (e.g. their own app)
+  and back on when they join (`PUT .../add-ons/COMPLAINTS/towers/{towerId}`, society admin; `Society` keeps the
+  set). Raising a complaint about such a tower (its flats or its common areas) is refused; society-wide areas and
+  complaints already raised are not affected. Only COMPLAINTS works per tower.
 - The feed is the home page and, for now, only for signed-in approved members: published posts from their society
   and every society within `feed.nearby-meters` (10 km) that uses the feed (`GET /feed/societies/{id}/feed`).
   `/feed/public/**` and `/feed/share/**` need a login until the legal pages are published.

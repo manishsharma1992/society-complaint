@@ -9,6 +9,7 @@ import { HlmSpinnerImports } from '@spartan-ng/helm/spinner';
 import { forkJoin, switchMap, of } from 'rxjs';
 import { ComplaintsApi } from '../../core/complaints';
 import { Category, Complaint, Flat, Tower } from '../../core/models';
+import { SocietyStore } from '../../core/society';
 import { ResidencyApi } from '../../core/residency';
 import { SessionStore } from '../../core/session';
 import { ComplaintCard } from '../../shared/complaint-card';
@@ -36,6 +37,7 @@ const MAX_PHOTOS = 5;
 export default class RaisePage {
   private readonly api = inject(ComplaintsApi);
   private readonly residency = inject(ResidencyApi);
+  private readonly society = inject(SocietyStore);
   private readonly router = inject(Router);
   private readonly user = inject(SessionStore).user;
 
@@ -48,6 +50,10 @@ export default class RaisePage {
   protected readonly categories = signal<Category[]>([]);
   protected readonly towers = signal<Tower[]>([]);
   protected readonly myFlats = signal<Flat[]>([]);
+  /** towers and own flats where complaints are on (a tower may handle complaints its own way) */
+  protected readonly openTowers = computed(() => this.towers().filter((t) => this.society.complaintsOnIn(t.id)));
+  protected readonly openFlats = computed(() => this.myFlats().filter((f) => this.society.complaintsOnIn(f.towerId)));
+  protected readonly closedFlats = computed(() => this.myFlats().filter((f) => !this.society.complaintsOnIn(f.towerId)));
   protected readonly categoryId = signal<number | null>(null);
   protected readonly where = signal<Where | null>(null);
 
@@ -80,8 +86,9 @@ export default class RaisePage {
       this.towers.set(towers);
       this.myFlats.set(flats);
       // one flat: that is almost always where the problem is
-      if (flats.length === 1) {
-        this.where.set({ kind: 'flat', flatId: flats[0].id });
+      const open = flats.filter((f) => this.society.complaintsOnIn(f.towerId));
+      if (open.length === 1) {
+        this.where.set({ kind: 'flat', flatId: open[0].id });
       }
     });
     inject(DestroyRef).onDestroy(() => this.photos().forEach((p) => URL.revokeObjectURL(p.url)));

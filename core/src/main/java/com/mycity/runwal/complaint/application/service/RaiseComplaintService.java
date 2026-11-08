@@ -1,6 +1,7 @@
 package com.mycity.runwal.complaint.application.service;
 
 import com.mycity.runwal.complaint.application.command.RaiseComplaintCommand;
+import com.mycity.runwal.complaint.application.port.ComplaintsAddOn;
 import com.mycity.runwal.complaint.application.port.CurrentActor;
 import com.mycity.runwal.complaint.application.port.DomainEventPublisher;
 import com.mycity.runwal.complaint.application.port.FlatDirectory;
@@ -37,12 +38,13 @@ public class RaiseComplaintService {
     private final CurrentActor currentActor;
     private final DomainEventPublisher eventPublisher;
     private final PhotoStorage photoStorage;
+    private final ComplaintsAddOn addOn;
     private final Clock clock;
 
     public RaiseComplaintService(ComplaintRepository complaints, ComplaintCategoryRepository categories,
                                  FlatDirectory flatDirectory, SlaPolicy slaPolicy, ComplaintAccessPolicy accessPolicy,
                                  CurrentActor currentActor, DomainEventPublisher eventPublisher,
-                                 PhotoStorage photoStorage, Clock clock) {
+                                 PhotoStorage photoStorage, ComplaintsAddOn addOn, Clock clock) {
         this.complaints = complaints;
         this.categories = categories;
         this.flatDirectory = flatDirectory;
@@ -51,6 +53,7 @@ public class RaiseComplaintService {
         this.currentActor = currentActor;
         this.eventPublisher = eventPublisher;
         this.photoStorage = photoStorage;
+        this.addOn = addOn;
         this.clock = clock;
     }
 
@@ -65,6 +68,9 @@ public class RaiseComplaintService {
         Actor actor = currentActor.actor();
         if (!accessPolicy.mayRaise(actor, societyId, location, flatDirectory.flatsOf(societyId, actor.userId()))) {
             throw new ActionNotAllowedException("You can raise complaints only for your own flat or a common area");
+        }
+        if (location.towerId() != null && !addOn.isOnIn(societyId, location.towerId())) {
+            throw new ActionNotAllowedException("Complaints for this tower are handled outside this app");
         }
 
         Complaint complaint = Complaint.raise(complaints.nextId(), societyId, location,

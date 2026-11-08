@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.mycity.runwal.residency.application.command.OfferAddOnCommand;
 import com.mycity.runwal.residency.application.command.SwitchAddOnCommand;
+import com.mycity.runwal.residency.application.command.SwitchAddOnInTowerCommand;
+import com.mycity.runwal.residency.application.query.AddOnOnInTowerQuery;
 import com.mycity.runwal.residency.application.query.AddOnOnQuery;
 import com.mycity.runwal.residency.application.query.AddOnView;
 import com.mycity.runwal.residency.application.query.NearbySocietiesQuery;
@@ -15,11 +17,15 @@ import com.mycity.runwal.residency.domain.model.actor.ActorRole;
 import com.mycity.runwal.residency.domain.model.society.AddOn;
 import com.mycity.runwal.residency.domain.model.society.GeoPoint;
 import com.mycity.runwal.residency.domain.model.society.Society;
+import com.mycity.runwal.residency.domain.model.tower.Tower;
+import com.mycity.runwal.residency.domain.model.tower.TowerCode;
+import com.mycity.runwal.residency.domain.model.tower.TowerRepository;
 import com.mycity.runwal.residency.domain.service.SocietySettingsPolicy;
 import com.mycity.runwal.shared.id.SocietyId;
 import com.mycity.runwal.shared.id.TowerId;
 import com.mycity.runwal.shared.id.UserId;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
@@ -39,7 +45,7 @@ class SocietySettingsServiceTest {
             new Society(THANE, "Thane", new GeoPoint(19.2183, 72.9781), Set.of(AddOn.FEED), Set.of(AddOn.FEED)));
     private Actor caller = SOCIETY_ADMIN;
     private final SocietySettingsService settings =
-            new SocietySettingsService(societies, () -> caller, new SocietySettingsPolicy());
+            new SocietySettingsService(societies, new OneTower(), () -> caller, new SocietySettingsPolicy());
     private final ResidencyQueryService queries =
             new ResidencyQueryService(societies, null, null, () -> caller);
 
@@ -109,5 +115,51 @@ class SocietySettingsServiceTest {
         assertThat(queries.nearby(new NearbySocietiesQuery(1, 10_000, "FEED")))
                 .extracting(SocietyView::name).containsExactly("Palava");
         assertThat(queries.nearby(new NearbySocietiesQuery(99, 10_000, "FEED"))).isEmpty();
+    }
+
+    @Test
+    void theSocietyAdminLeavesOutATowerWithItsOwnComplaintAppAndBringsItBack() {
+        caller = OWNER;
+        settings.offer(new OfferAddOnCommand(1, "COMPLAINTS", true));
+        caller = SOCIETY_ADMIN;
+        settings.switchAddOn(new SwitchAddOnCommand(1, "COMPLAINTS", true));
+
+        SocietyView off = settings.switchAddOnInTower(new SwitchAddOnInTowerCommand(1, "COMPLAINTS", 5, false)).orElseThrow();
+        assertThat(off.complaintsOffInTowers()).containsExactly(5L);
+        assertThat(queries.addOnOnInTower(new AddOnOnInTowerQuery(1, "COMPLAINTS", 5))).isFalse();
+        assertThat(queries.addOnOnInTower(new AddOnOnInTowerQuery(1, "COMPLAINTS", 6))).isTrue();
+        assertThat(queries.addOnOn(new AddOnOnQuery(1, "COMPLAINTS"))).as("still on for the society").isTrue();
+
+        settings.switchAddOnInTower(new SwitchAddOnInTowerCommand(1, "COMPLAINTS", 5, true));
+        assertThat(queries.addOnOnInTower(new AddOnOnInTowerQuery(1, "COMPLAINTS", 5))).isTrue();
+    }
+
+    @Test
+    void onlyTheSocietyAdminSwitchesTowersAndOnlyTheSocietysOwnTowers() {
+        for (Actor notAdmin : List.of(TOWER_ADMIN, RESIDENT)) {
+            caller = notAdmin;
+            assertThatThrownBy(() -> settings.switchAddOnInTower(new SwitchAddOnInTowerCommand(1, "COMPLAINTS", 5, false)))
+                    .isInstanceOf(ActionNotAllowedException.class);
+        }
+        caller = SOCIETY_ADMIN;
+        assertThat(settings.switchAddOnInTower(new SwitchAddOnInTowerCommand(1, "COMPLAINTS", 99, false))).isEmpty();
+        assertThatThrownBy(() -> settings.switchAddOnInTower(new SwitchAddOnInTowerCommand(1, "FEED", 5, false)))
+                .isInstanceOf(InvalidResidencyException.class);
+    }
+
+    /** Runwal MyCity has tower 5 (B2); no other tower exists. */
+    private static final class OneTower implements TowerRepository {
+
+        private final Tower b2 = new Tower(new TowerId(5), RUNWAL, new TowerCode("B2"), "Radiant", 30);
+
+        @Override
+        public List<Tower> findBySociety(SocietyId societyId) {
+            return societyId.equals(RUNWAL) ? List.of(b2) : List.of();
+        }
+
+        @Override
+        public Optional<Tower> findById(SocietyId societyId, TowerId id) {
+            return societyId.equals(RUNWAL) && id.equals(b2.id()) ? Optional.of(b2) : Optional.empty();
+        }
     }
 }

@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.mycity.runwal.residency.application.command.OfferAddOnCommand;
 import com.mycity.runwal.residency.application.command.SwitchAddOnCommand;
+import com.mycity.runwal.residency.application.command.SwitchAddOnInTowerCommand;
 import com.mycity.runwal.residency.application.query.AddOnView;
 import com.mycity.runwal.residency.application.query.SocietyView;
 import com.mycity.runwal.residency.application.service.ActionNotAllowedException;
@@ -25,7 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 class SocietySettingsControllerTest {
 
     private static final SocietyView RUNWAL = new SocietyView(1, "Runwal MyCity", 19.186062, 73.074812,
-            List.of(new AddOnView("FEED", true, true), new AddOnView("COMPLAINTS", true, false)));
+            List.of(new AddOnView("FEED", true, true), new AddOnView("COMPLAINTS", true, false)), List.of(5L));
 
     @Autowired
     private MockMvc mockMvc;
@@ -51,6 +52,22 @@ class SocietySettingsControllerTest {
                 .andExpect(jsonPath("$.latitude").value(19.186062));
         mockMvc.perform(put("/residency/societies/9/add-ons/FEED").contentType(MediaType.APPLICATION_JSON)
                         .content("{\"on\": true}"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void theAdminSwitchesComplaintsOffForOneTower() throws Exception {
+        given(service.switchAddOnInTower(new SwitchAddOnInTowerCommand(1, "COMPLAINTS", 5, false)))
+                .willReturn(Optional.of(RUNWAL));
+        given(service.switchAddOnInTower(new SwitchAddOnInTowerCommand(1, "COMPLAINTS", 99, false)))
+                .willReturn(Optional.empty());
+
+        mockMvc.perform(put("/residency/societies/1/add-ons/COMPLAINTS/towers/5")
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"on\": false}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.complaintsOffInTowers[0]").value(5));
+        mockMvc.perform(put("/residency/societies/1/add-ons/COMPLAINTS/towers/99")
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"on\": false}"))
                 .andExpect(status().isNotFound());
     }
 

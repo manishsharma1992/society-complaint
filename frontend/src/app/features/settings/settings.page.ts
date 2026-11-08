@@ -2,12 +2,15 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { Observable } from 'rxjs';
+import { Tower } from '../../core/models';
+import { ResidencyApi } from '../../core/residency';
 import { Roles } from '../../core/roles';
 import { AddOn, AddOnName, Society, SocietyStore } from '../../core/society';
 
 /**
  * A society's add-ons. The platform owner decides which are available to the society; the society admin switches
  * available ones on or off for everyone in the society. Switching off hides an add-on; its data stays.
+ * Complaints can also be left off for single towers that handle complaints their own way (e.g. their own app).
  */
 @Component({
   selector: 'app-settings-page',
@@ -42,6 +45,23 @@ import { AddOn, AddOnName, Society, SocietyStore } from '../../core/society';
                   <span>{{ t('settings.on') }}</span>
                 </label>
               </div>
+              @if (a.addOn === 'COMPLAINTS' && a.on && roles.isSocietyAdmin() && towers().length > 0) {
+                <fieldset class="towers">
+                  <legend>{{ t('settings.towers.title') }}</legend>
+                  <p class="muted small">{{ t('settings.towers.lead') }}</p>
+                  <ul class="tower-list">
+                    @for (tower of towers(); track tower.id) {
+                      <li>
+                        <label class="switch">
+                          <input type="checkbox" role="switch" [checked]="!society.complaintsOffInTowers.includes(tower.id)"
+                                 [disabled]="busyTower() === tower.id" (change)="turnTower(tower, $any($event.target))" />
+                          <span><span class="num">{{ tower.code }}</span> {{ tower.name }}</span>
+                        </label>
+                      </li>
+                    }
+                  </ul>
+                </fieldset>
+              }
             </li>
           }
         </ul>
@@ -68,6 +88,11 @@ import { AddOn, AddOnName, Society, SocietyStore } from '../../core/society';
     .small { font-size: var(--text-sm); }
     .warn { color: var(--color-error); }
     .note { margin-top: var(--space-md); }
+    .towers { grid-column: 1 / -1; border: 0; margin: 0; padding: var(--space-sm) 0 0; }
+    .towers legend { font-weight: 600; padding: 0; }
+    .tower-list { list-style: none; margin: var(--space-xs) 0 0; padding: 0; display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: 0 var(--space-md); }
+    .num { font-variant-numeric: tabular-nums; font-weight: 600; }
     @media (min-width: 48rem) { .row { grid-template-columns: 1fr auto; align-items: center; } }
   `,
 })
@@ -75,10 +100,26 @@ export default class SettingsPage {
   protected readonly store = inject(SocietyStore);
   protected readonly roles = inject(Roles);
   protected readonly busy = signal<AddOnName | null>(null);
+  protected readonly busyTower = signal<number | null>(null);
+  protected readonly towers = signal<Tower[]>([]);
   protected readonly failed = signal(false);
 
   constructor() {
     this.store.ensure().subscribe();
+    inject(ResidencyApi).towers().subscribe((towers) => this.towers.set(towers));
+  }
+
+  protected turnTower(tower: Tower, input: HTMLInputElement): void {
+    this.busyTower.set(tower.id);
+    this.failed.set(false);
+    this.store.switchComplaintsInTower(tower.id, input.checked).subscribe({
+      next: () => this.busyTower.set(null),
+      error: () => {
+        this.failed.set(true);
+        this.busyTower.set(null);
+        input.checked = !input.checked; // nothing changed on the server: put the switch back
+      },
+    });
   }
 
   protected offer(addOn: AddOn, input: HTMLInputElement): void {

@@ -115,7 +115,8 @@
     "errorNotYours": "You can raise complaints only for your own flat or a common area.",
     "discardQuestion": "Discard this complaint? Nothing has been sent yet.",
     "keepEditing": "Keep editing",
-    "discard": "Discard"
+    "discard": "Discard",
+    "handledOutside": "Complaints for {{label}} are handled outside this app."
   },
   "profile": {
     "title": "Profile",
@@ -501,7 +502,11 @@
     "on": "On",
     "notAvailable": "Not available to this society yet.",
     "failed": "The change could not be saved. Try again.",
-    "note": "Switching an add-on off hides it for everyone in the society. Nothing is deleted: switching it on again brings everything back."
+    "note": "Switching an add-on off hides it for everyone in the society. Nothing is deleted: switching it on again brings everything back.",
+    "towers": {
+      "title": "Towers using complaints",
+      "lead": "Switch off a tower that handles complaints its own way, for example with its own app. Its residents can still report society-wide areas, and it can join any time."
+    }
   },
   "help": {
     "link": "How to use the app",

@@ -2,14 +2,17 @@ package com.mycity.runwal.residency.application.service;
 
 import com.mycity.runwal.residency.application.command.OfferAddOnCommand;
 import com.mycity.runwal.residency.application.command.SwitchAddOnCommand;
+import com.mycity.runwal.residency.application.command.SwitchAddOnInTowerCommand;
 import com.mycity.runwal.residency.application.port.CurrentActor;
 import com.mycity.runwal.residency.application.query.SocietyView;
 import com.mycity.runwal.residency.domain.model.actor.Actor;
 import com.mycity.runwal.residency.domain.model.society.AddOn;
 import com.mycity.runwal.residency.domain.model.society.SocietyRepository;
+import com.mycity.runwal.residency.domain.model.tower.TowerRepository;
 import com.mycity.runwal.residency.domain.service.SocietySettingsPolicy;
 import com.mycity.runwal.shared.ddd.annotation.ApplicationService;
 import com.mycity.runwal.shared.id.SocietyId;
+import com.mycity.runwal.shared.id.TowerId;
 import java.util.Optional;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +21,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class SocietySettingsService {
 
     private final SocietyRepository societies;
+    private final TowerRepository towers;
     private final CurrentActor currentActor;
     private final SocietySettingsPolicy policy;
 
-    public SocietySettingsService(SocietyRepository societies, CurrentActor currentActor, SocietySettingsPolicy policy) {
+    public SocietySettingsService(SocietyRepository societies, TowerRepository towers, CurrentActor currentActor,
+                                  SocietySettingsPolicy policy) {
         this.societies = societies;
+        this.towers = towers;
         this.currentActor = currentActor;
         this.policy = policy;
     }
@@ -59,6 +65,29 @@ public class SocietySettingsService {
                 society.switchOn(addOn);
             } else {
                 society.switchOff(addOn);
+            }
+            societies.save(society);
+            return SocietyView.of(society);
+        });
+    }
+
+    /** Empty when there is no such society or the tower is not one of its towers. */
+    @Transactional
+    public Optional<SocietyView> switchAddOnInTower(SwitchAddOnInTowerCommand command) {
+        SocietyId societyId = new SocietyId(command.societyId());
+        if (!policy.maySwitchAddOns(currentActor.actor(), societyId)) {
+            throw new ActionNotAllowedException("Only the society admin can switch this society's add-ons");
+        }
+        AddOn addOn = AddOn.from(command.addOn());
+        TowerId tower = new TowerId(command.towerId());
+        if (towers.findById(societyId, tower).isEmpty()) {
+            return Optional.empty();
+        }
+        return societies.findById(societyId).map(society -> {
+            if (command.on()) {
+                society.switchOnInTower(addOn, tower);
+            } else {
+                society.switchOffInTower(addOn, tower);
             }
             societies.save(society);
             return SocietyView.of(society);

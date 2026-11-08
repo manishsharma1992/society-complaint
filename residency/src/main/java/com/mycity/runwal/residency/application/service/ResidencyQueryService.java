@@ -5,6 +5,7 @@ import com.mycity.runwal.residency.application.query.FlatView;
 import com.mycity.runwal.residency.application.query.FlatsOfMemberQuery;
 import com.mycity.runwal.residency.application.query.GetFlatQuery;
 import com.mycity.runwal.residency.application.query.AddOnOnQuery;
+import com.mycity.runwal.residency.application.query.AddOnOnInTowerQuery;
 import com.mycity.runwal.residency.application.query.GetSocietyQuery;
 import com.mycity.runwal.residency.application.query.NearbySocietiesQuery;
 import com.mycity.runwal.residency.application.query.ListFlatsQuery;
@@ -60,6 +61,14 @@ public class ResidencyQueryService {
     public boolean addOnOn(AddOnOnQuery query) {
         AddOn addOn = AddOn.from(query.addOn());
         return societies.findById(new SocietyId(query.societyId())).map(s -> s.isOn(addOn)).orElse(false);
+    }
+
+    /** For Complaint Management, before a complaint about a tower: on for the society and not off for that tower. */
+    @Transactional(readOnly = true)
+    public boolean addOnOnInTower(AddOnOnInTowerQuery query) {
+        AddOn addOn = AddOn.from(query.addOn());
+        return societies.findById(new SocietyId(query.societyId()))
+                .map(s -> s.isOnInTower(addOn, new TowerId(query.towerId()))).orElse(false);
     }
 
     /** For the feed: neighbours (itself included) that use the add-on; empty for an unknown society. */

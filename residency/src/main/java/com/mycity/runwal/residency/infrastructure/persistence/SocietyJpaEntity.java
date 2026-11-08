@@ -32,6 +32,12 @@ class SocietyJpaEntity {
     @CollectionTable(schema = "residency", name = "society_add_on", joinColumns = @JoinColumn(name = "society_id"))
     Set<AddOnRow> addOns = new HashSet<>();
 
+    /** Towers where complaints are off while they are on for the rest of the society. */
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(schema = "residency", name = "society_complaints_off_tower", joinColumns = @JoinColumn(name = "society_id"))
+    @Column(name = "tower_id", nullable = false)
+    Set<Long> complaintsOffTowers = new HashSet<>();
+
     protected SocietyJpaEntity() {
     }
 
