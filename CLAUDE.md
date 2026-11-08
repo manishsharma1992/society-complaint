@@ -465,8 +465,16 @@ The server has 512 MB today, which is not enough for libvips or ffmpeg next to t
   Guidelines, Grievance Redressal), built by the same script from `landing/legal.html` and `landing/legal_texts.py`
   (a small Markdown subset; English prevails, hi and mr are translations and say so). Courts: Thane. The Privacy
   Policy must list everything the app stores; update it with any new personal data. The Grievance Officer's details
-  are "To be announced" until the owner names one. The homepage footer links every section; the legal page's
-  header stays in view, with `scroll-padding-top` so section jumps and focus land below it.
+  are "To be announced" until the owner names one. The footer links every section.
+- One header and one footer for the homepage and the legal pages: `landing/shared.css` plus `header()` and `footer()`
+  in `build_landing.py`; change them there, never per page. The header is fixed (clear over the homepage photo,
+  a frosted bar once the page scrolls, solid when transparency is reduced); pages keep `scroll-padding-top` so
+  section jumps and keyboard focus land below it. On a phone the header shows the logo without the name.
+- Themes (homepage and legal pages only; the Angular app stays light): automatic (the system's
+  `prefers-color-scheme`), light or dark, cycled by the header button and saved as `mycity.theme` in
+  localStorage, applied in `<head>` before paint. Colour roles are tokens in `shared.css` (`--surface`,
+  `--on-surface`, `--surface-2`, ...); use them, never fixed colours, so every section follows the theme. Photo
+  sections keep their dark scrim and light text (`--on-photo`) in both themes.
 
 ## Neon / Spring Boot notes
 - DB credentials come from environment variables (`DB_URL`, `DB_USER`, `DB_PASSWORD`), one set per service. Never commit them.
