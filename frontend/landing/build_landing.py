@@ -4,6 +4,7 @@ Run after changing a text:  python3 frontend/landing/build_landing.py
 Output: public/home.html (served at /), public/hi/index.html, public/mr/index.html.
 """
 import html
+import shutil
 import json
 import re
 from pathlib import Path
@@ -63,6 +64,11 @@ TEXTS = {
         "p3_t": "Your number stays private",
         "p3_d": "Only the society admin sees it, once, to approve you.",
         "band_line": "This is our home. It should be what we were promised.",
+        "nav_app": "Complaints",
+        "app_title": "Complaints, for the whole society",
+        "app_intro": "Raise a problem in a minute and follow it until it is fixed. Built for residents, maintenance staff and admins.",
+        "app_sample": "Screens from the app, with sample data.",
+        "walk": [["Snap and send", "Add up to 5 photos, choose your flat or a common area, and say what is wrong.", "Raising a complaint: adding photos"], ["All your complaints in one place", "See the status of each one, and which are overdue.", "The list of complaints with their status"], ["Every step on record", "Who it was assigned to, when work started, every photo and comment.", "One complaint with its photos and history"], ["Staff see their jobs", "The most urgent first. Staff start their shift with a selfie at the society.", "A staff member’s list of jobs"], ["Admins see the whole picture", "What was fixed, how fast, by whom, and the hours on shift.", "The staff report for admins"]],
         "how_title": "How it works",
         "how_intro": "Three things happen here. Pick one to see its steps; the times are an example from a typical day.",
         "tab_complaint": "Raise a complaint", "tab_feed": "Document an issue", "tab_staff": "Staff shifts",
@@ -139,6 +145,11 @@ TEXTS = {
         "p3_t": "आपका नंबर निजी",
         "p3_d": "सिर्फ़ सोसाइटी एडमिन, एक बार, आपको मंज़ूरी देने के लिए देखते हैं।",
         "band_line": "यह हमारा घर है। यह वैसा होना चाहिए जैसा वादा किया गया था।",
+        "nav_app": "शिकायतें",
+        "app_title": "पूरी सोसाइटी के लिए शिकायतें",
+        "app_intro": "एक मिनट में समस्या दर्ज करें और ठीक होने तक नज़र रखें। निवासियों, मेंटेनेंस स्टाफ़ और एडमिन के लिए।",
+        "app_sample": "ऐप की स्क्रीन, नमूना डेटा के साथ।",
+        "walk": [["फ़ोटो लें और भेजें", "5 तक फ़ोटो जोड़ें, अपना फ़्लैट या कॉमन एरिया चुनें, और बताएँ क्या ख़राब है।", "शिकायत दर्ज करना: फ़ोटो जोड़ना"], ["आपकी सारी शिकायतें एक जगह", "हर शिकायत की स्थिति देखें, और कौन-सी देर से चल रही हैं।", "स्थिति के साथ शिकायतों की सूची"], ["हर कदम दर्ज", "किसे सौंपी गई, काम कब शुरू हुआ, हर फ़ोटो और टिप्पणी।", "फ़ोटो और इतिहास के साथ एक शिकायत"], ["स्टाफ़ अपने काम देखते हैं", "सबसे ज़रूरी पहले। स्टाफ़ सोसाइटी में सेल्फ़ी के साथ शिफ़्ट शुरू करते हैं।", "स्टाफ़ के कामों की सूची"], ["एडमिन पूरी तस्वीर देखते हैं", "क्या ठीक हुआ, कितनी जल्दी, किसने, और शिफ़्ट के घंटे।", "एडमिन के लिए स्टाफ़ रिपोर्ट"]],
         "how_title": "यह कैसे काम करता है",
         "how_intro": "यहाँ तीन काम होते हैं। कदम देखने के लिए एक चुनें; समय एक आम दिन का उदाहरण है।",
         "tab_complaint": "शिकायत दर्ज करें", "tab_feed": "समस्या दर्ज करें", "tab_staff": "स्टाफ़ शिफ़्ट",
@@ -215,6 +226,11 @@ TEXTS = {
         "p3_t": "तुमचा नंबर खासगी",
         "p3_d": "फक्त सोसायटी ॲडमिन, एकदा, तुम्हाला मंजुरी देण्यासाठी पाहतात.",
         "band_line": "हे आमचे घर आहे. ते वचन दिल्याप्रमाणे असायला हवे.",
+        "nav_app": "तक्रारी",
+        "app_title": "संपूर्ण सोसायटीसाठी तक्रारी",
+        "app_intro": "एका मिनिटात समस्या नोंदवा आणि ती सुटेपर्यंत पाठपुरावा करा. रहिवासी, मेंटेनन्स कर्मचारी आणि ॲडमिनसाठी.",
+        "app_sample": "ॲपच्या स्क्रीन, नमुना माहितीसह.",
+        "walk": [["फोटो काढा आणि पाठवा", "5 पर्यंत फोटो जोडा, तुमचा फ्लॅट किंवा कॉमन एरिया निवडा, आणि काय बिघडले ते सांगा.", "तक्रार नोंदवणे: फोटो जोडणे"], ["तुमच्या सर्व तक्रारी एकाच ठिकाणी", "प्रत्येक तक्रारीची स्थिती पाहा, आणि कोणत्या उशिरा आहेत.", "स्थितीसह तक्रारींची यादी"], ["प्रत्येक टप्पा नोंदवलेला", "कोणाला सोपवली, काम कधी सुरू झाले, प्रत्येक फोटो आणि टिप्पणी.", "फोटो आणि इतिहासासह एक तक्रार"], ["कर्मचारी त्यांची कामे पाहतात", "सर्वात तातडीची आधी. कर्मचारी सोसायटीत सेल्फीसह शिफ्ट सुरू करतात.", "कर्मचाऱ्याच्या कामांची यादी"], ["ॲडमिनना संपूर्ण चित्र दिसते", "काय सुटले, किती लवकर, कोणी, आणि शिफ्टचे तास.", "ॲडमिनसाठी कर्मचारी अहवाल"]],
         "how_title": "हे कसे काम करते",
         "how_intro": "इथे तीन गोष्टी होतात. टप्पे पाहण्यासाठी एक निवडा; वेळा एका सामान्य दिवसाचे उदाहरण आहेत.",
         "tab_complaint": "तक्रार नोंदवा", "tab_feed": "समस्या नोंदवा", "tab_staff": "कर्मचारी शिफ्ट",
@@ -273,6 +289,22 @@ def slip(flow, data, hidden):
             + "".join(rows) + f'<p class="total"><span>{e(total)}</span><span>{e(total_value)}</span></p></div>')
 
 
+# the app's own screens, in walkthrough order (images/app/<lang>/<name>.jpg, captured with sample data)
+SCREENS = ["raise", "complaints", "complaint", "jobs", "report"]
+
+
+def walk(lang, t):
+    """The walkthrough: each step with its own screen (shown inline on a phone), and the sticky phone's screens."""
+    steps, screens = [], []
+    for i, ((title, text, alt), name) in enumerate(zip(t["walk"], SCREENS)):
+        src = f'/images/app/{lang}/{name}.jpg'
+        on = ' on' if i == 0 else ''
+        steps.append(f'<li class="wstep{on}"><h3>{e(title)}</h3><p>{e(text)}</p>'
+                     f'<div class="device"><img src="{src}" width="780" height="1560" alt="{e(alt)}" loading="lazy"></div></li>')
+        screens.append(f'<img class="{on.strip()}" src="{src}" width="780" height="1560" alt="" loading="lazy">')
+    return "\n          ".join(steps), "".join(screens)
+
+
 def json_ld(t):
     """WebSite + WebApplication: what the site is, for search engines."""
     return json.dumps({
@@ -294,6 +326,7 @@ def render(lang, t):
               "zigzag": zigzag(),
               "statement": " ".join(f'<span class="w">{e(w)}</span>' for w in t["statement"].split()),
               "slips": "\n          ".join(slip(f, t["slip_" + f], i > 0) for i, f in enumerate(("complaint", "feed", "staff"))),
+              "walk_steps": walk(lang, t)[0], "walk_screens": walk(lang, t)[1],
               "cur_en": ' aria-current="page"' if lang == "en" else "",
               "cur_hi": ' aria-current="page"' if lang == "hi" else "",
               "cur_mr": ' aria-current="page"' if lang == "mr" else ""}
@@ -304,9 +337,13 @@ def render(lang, t):
 
 if __name__ == "__main__":
     targets = {"en": PUBLIC / "home.html", "hi": PUBLIC / "hi" / "index.html", "mr": PUBLIC / "mr" / "index.html"}
+    # Motion (motion.dev), served from this site; installed as a dev dependency of the frontend
+    (PUBLIC / "vendor").mkdir(exist_ok=True)
+    shutil.copy(HERE.parent / "node_modules" / "motion" / "dist" / "motion.js", PUBLIC / "vendor" / "motion.js")
     keys = set(TEXTS["en"])
     for lang, t in TEXTS.items():
         assert set(t) == keys, f"{lang} texts differ: {keys ^ set(t)}"
+        assert len(t["walk"]) == len(SCREENS)
         targets[lang].parent.mkdir(parents=True, exist_ok=True)
         targets[lang].write_text(render(lang, t), encoding="utf-8")
         print("wrote", targets[lang].relative_to(HERE.parent))

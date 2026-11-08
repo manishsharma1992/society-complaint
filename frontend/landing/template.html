@@ -101,9 +101,9 @@
     /* scene 1: the towers settle as you scroll */
     .hero { position: relative; }
     .stick { position: relative; min-height: 100svh; overflow: hidden; display: grid; place-items: center; }
-    .hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; transform: scale(calc(1.18 - 0.18 * var(--p, 0))); will-change: transform; }
-    .hero .shade { position: absolute; inset: 0; background: var(--color-scrim); opacity: calc(0.75 + 0.25 * var(--p, 0)); }
-    .hero .words { position: relative; z-index: 2; padding: 120px var(--gutter) 80px; opacity: calc(1 - 1.4 * var(--p, 0)); transform: translateY(calc(-80px * var(--p, 0))); }
+    .hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; will-change: transform; }
+    .hero .shade { position: absolute; inset: 0; background: var(--color-scrim); opacity: 0.85; }
+    .hero .words { position: relative; z-index: 2; padding: 120px var(--gutter) 80px; }
     .hero h1 { font-size: var(--text-mega); max-width: 14ch; margin-inline: auto; }
     .hero .lead { font-size: var(--text-lead); color: var(--color-on-night); max-width: 34ch; margin: var(--space-lg) auto 0; }
 
@@ -141,6 +141,32 @@
     .js:not(.still) .post[data-step="2"] .status .wait { display: none; }
     .js:not(.still) .post[data-step="2"] .status .done { display: inline; color: var(--color-accent-press); }
 
+    /* complaints, for the whole society: the app's own screens */
+    .app { background: var(--color-night); }
+    .app .intro { color: var(--color-on-night-2); }
+    .device { position: relative; width: 100%; aspect-ratio: 1 / 2; border-radius: 42px; padding: 9px; background: var(--color-night-3); }
+    .device img { width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 34px; }
+    .fan { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-lg); align-items: end; max-width: 860px; margin-top: var(--space-3xl); }
+    .fan .device:nth-child(2) { transform: translateY(-48px); }
+    .walk { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); margin-top: var(--space-4xl); }
+    .wsteps { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3xl); }
+    .wstep h3 { font-size: clamp(1.75rem, 1.6vw + 1rem, 2.5rem); max-width: 22ch; }
+    .wstep p { color: var(--color-on-night-2); font-size: var(--text-lead); max-width: 34ch; margin-top: var(--space-md); }
+    .wstep .device { max-width: 300px; margin: var(--space-xl) auto 0; }
+    .stage-col { display: none; }
+    .sample { margin-top: var(--space-3xl); font-size: var(--text-small); color: var(--color-on-night-2); }
+    @media (min-width: 64rem) {
+      .walk { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3xl); }
+      .wsteps { gap: 0; }
+      .wstep { min-height: 80svh; display: grid; align-content: center; transition: opacity var(--dur-short) var(--ease-out); }
+      .js:not(.still) .wstep:not(.on) { opacity: 0.3; }
+      .wstep .device { display: none; }
+      .stage-col { display: block; }
+      .stage-col .device { position: sticky; top: calc(50svh - 330px); width: 330px; margin-inline: auto; }
+      .stage-col .device img { position: absolute; inset: 9px; width: calc(100% - 18px); height: calc(100% - 18px); opacity: 0; transition: opacity var(--dur-long) var(--ease-out); }
+      .stage-col .device img.on { opacity: 1; }
+    }
+
     /* how it works */
     section { padding-block: var(--space-4xl); }
     section.statement, section.story { padding-block: 0; }
@@ -177,7 +203,7 @@
 
     /* scene 4: the photograph moves slower than the page */
     .home { position: relative; height: 85svh; min-height: 520px; overflow: hidden; display: grid; place-items: center; padding: 0; }
-    .home img { position: absolute; inset: -12% 0; width: 100%; height: 124%; object-fit: cover; transform: translateY(calc((var(--p, 0.5) - 0.5) * -16%)); will-change: transform; }
+    .home img { position: absolute; inset: -12% 0; width: 100%; height: 124%; object-fit: cover; will-change: transform; }
     .home .shade { position: absolute; inset: 0; background: var(--color-scrim); }
     .home p { position: relative; z-index: 2; font-size: var(--text-statement); font-weight: 600; line-height: 1.2; max-width: 22ch; text-align: center; padding-inline: var(--gutter); }
 
@@ -230,12 +256,9 @@
       .js:not(.still) .story .post .field { opacity: 1; transform: none; }
       .story-grid { margin-top: var(--space-xl); gap: var(--space-xl); }
     }
-    .js [data-rise] { opacity: 0; transform: translateY(20px); transition: opacity var(--dur-long) var(--ease-out), transform var(--dur-long) var(--ease-out); }
-    .js [data-rise].in { opacity: 1; transform: none; }
+    /* entrances: hidden only once Motion has loaded and will reveal them */
+    .motion [data-rise] > * { opacity: 0; }
     @media (prefers-reduced-motion: reduce) {
-      .js [data-rise] { opacity: 1; transform: none; transition: none; }
-      .hero img, .home img { transform: none; }
-      .hero .words { opacity: 1; transform: none; }
       .slip.show { animation: none; }
       .btn, .tabs button, summary::after, .w, .steps li, .field { transition: none; }
     }
@@ -265,7 +288,7 @@
           <p class="lead">{{lead}}</p>
           <div class="actions">
             <a class="btn" href="/login">{{cta_voice}}</a>
-            <a class="btn glass" href="#how">{{nav_how}}</a>
+            <a class="btn glass" href="#complaints">{{nav_app}}</a>
           </div>
         </div>
       </div>
@@ -295,6 +318,25 @@
           </div>
         </div>
       </div>
+    </section>
+
+    <section class="app" id="complaints" aria-labelledby="app-title">
+      <div class="container center" data-rise>
+        <h2 id="app-title">{{app_title}}</h2>
+        <p class="intro">{{app_intro}}</p>
+      </div>
+      <div class="container fan" aria-hidden="true">
+        <div class="device"><img src="/images/app/{{lang}}/raise.jpg" width="780" height="1560" alt="" loading="lazy"></div>
+        <div class="device"><img src="/images/app/{{lang}}/complaint.jpg" width="780" height="1560" alt="" loading="lazy"></div>
+        <div class="device"><img src="/images/app/{{lang}}/jobs.jpg" width="780" height="1560" alt="" loading="lazy"></div>
+      </div>
+      <div class="container walk">
+        <ol class="wsteps">
+          {{walk_steps}}
+        </ol>
+        <div class="stage-col" aria-hidden="true"><div class="device">{{walk_screens}}</div></div>
+      </div>
+      <p class="container center sample">{{app_sample}}</p>
     </section>
 
     <section class="band2 light" id="how" aria-labelledby="how-title">
@@ -371,7 +413,7 @@
             <a href="/" lang="en">English</a><a href="/hi/" lang="hi">हिन्दी</a><a href="/mr/" lang="mr">मराठी</a>
           </nav>
           <nav aria-label="{{nav_how}}">
-            <a href="#how">{{nav_how}}</a><a href="#why">{{nav_why}}</a><a href="#faq">{{nav_faq}}</a><a href="/login">{{nav_signin}}</a>
+            <a href="#complaints">{{nav_app}}</a><a href="#how">{{nav_how}}</a><a href="#why">{{nav_why}}</a><a href="#faq">{{nav_faq}}</a><a href="/login">{{nav_signin}}</a>
           </nav>
         </div>
       </div>
@@ -379,6 +421,7 @@
     </div>
   </footer>
 
+  <script src="/vendor/motion.js"></script>
   <script>
     // the live thing: each tab prints its own slip (without script all three slips show, one under another)
     const tabs = [...document.querySelectorAll('[role=tab]')];
@@ -401,50 +444,54 @@
     });
     tabs.slice(1).forEach((t) => { document.getElementById(t.getAttribute('aria-controls')).hidden = true; });
 
-    // entrances for the plain sections
-    const parts = document.querySelectorAll('[data-rise]');
-    if ('IntersectionObserver' in window) {
-      const seen = new IntersectionObserver((entries) => entries.forEach((e) => {
-        if (e.isIntersecting) { e.target.classList.add('in'); seen.unobserve(e.target); }
-      }), { rootMargin: '0px 0px -6% 0px' });
-      parts.forEach((el) => seen.observe(el));
-    } else {
-      parts.forEach((el) => el.classList.add('in'));
-    }
+    // everything that moves is driven by Motion (motion.dev), only when motion is welcome
+    if (window.Motion && !document.documentElement.classList.contains('still')) {
+      const { animate, scroll, inView, stagger } = Motion;
+      const $ = (q, el = document) => el.querySelector(q);
+      const $$ = (q, el = document) => [...el.querySelectorAll(q)];
+      document.documentElement.classList.add('motion');
 
-    // the scroll scenes: each reads how far through it the reader is (0 to 1) and draws from that
-    if (!document.documentElement.classList.contains('still')) {
-      const scenes = [...document.querySelectorAll('[data-scene]')];
-      const words = [...document.querySelectorAll('.statement .w')];
-      const steps = [...document.querySelectorAll('.steps li')];
-      const post = document.querySelector('.post');
-      const clamp = (v) => Math.min(1, Math.max(0, v));
-      let queued = false;
-      function draw() {
-        queued = false;
-        const vh = innerHeight;
-        for (const s of scenes) {
-          const r = s.getBoundingClientRect();
-          if (r.bottom < -vh || r.top > 2 * vh) continue;
-          const kind = s.dataset.scene;
-          const p = kind === 'drift' ? clamp((vh - r.top) / (vh + r.height)) : clamp(-r.top / Math.max(1, r.height - vh));
-          s.style.setProperty('--p', p.toFixed(4));
-          if (kind === 'words') {
-            const lit = Math.ceil(clamp(p * 1.3) * words.length);
-            words.forEach((w, i) => w.classList.toggle('lit', i < lit));
-          } else if (kind === 'story') {
-            const step = Math.min(2, Math.floor(p * 3));
-            if (post.dataset.step !== String(step)) {
-              post.dataset.step = step;
-              steps.forEach((li, i) => li.classList.toggle('on', i === step));
-            }
-          }
+      // the parts of each plain section rise in turn, on a spring, once
+      inView('[data-rise]', (el) => {
+        try {
+          animate([...el.children], { opacity: [0, 1], y: [28, 0] }, { delay: stagger(0.08), type: 'spring', bounce: 0, duration: 0.9 });
+        } catch (e) {
+          document.documentElement.classList.remove('motion'); // never leave content hidden
         }
-      }
-      const ask = () => { if (!queued) { queued = true; requestAnimationFrame(draw); } };
-      addEventListener('scroll', ask, { passive: true });
-      addEventListener('resize', ask);
-      draw();
+      }, { margin: '0px 0px -10% 0px' });
+
+      // scene 1: the towers settle and the words leave as you scroll
+      const hero = $('.hero');
+      scroll(animate($('img', hero), { scale: [1.18, 1] }, { ease: 'linear' }), { target: hero, offset: ['start start', 'end start'] });
+      scroll(animate($('.words', hero), { opacity: [1, 0], y: [0, -90] }, { ease: 'linear' }), { target: hero, offset: ['start start', '55% start'] });
+
+      // scene 2: the sentence lights up word by word
+      const words = $$('.statement .w');
+      scroll((p) => { const lit = Math.ceil(Math.min(1, p * 1.3) * words.length); words.forEach((w, i) => w.classList.toggle('lit', i < lit)); },
+        { target: $('.statement'), offset: ['start start', 'end end'] });
+
+      // scene 3: the example post fills in
+      const post = $('.post'), steps = $$('.steps li');
+      scroll((p) => {
+        const step = String(Math.min(2, Math.floor(p * 3)));
+        if (post.dataset.step !== step) { post.dataset.step = step; steps.forEach((li, i) => li.classList.toggle('on', String(i) === step)); }
+      }, { target: $('.story'), offset: ['start start', 'end end'] });
+
+      // the three phones drift at their own speeds
+      $$('.fan .device').forEach((d, i) => {
+        scroll(animate(d, { y: [[140, 60, 180][i], [-20, -80, -40][i]] }, { ease: 'linear' }), { target: $('.fan'), offset: ['start end', 'end start'] });
+      });
+
+      // the walkthrough: the phone shows the screen of the step in the middle of the screen
+      const wsteps = $$('.wstep'), screens = $$('.stage-col img');
+      wsteps.forEach((li, i) => inView(li, () => {
+        wsteps.forEach((x) => x.classList.toggle('on', x === li));
+        screens.forEach((img, j) => img.classList.toggle('on', j === i));
+      }, { amount: 0.6 }));
+
+      // scene 4: the garden moves slower than the page
+      const home = $('.home');
+      scroll(animate($('img', home), { y: ['-8%', '8%'] }, { ease: 'linear' }), { target: home, offset: ['start end', 'end start'] });
     }
   </script>
 </body>
