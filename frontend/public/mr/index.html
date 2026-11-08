@@ -198,6 +198,36 @@
     .js:not(.still) .post[data-step="2"] .status .wait { display: none; }
     .js:not(.still) .post[data-step="2"] .status .done { display: inline; color: var(--link); }
 
+    /* the queue: one plumber, many flats; complaints wait in order and go to whoever frees up */
+    .queue { background: var(--surface-2); padding-block: 0; }
+    .queue .stick { align-content: center; padding-block: var(--space-2xl); }
+    .queue .intro { color: var(--on-surface-2); }
+    .board { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); margin-top: var(--space-xl); text-align: start; }
+    .board h3 { font-size: var(--text-small); font-weight: 600; color: var(--muted); letter-spacing: 0; margin: 0 0 var(--space-sm); }
+    .lane { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-sm); }
+    .card { position: relative; background: var(--surface); border-radius: var(--radius-panel); padding: var(--space-sm) var(--space-md); min-height: 64px; }
+    .card .title { font-weight: 600; }
+    .card .meta { font-size: var(--text-small); color: var(--on-surface-2); }
+    .badge { display: inline-block; margin-top: 4px; padding: 2px 10px; border-radius: var(--radius-pill); font-size: var(--text-small); font-weight: 600; }
+    .badge.go { background: var(--color-accent); color: var(--color-accent-ink); }
+    .badge.wait { background: var(--surface-3); color: var(--on-surface); }
+    .badge.free { background: var(--color-accent); color: var(--color-accent-ink); }
+    .badge.busy { background: var(--surface-3); color: var(--on-surface); }
+    .caption { margin: var(--space-lg) auto 0; max-width: 46ch; min-height: 3.2em; font-size: var(--text-lead); }
+    /* each part shows from one step to another; without motion only the final state shows */
+    .motion .queue [data-show] { transition: opacity var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out); }
+    .motion .queue [data-show]:not(.on) { opacity: 0; transform: translateY(6px); }
+    .motion .queue .caption[data-show]:not(.on) { display: none; }
+    html:not(.motion) .queue [data-show]:not([data-final]) { display: none; }
+    .slot { display: grid; }
+    .slot > * { grid-area: 1 / 1; justify-self: start; }
+    @media (min-width: 48rem) { .board { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2xl); } }
+    /* pinned on wider screens; on a phone the two lists are too tall to pin, so the steps follow the scroll past it */
+    @media (min-width: 48rem) {
+      .motion .queue { height: 320svh; }
+      .motion .queue > .stick { position: sticky; top: 0; height: 100svh; }
+    }
+
     /* complaints, for the whole society: the app's own screens */
     .app { background: var(--surface); }
     .app .intro { color: var(--on-surface-2); }
@@ -358,6 +388,47 @@
       </div>
     </section>
 
+    <section class="queue" data-scene="queue" aria-labelledby="queue-title">
+      <div class="stick">
+        <div class="container center">
+          <h2 id="queue-title">एक प्लंबर. 650 फ्लॅट्स.</h2>
+          <p class="intro">आज तक्रारी WhatsApp ग्रुपमध्ये जातात. संदेश वर सरकून जातात, एकच गळती पाच वेळा सांगितली जाते, आणि त्यावर कोण काम करत आहे हे कोणालाच माहीत नसते. एक व्यक्ती एकाच वेळी प्रत्येक फ्लॅटमध्ये असू शकत नाही.</p>
+          <div class="board">
+            <div>
+              <h3>प्रतीक्षेत</h3>
+              <ul class="lane">
+                <li class="card"><p class="title">लिफ्ट 2 चे दार बंद होत नाही</p><p class="meta">लिफ्ट तंत्रज्ञ</p>
+                  <span class="badge go" data-show="1" data-final>लिफ्ट तंत्रज्ञाला सोपवली</span></li>
+                <li class="card"><p class="title">28 व्या मजल्यावरील कॉरिडॉरचा दिवा</p><p class="meta">इलेक्ट्रिशियन</p>
+                  <span class="badge go" data-show="1" data-final>इलेक्ट्रिशियनला सोपवली</span></li>
+                <li class="card"><p class="title">स्वयंपाकघरातील नळ गळत आहे</p><p class="meta">प्लंबर</p>
+                  <div class="slot"><span class="badge wait" data-show="2" data-hide="3">प्रतीक्षेत: प्लंबर व्यस्त आहे</span>
+                  <span class="badge go" data-show="3" data-final>प्लंबरला सोपवली</span></div></li>
+              </ul>
+            </div>
+            <div>
+              <h3>शिफ्टवर</h3>
+              <ul class="lane">
+                <li class="card"><p class="title">लिफ्ट तंत्रज्ञ</p>
+                  <div class="slot"><span class="badge free" data-show="0" data-hide="1">मोकळा</span>
+                  <span class="badge busy" data-show="1" data-final>व्यस्त: लिफ्ट 2 चे दार बंद होत नाही</span></div></li>
+                <li class="card"><p class="title">इलेक्ट्रिशियन</p>
+                  <div class="slot"><span class="badge free" data-show="0" data-hide="1">मोकळा</span>
+                  <span class="badge busy" data-show="1" data-final>व्यस्त: 28 व्या मजल्यावरील कॉरिडॉरचा दिवा</span></div></li>
+                <li class="card"><p class="title">प्लंबर</p>
+                  <div class="slot"><span class="badge busy" data-show="0" data-hide="3">व्यस्त: बाथरूमचा नळ, A1-1102</span>
+                  <span class="badge busy" data-show="3" data-final>व्यस्त: स्वयंपाकघरातील नळ गळत आहे</span></div></li>
+              </ul>
+            </div>
+          </div>
+          <p class="caption" data-show="0" data-hide="1">तक्रारी एकाच रांगेत थांबतात, सर्वात तातडीच्या आधी. काहीही वर सरकून हरवत नाही.</p>
+          <p class="caption" data-show="1" data-hide="2">प्रत्येक तक्रार थेट शिफ्टवर असलेल्या, ती हाताळणाऱ्या मोकळ्या कर्मचाऱ्याकडे जाते.</p>
+          <p class="caption" data-show="2" data-hide="3">प्लंबर व्यस्त आहे. गळती थांबते, आणि तक्रार करणाऱ्या रहिवाशाला तसे सांगितले जाते.</p>
+          <p class="caption" data-show="3" data-final>तो काम संपवताच गळती त्याची. कोणालाही कोणाच्या मागे लागावे लागले नाही.</p>
+        </div>
+      </div>
+    </section>
+
     <section class="app" id="complaints" aria-labelledby="app-title">
       <div class="container center" data-rise>
         <h2 id="app-title">संपूर्ण सोसायटीसाठी तक्रारी</h2>
@@ -372,11 +443,13 @@
         <ol class="wsteps">
           <li class="wstep on"><h3>फोटो काढा आणि पाठवा</h3><p>5 पर्यंत फोटो जोडा, तुमचा फ्लॅट किंवा कॉमन एरिया निवडा, आणि काय बिघडले ते सांगा.</p><div class="device"><img src="/images/app/mr/raise.jpg" width="780" height="1560" alt="तक्रार नोंदवणे: फोटो जोडणे" loading="lazy"></div></li>
           <li class="wstep"><h3>तुमच्या सर्व तक्रारी एकाच ठिकाणी</h3><p>प्रत्येक तक्रारीची स्थिती पाहा, आणि कोणत्या उशिरा आहेत.</p><div class="device"><img src="/images/app/mr/complaints.jpg" width="780" height="1560" alt="स्थितीसह तक्रारींची यादी" loading="lazy"></div></li>
+          <li class="wstep"><h3>प्रतीक्षा गूढ नाही</h3><p>सर्व कर्मचारी व्यस्त असताना तुमची तक्रार रांगेत आहे हे तुम्हाला दिसते. कोणी मोकळे होताच ती सोपवली जाते.</p><div class="device"><img src="/images/app/mr/waiting.jpg" width="780" height="1560" alt="रांगेत प्रतीक्षेत असलेली तक्रार" loading="lazy"></div></li>
           <li class="wstep"><h3>प्रत्येक टप्पा नोंदवलेला</h3><p>कोणाला सोपवली, काम कधी सुरू झाले, प्रत्येक फोटो आणि टिप्पणी.</p><div class="device"><img src="/images/app/mr/complaint.jpg" width="780" height="1560" alt="फोटो आणि इतिहासासह एक तक्रार" loading="lazy"></div></li>
-          <li class="wstep"><h3>कर्मचारी त्यांची कामे पाहतात</h3><p>सर्वात तातडीची आधी. कर्मचारी सोसायटीत सेल्फीसह शिफ्ट सुरू करतात.</p><div class="device"><img src="/images/app/mr/jobs.jpg" width="780" height="1560" alt="कर्मचाऱ्याच्या कामांची यादी" loading="lazy"></div></li>
+          <li class="wstep"><h3>कर्मचारी त्यांची कामे पाहतात</h3><p>कामे आपोआप त्यांच्याकडे येतात, सर्वात तातडीची आधी. कर्मचारी सोसायटीत सेल्फीसह शिफ्ट सुरू करतात.</p><div class="device"><img src="/images/app/mr/jobs.jpg" width="780" height="1560" alt="कर्मचाऱ्याच्या कामांची यादी" loading="lazy"></div></li>
+          <li class="wstep"><h3>कोण काय हाताळते, एकदाच ठरवा</h3><p>ॲडमिन प्रत्येक कर्मचाऱ्याच्या श्रेणींवर खूण करतात; त्यानंतर सोपवण्याचे काम ॲप करते.</p><div class="device"><img src="/images/app/mr/skills.jpg" width="780" height="1560" alt="सेटिंग्ज: कोण कोणत्या तक्रारी हाताळते" loading="lazy"></div></li>
           <li class="wstep"><h3>ॲडमिनना संपूर्ण चित्र दिसते</h3><p>काय सुटले, किती लवकर, कोणी, आणि शिफ्टचे तास.</p><div class="device"><img src="/images/app/mr/report.jpg" width="780" height="1560" alt="ॲडमिनसाठी कर्मचारी अहवाल" loading="lazy"></div></li>
         </ol>
-        <div class="stage-col" aria-hidden="true"><div class="device"><img class="on" src="/images/app/mr/raise.jpg" width="780" height="1560" alt="" loading="lazy"><img class="" src="/images/app/mr/complaints.jpg" width="780" height="1560" alt="" loading="lazy"><img class="" src="/images/app/mr/complaint.jpg" width="780" height="1560" alt="" loading="lazy"><img class="" src="/images/app/mr/jobs.jpg" width="780" height="1560" alt="" loading="lazy"><img class="" src="/images/app/mr/report.jpg" width="780" height="1560" alt="" loading="lazy"></div></div>
+        <div class="stage-col" aria-hidden="true"><div class="device"><img class="on" src="/images/app/mr/raise.jpg" width="780" height="1560" alt="" loading="lazy"><img class="" src="/images/app/mr/complaints.jpg" width="780" height="1560" alt="" loading="lazy"><img class="" src="/images/app/mr/waiting.jpg" width="780" height="1560" alt="" loading="lazy"><img class="" src="/images/app/mr/complaint.jpg" width="780" height="1560" alt="" loading="lazy"><img class="" src="/images/app/mr/jobs.jpg" width="780" height="1560" alt="" loading="lazy"><img class="" src="/images/app/mr/skills.jpg" width="780" height="1560" alt="" loading="lazy"><img class="" src="/images/app/mr/report.jpg" width="780" height="1560" alt="" loading="lazy"></div></div>
       </div>
       <p class="container center sample">ॲपच्या स्क्रीन, नमुना माहितीसह.</p>
     </section>
@@ -521,6 +594,22 @@
         const step = String(Math.min(2, Math.floor(p * 3)));
         if (post.dataset.step !== step) { post.dataset.step = step; steps.forEach((li, i) => li.classList.toggle('on', String(i) === step)); }
       }, { target: $('.story'), offset: ['start start', 'end end'] });
+
+      // the queue: complaints go to staff as they free up, one step per stretch of scroll
+      const queue = $('.queue'), parts = $$('[data-show]', queue);
+      let queueStep = -1;
+      const showStep = (step) => {
+        if (step === queueStep) return;
+        queueStep = step;
+        parts.forEach((el) => {
+          const from = Number(el.dataset.show), until = el.dataset.hide === undefined ? Infinity : Number(el.dataset.hide);
+          el.classList.toggle('on', step >= from && step < until);
+        });
+      };
+      showStep(0);
+      const pinned = matchMedia('(min-width: 48rem)').matches;
+      scroll((p) => showStep(Math.min(3, Math.floor(p * 4))),
+        { target: queue, offset: pinned ? ['start start', 'end end'] : ['start 0.6', 'end 0.9'] });
 
       // the three phones drift at their own speeds
       $$('.fan .device').forEach((d, i) => {

@@ -127,6 +127,36 @@
     .js:not(.still) .post[data-step="2"] .status .wait { display: none; }
     .js:not(.still) .post[data-step="2"] .status .done { display: inline; color: var(--link); }
 
+    /* the queue: one plumber, many flats; complaints wait in order and go to whoever frees up */
+    .queue { background: var(--surface-2); padding-block: 0; }
+    .queue .stick { align-content: center; padding-block: var(--space-2xl); }
+    .queue .intro { color: var(--on-surface-2); }
+    .board { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); margin-top: var(--space-xl); text-align: start; }
+    .board h3 { font-size: var(--text-small); font-weight: 600; color: var(--muted); letter-spacing: 0; margin: 0 0 var(--space-sm); }
+    .lane { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-sm); }
+    .card { position: relative; background: var(--surface); border-radius: var(--radius-panel); padding: var(--space-sm) var(--space-md); min-height: 64px; }
+    .card .title { font-weight: 600; }
+    .card .meta { font-size: var(--text-small); color: var(--on-surface-2); }
+    .badge { display: inline-block; margin-top: 4px; padding: 2px 10px; border-radius: var(--radius-pill); font-size: var(--text-small); font-weight: 600; }
+    .badge.go { background: var(--color-accent); color: var(--color-accent-ink); }
+    .badge.wait { background: var(--surface-3); color: var(--on-surface); }
+    .badge.free { background: var(--color-accent); color: var(--color-accent-ink); }
+    .badge.busy { background: var(--surface-3); color: var(--on-surface); }
+    .caption { margin: var(--space-lg) auto 0; max-width: 46ch; min-height: 3.2em; font-size: var(--text-lead); }
+    /* each part shows from one step to another; without motion only the final state shows */
+    .motion .queue [data-show] { transition: opacity var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out); }
+    .motion .queue [data-show]:not(.on) { opacity: 0; transform: translateY(6px); }
+    .motion .queue .caption[data-show]:not(.on) { display: none; }
+    html:not(.motion) .queue [data-show]:not([data-final]) { display: none; }
+    .slot { display: grid; }
+    .slot > * { grid-area: 1 / 1; justify-self: start; }
+    @media (min-width: 48rem) { .board { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2xl); } }
+    /* pinned on wider screens; on a phone the two lists are too tall to pin, so the steps follow the scroll past it */
+    @media (min-width: 48rem) {
+      .motion .queue { height: 320svh; }
+      .motion .queue > .stick { position: sticky; top: 0; height: 100svh; }
+    }
+
     /* complaints, for the whole society: the app's own screens */
     .app { background: var(--surface); }
     .app .intro { color: var(--on-surface-2); }
@@ -286,6 +316,47 @@
       </div>
     </section>
 
+    <section class="queue" data-scene="queue" aria-labelledby="queue-title">
+      <div class="stick">
+        <div class="container center">
+          <h2 id="queue-title">{{q_title}}</h2>
+          <p class="intro">{{q_intro}}</p>
+          <div class="board">
+            <div>
+              <h3>{{q_waiting}}</h3>
+              <ul class="lane">
+                <li class="card"><p class="title">{{q_job_lift}}</p><p class="meta">{{q_lift}}</p>
+                  <span class="badge go" data-show="1" data-final>{{q_to_lift}}</span></li>
+                <li class="card"><p class="title">{{q_job_light}}</p><p class="meta">{{q_electrician}}</p>
+                  <span class="badge go" data-show="1" data-final>{{q_to_electrician}}</span></li>
+                <li class="card"><p class="title">{{q_job_leak}}</p><p class="meta">{{q_plumber}}</p>
+                  <div class="slot"><span class="badge wait" data-show="2" data-hide="3">{{q_wait}}</span>
+                  <span class="badge go" data-show="3" data-final>{{q_to_plumber}}</span></div></li>
+              </ul>
+            </div>
+            <div>
+              <h3>{{q_staff}}</h3>
+              <ul class="lane">
+                <li class="card"><p class="title">{{q_lift}}</p>
+                  <div class="slot"><span class="badge free" data-show="0" data-hide="1">{{q_free}}</span>
+                  <span class="badge busy" data-show="1" data-final>{{q_busy}}: {{q_job_lift}}</span></div></li>
+                <li class="card"><p class="title">{{q_electrician}}</p>
+                  <div class="slot"><span class="badge free" data-show="0" data-hide="1">{{q_free}}</span>
+                  <span class="badge busy" data-show="1" data-final>{{q_busy}}: {{q_job_light}}</span></div></li>
+                <li class="card"><p class="title">{{q_plumber}}</p>
+                  <div class="slot"><span class="badge busy" data-show="0" data-hide="3">{{q_busy}}: {{q_job_old}}</span>
+                  <span class="badge busy" data-show="3" data-final>{{q_busy}}: {{q_job_leak}}</span></div></li>
+              </ul>
+            </div>
+          </div>
+          <p class="caption" data-show="0" data-hide="1">{{q_s0}}</p>
+          <p class="caption" data-show="1" data-hide="2">{{q_s1}}</p>
+          <p class="caption" data-show="2" data-hide="3">{{q_s2}}</p>
+          <p class="caption" data-show="3" data-final>{{q_s3}}</p>
+        </div>
+      </div>
+    </section>
+
     <section class="app" id="complaints" aria-labelledby="app-title">
       <div class="container center" data-rise>
         <h2 id="app-title">{{app_title}}</h2>
@@ -425,6 +496,22 @@
         const step = String(Math.min(2, Math.floor(p * 3)));
         if (post.dataset.step !== step) { post.dataset.step = step; steps.forEach((li, i) => li.classList.toggle('on', String(i) === step)); }
       }, { target: $('.story'), offset: ['start start', 'end end'] });
+
+      // the queue: complaints go to staff as they free up, one step per stretch of scroll
+      const queue = $('.queue'), parts = $$('[data-show]', queue);
+      let queueStep = -1;
+      const showStep = (step) => {
+        if (step === queueStep) return;
+        queueStep = step;
+        parts.forEach((el) => {
+          const from = Number(el.dataset.show), until = el.dataset.hide === undefined ? Infinity : Number(el.dataset.hide);
+          el.classList.toggle('on', step >= from && step < until);
+        });
+      };
+      showStep(0);
+      const pinned = matchMedia('(min-width: 48rem)').matches;
+      scroll((p) => showStep(Math.min(3, Math.floor(p * 4))),
+        { target: queue, offset: pinned ? ['start start', 'end end'] : ['start 0.6', 'end 0.9'] });
 
       // the three phones drift at their own speeds
       $$('.fan .device').forEach((d, i) => {
