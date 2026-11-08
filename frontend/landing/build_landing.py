@@ -356,6 +356,7 @@ def render_legal(lang, t):
     values = {**{k: e(v) for k, v in ui.items()}, "lang": lang, "logo": LOGO, "path": t["path"], "language": e(t["language"]),
               "legal_path": legal_path(lang), "updated": e(UPDATED[lang]), "note": note,
               "footer_independent": e(t["footer_independent"]),
+              "footer_place": e(t["footer_place"]), "nav_signin": e(t["nav_signin"]), "skip": e(t["skip"]),
               "toc": "".join(f'<li><a href="#{sid}">{e(title)}</a></li>' for sid, title, _ in LEGAL[lang]),
               "sections": "\n    ".join(f'<section id="{sid}" aria-labelledby="{sid}-h"><h2 id="{sid}-h">{e(title)}</h2>{md(body)}</section>'
                                           for sid, title, body in LEGAL[lang]),

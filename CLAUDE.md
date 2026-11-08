@@ -415,8 +415,9 @@ The server has 512 MB today, which is not enough for libvips or ffmpeg next to t
   (SOCIETY_ADMIN). All texts in en, hi and mr. Post content written by users is not translated.
 
 ### Before launch
-- Publish Terms of Use, a Content Policy, a Privacy Policy and a Grievance Officer contact page, in all three
-  languages, and put a report link on every post.
+- Terms of Use, Community Guidelines (the content policy), Privacy Policy and Grievance Redressal are published in
+  all three languages (`/legal/`). Still to do: the Grievance Officer's name and contact, and a report link on
+  every post.
 - Have a lawyer review the content policy and the takedown process.
 
 ### Tests
@@ -460,6 +461,12 @@ The server has 512 MB today, which is not enough for libvips or ffmpeg next to t
 - Font: Noto Sans with Noto Sans Devanagari (Google Fonts), so the three languages match. App screenshots in
   `public/images/app/<lang>/` were captured from the built app with a mock API and sample data; recapture them
   when those screens change. Never use the feed's demo posts in them (they contain invented claims).
+- Legal pages at `/legal/`, `/hi/legal/`, `/mr/legal/` (Disclaimer, Terms of Use, Privacy Policy, Community
+  Guidelines, Grievance Redressal), built by the same script from `landing/legal.html` and `landing/legal_texts.py`
+  (a small Markdown subset; English prevails, hi and mr are translations and say so). Courts: Thane. The Privacy
+  Policy must list everything the app stores; update it with any new personal data. The Grievance Officer's details
+  are "To be announced" until the owner names one. The homepage footer links every section; the legal page's
+  header stays in view, with `scroll-padding-top` so section jumps and focus land below it.
 
 ## Neon / Spring Boot notes
 - DB credentials come from environment variables (`DB_URL`, `DB_USER`, `DB_PASSWORD`), one set per service. Never commit them.
