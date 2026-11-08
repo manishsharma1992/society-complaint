@@ -9,6 +9,8 @@ import json
 import re
 from pathlib import Path
 
+from legal_texts import LEGAL, UI, UPDATED
+
 HERE = Path(__file__).parent
 PUBLIC = HERE.parent / "public"
 SITE = "https://runwalltdfakepromises.com"
@@ -320,6 +322,55 @@ def json_ld(t):
     }, ensure_ascii=False)
 
 
+def md(text):
+    """The legal texts' Markdown subset: paragraphs (line breaks kept), "- " lists, "1. " lists with "   - " sub-items, **bold**."""
+    inline = lambda x: re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", e(x))
+    out = []
+    for block in text.strip().split("\n\n"):
+        lines = block.split("\n")
+        if all(l.startswith("- ") for l in lines):
+            out.append("<ul>" + "".join(f"<li>{inline(l[2:])}</li>" for l in lines) + "</ul>")
+        elif re.match(r"\d+\. ", lines[0]):
+            items = []
+            for l in lines:
+                if re.match(r"\d+\. ", l):
+                    items.append([inline(l.split(". ", 1)[1]), []])
+                else:
+                    items[-1][1].append(f"<li>{inline(l.strip()[2:])}</li>")
+            out.append("<ol>" + "".join(f"<li>{t}" + (f"<ul>{''.join(sub)}</ul>" if sub else "") + "</li>" for t, sub in items) + "</ol>")
+        else:
+            out.append("<p>" + "<br>".join(inline(l) for l in lines) + "</p>")
+    return "\n".join(out)
+
+
+assert md("A **b** & c\n\n- x\n- y\n\n1. one\n   - sub\n2. two") == (
+    "<p>A <strong>b</strong> &amp; c</p>\n<ul><li>x</li><li>y</li></ul>\n"
+    "<ol><li>one<ul><li>sub</li></ul></li><li>two</li></ol>")
+
+
+def render_legal(lang, t):
+    page = (HERE / "legal.html").read_text(encoding="utf-8")
+    ui = UI[lang]
+    note = (f'<p class="note">{e(ui["legal_note"])} <a href="/legal/" hreflang="en" lang="en">{e(ui["legal_note_link"])}</a></p>'
+            if ui["legal_note"] else "")
+    values = {**{k: e(v) for k, v in ui.items()}, "lang": lang, "logo": LOGO, "path": t["path"], "language": e(t["language"]),
+              "legal_path": legal_path(lang), "updated": e(UPDATED[lang]), "note": note,
+              "footer_independent": e(t["footer_independent"]),
+              "toc": "".join(f'<li><a href="#{sid}">{e(title)}</a></li>' for sid, title, _ in LEGAL[lang]),
+              "sections": "\n    ".join(f'<section id="{sid}" aria-labelledby="{sid}-h"><h2 id="{sid}-h">{e(title)}</h2>{md(body)}</section>'
+                                          for sid, title, body in LEGAL[lang]),
+              "cur_en": ' aria-current="page"' if lang == "en" else "",
+              "cur_hi": ' aria-current="page"' if lang == "hi" else "",
+              "cur_mr": ' aria-current="page"' if lang == "mr" else ""}
+    out = re.sub(r"\{\{(\w+)\}\}", lambda m: values[m.group(1)], page)
+    assert "{{" not in out, "a placeholder has no text"
+    return out
+
+
+def legal_path(lang):
+    return "/legal/" if lang == "en" else f"/{lang}/legal/"
+
+
 def render(lang, t):
     page = (HERE / "template.html").read_text(encoding="utf-8")
     values = {**{k: e(v) for k, v in t.items() if isinstance(v, str)}, "lang": lang, "logo": LOGO, "json_ld": json_ld(t),
@@ -327,6 +378,8 @@ def render(lang, t):
               "statement": " ".join(f'<span class="w">{e(w)}</span>' for w in t["statement"].split()),
               "slips": "\n          ".join(slip(f, t["slip_" + f], i > 0) for i, f in enumerate(("complaint", "feed", "staff"))),
               "walk_steps": walk(lang, t)[0], "walk_screens": walk(lang, t)[1],
+              "legal_nav": e(UI[lang]["legal_title"]),
+              "legal_links": "".join(f'<a href="{legal_path(lang)}#{sid}">{e(title)}</a>' for sid, title, _ in LEGAL[lang]),
               "cur_en": ' aria-current="page"' if lang == "en" else "",
               "cur_hi": ' aria-current="page"' if lang == "hi" else "",
               "cur_mr": ' aria-current="page"' if lang == "mr" else ""}
@@ -347,3 +400,8 @@ if __name__ == "__main__":
         targets[lang].parent.mkdir(parents=True, exist_ok=True)
         targets[lang].write_text(render(lang, t), encoding="utf-8")
         print("wrote", targets[lang].relative_to(HERE.parent))
+        legal = PUBLIC / legal_path(lang).strip("/") / "index.html"
+        assert [sid for sid, _, _ in LEGAL[lang]] == [sid for sid, _, _ in LEGAL["en"]], f"{lang} legal sections differ"
+        legal.parent.mkdir(parents=True, exist_ok=True)
+        legal.write_text(render_legal(lang, t), encoding="utf-8")
+        print("wrote", legal.relative_to(HERE.parent))

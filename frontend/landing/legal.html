@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{legal_title}} · Runwal MyCity Residents</title>
+  <meta name="description" content="{{legal_meta}}">
+  <link rel="canonical" href="https://runwalltdfakepromises.com{{legal_path}}">
+  <link rel="alternate" hreflang="en" href="https://runwalltdfakepromises.com/legal/">
+  <link rel="alternate" hreflang="hi" href="https://runwalltdfakepromises.com/hi/legal/">
+  <link rel="alternate" hreflang="mr" href="https://runwalltdfakepromises.com/mr/legal/">
+  <link rel="alternate" hreflang="x-default" href="https://runwalltdfakepromises.com/legal/">
+  <meta name="theme-color" content="#0b120d">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap">
+  <style>
+    :root {
+      --color-night: #0b120d; --color-on-night: #f2f5f0; --color-on-night-2: #b3c0b6; --color-accent-glow: #7fd08f;
+      --color-paper: #fbfcfa; --color-paper-2: #f0f4ee; --color-ink: #17201a; --color-ink-2: #3c473f; --color-accent: #1b8233; --color-focus: #1b8233;
+      --font-body: "Noto Sans", "Noto Sans Devanagari", system-ui, sans-serif;
+      --gutter: 32px; --measure: 46rem;
+    }
+    @media (max-width: 40rem) { :root { --gutter: 20px; } }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { overflow-x: clip; }
+    html { -webkit-text-size-adjust: 100%; scroll-padding-top: 24px; scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    body { margin: 0; background: var(--color-paper); color: var(--color-ink); font: 400 1.0625rem/1.7 var(--font-body); -webkit-font-smoothing: antialiased; }
+    a { color: var(--color-accent); text-underline-offset: 0.18em; }
+    :focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; }
+    .top :focus-visible { outline-color: var(--color-accent-glow); }
+    .top { background: var(--color-night); color: var(--color-on-night); }
+    .nav { max-width: 72rem; margin-inline: auto; padding-inline: var(--gutter); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; min-height: 72px; }
+    .brand { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; text-decoration: none; font-weight: 700; color: inherit; }
+    .brand svg { height: 28px; width: auto; color: var(--color-accent-glow); }
+    .langs { display: flex; gap: 16px; font-size: 0.9375rem; }
+    .langs a { min-height: 44px; display: inline-flex; align-items: center; color: var(--color-on-night-2); text-decoration: none; }
+    .langs a:hover, .langs a[aria-current] { color: var(--color-on-night); text-decoration: underline; }
+    main { max-width: var(--measure); margin-inline: auto; padding: 64px var(--gutter) 96px; }
+    h1 { font-size: clamp(2.25rem, 3vw + 1rem, 3.25rem); line-height: 1.1; letter-spacing: -0.02em; margin: 0; }
+    :lang(hi) h1, :lang(mr) h1, :lang(hi) h2, :lang(mr) h2 { letter-spacing: 0; line-height: 1.35; }
+    .updated { color: var(--color-ink-2); margin: 12px 0 0; }
+    .note { margin: 24px 0 0; padding: 16px 20px; border-radius: 14px; background: var(--color-paper-2); color: var(--color-ink-2); }
+    .toc { list-style: none; margin: 40px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+    .toc a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 999px; background: var(--color-paper-2); color: var(--color-ink); text-decoration: none; font-size: 0.9375rem; font-weight: 600; }
+    .toc a:hover { background: var(--color-ink); color: var(--color-paper); }
+    section { margin-top: 72px; }
+    h2 { font-size: 1.75rem; line-height: 1.2; letter-spacing: -0.01em; margin: 0 0 16px; }
+    p, ul, ol { margin: 0 0 16px; }
+    ul, ol { padding-inline-start: 1.4em; }
+    main li + li { margin-top: 6px; }
+    .toc li + li { margin-top: 0; }
+    li ul { margin: 8px 0 0; }
+    footer { background: var(--color-night); color: var(--color-on-night-2); font-size: 0.9375rem; }
+    footer div { max-width: 72rem; margin-inline: auto; padding: 40px var(--gutter); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    footer a { color: var(--color-on-night); }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="nav">
+      <a class="brand" href="{{path}}">{{logo}}<span>Runwal MyCity</span></a>
+      <nav class="langs" aria-label="{{language}}">
+        <a href="/legal/" hreflang="en" lang="en"{{cur_en}}>English</a>
+        <a href="/hi/legal/" hreflang="hi" lang="hi"{{cur_hi}}>हिन्दी</a>
+        <a href="/mr/legal/" hreflang="mr" lang="mr"{{cur_mr}}>मराठी</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main">
+    <h1>{{legal_title}}</h1>
+    <p class="updated">{{updated}}</p>
+    {{note}}
+    <nav aria-label="{{legal_title}}"><ul class="toc">{{toc}}</ul></nav>
+    {{sections}}
+  </main>
+  <footer>
+    <div>
+      <a href="{{path}}">{{back_home}}</a>
+      <span>{{footer_independent}}</span>
+    </div>
+  </footer>
+</body>
+</html>

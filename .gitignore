@@ -20,3 +20,4 @@ frontend/.hallmark/shots/
 
 # Nx workspace cache (Spartan CLI)
 frontend/.nx/
+__pycache__/

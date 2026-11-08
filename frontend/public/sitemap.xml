@@ -18,4 +18,22 @@
     <xhtml:link rel="alternate" hreflang="hi" href="https://runwalltdfakepromises.com/hi/"/>
     <xhtml:link rel="alternate" hreflang="mr" href="https://runwalltdfakepromises.com/mr/"/>
   </url>
+  <url>
+    <loc>https://runwalltdfakepromises.com/legal/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://runwalltdfakepromises.com/legal/"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://runwalltdfakepromises.com/hi/legal/"/>
+    <xhtml:link rel="alternate" hreflang="mr" href="https://runwalltdfakepromises.com/mr/legal/"/>
+  </url>
+  <url>
+    <loc>https://runwalltdfakepromises.com/hi/legal/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://runwalltdfakepromises.com/legal/"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://runwalltdfakepromises.com/hi/legal/"/>
+    <xhtml:link rel="alternate" hreflang="mr" href="https://runwalltdfakepromises.com/mr/legal/"/>
+  </url>
+  <url>
+    <loc>https://runwalltdfakepromises.com/mr/legal/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://runwalltdfakepromises.com/legal/"/>
+    <xhtml:link rel="alternate" hreflang="hi" href="https://runwalltdfakepromises.com/hi/legal/"/>
+    <xhtml:link rel="alternate" hreflang="mr" href="https://runwalltdfakepromises.com/mr/legal/"/>
+  </url>
 </urlset>
