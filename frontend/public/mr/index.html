@@ -173,7 +173,9 @@
     .js:not(.still) .statement .w.lit { color: var(--on-surface); }
 
     /* scene 3: an example post fills in */
-    .story .stick, .band2, #faq { background: var(--surface-2); }
+    /* every section is its own band: white and green alternate, so no two neighbours share a background */
+    .story .stick, .app, .safe, .site-foot { background: var(--surface-2); }
+    .statement .stick, .queue, .band2, #faq { background: var(--surface); }
     .story .stick { align-content: center; padding-block: var(--space-3xl); }
     .story h2 { font-size: var(--text-section); }
     .story .intro { color: var(--on-surface-2); max-width: 44ch; margin-top: var(--space-md); }
@@ -199,13 +201,13 @@
     .js:not(.still) .post[data-step="2"] .status .done { display: inline; color: var(--link); }
 
     /* the queue: one plumber, many flats; complaints wait in order and go to whoever frees up */
-    .queue { background: var(--surface-2); padding-block: 0; }
+    .queue { padding-block: 0; }
     .queue .stick { align-content: center; padding-block: var(--space-2xl); }
     .queue .intro { color: var(--on-surface-2); }
     .board { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); margin-top: var(--space-xl); text-align: start; }
     .board h3 { font-size: var(--text-small); font-weight: 600; color: var(--muted); letter-spacing: 0; margin: 0 0 var(--space-sm); }
     .lane { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-sm); }
-    .card { position: relative; background: var(--surface); border-radius: var(--radius-panel); padding: var(--space-sm) var(--space-md); min-height: 64px; }
+    .card { position: relative; background: var(--surface-2); border-radius: var(--radius-panel); padding: var(--space-sm) var(--space-md); min-height: 64px; }
     .card .title { font-weight: 600; }
     .card .meta { font-size: var(--text-small); color: var(--on-surface-2); }
     .badge { display: inline-block; margin-top: 4px; padding: 2px 10px; border-radius: var(--radius-pill); font-size: var(--text-small); font-weight: 600; }
@@ -229,7 +231,6 @@
     }
 
     /* complaints, for the whole society: the app's own screens */
-    .app { background: var(--surface); }
     .app .intro { color: var(--on-surface-2); }
     .device { position: relative; width: 100%; aspect-ratio: 1 / 2; border-radius: 42px; padding: 9px; background: var(--device); }
     .device img { width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 34px; }
@@ -282,7 +283,7 @@
 
     /* safety: three equal promises the platform keeps */
     .safe .trio { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); margin-top: var(--space-2xl); }
-    .safe .trio > div { border-radius: var(--radius-panel); background: var(--surface-2); overflow: hidden; text-align: start; }
+    .safe .trio > div { border-radius: var(--radius-panel); background: var(--surface); overflow: hidden; text-align: start; }
     .safe .trio img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
     .safe .trio .say { padding: var(--space-lg); }
     .safe h3 { font-size: var(--text-title); margin-bottom: var(--space-sm); }
@@ -298,7 +299,7 @@
     .facts { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-xs); margin: var(--space-lg) 0 0; padding: 0; }
     .facts li { padding: var(--space-xs) var(--space-md); border-radius: var(--radius-pill); background: var(--surface-3); font-size: var(--text-small); color: var(--on-surface-2); }
     .qa { max-width: 760px; margin: var(--space-2xl) auto 0; display: grid; gap: var(--space-sm); text-align: start; }
-    details { background: var(--surface); border-radius: var(--radius-panel); }
+    details { background: var(--surface-2); border-radius: var(--radius-panel); }
     summary { min-height: 60px; display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding: var(--space-sm) var(--space-lg);
       cursor: pointer; list-style: none; font-weight: 600; border-radius: var(--radius-panel); }
     summary::-webkit-details-marker { display: none; }
