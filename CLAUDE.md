@@ -201,7 +201,9 @@ CODE-xx); every context's `ArchitectureTest` runs them. Read the classes for the
   raised, resolved or rejected, a shift starts, or the setup changes, `AssignmentPlanner` gives the most urgent
   waiting complaints to free staff (on shift, no job assigned or in progress, the category, their towers): one job
   each, one transaction per complaint. Event-driven, never polled (Neon must be able to sleep). On shift comes
-  from Workforce and staff towers from Identity, through ports answered in `integration`. The history note
+  from Workforce and staff towers from Identity, through ports answered in `integration`. Tower managers can be
+  given categories too (lifts: City Lift's AMC technician has no app): they are "on call", so no shift, any number
+  of jobs, only complaints in their own towers, and staff on shift come first. The history note
   "Assigned automatically" is translated by the web app; residents of an open complaint are told it waits.
 - The feed is the home page and, for now, only for signed-in approved members: published posts from their society
   and every society within `feed.nearby-meters` (10 km) that uses the feed (`GET /feed/societies/{id}/feed`).

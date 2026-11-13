@@ -18,7 +18,8 @@ import java.util.stream.Collectors;
 /**
  * Who gets which waiting complaint. The most urgent first (earliest due, then earliest raised); each goes to the
  * first free staff member who handles its category and works where it is. Each staff member gets one job at a time,
- * so a free staff member is one on shift with nothing assigned or in progress.
+ * so a free staff member is one on shift with nothing assigned or in progress. Tower managers on call are always
+ * free and stay available after a job; staff come before them.
  */
 @DomainService
 public class AssignmentPlanner {
@@ -40,7 +41,9 @@ public class AssignmentPlanner {
                         .findFirst()
                         .ifPresent(staff -> {
                             plan.add(new PlannedAssignment(complaint.id(), staff.id()));
-                            available.remove(staff.id());
+                            if (!staff.onCall()) {
+                                available.remove(staff.id());
+                            }
                         }));
         return plan;
     }

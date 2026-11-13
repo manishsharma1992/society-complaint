@@ -32,9 +32,9 @@ class InProcessStaffTest {
     void staffAndTheirTowersComeFromIdentity() {
         UserDirectoryService users = mock(UserDirectoryService.class);
         given(users.staffOf(new StaffOfSocietyQuery(1))).willReturn(List.of(
-                new StaffMemberView(30, List.of()), new StaffMemberView(31, List.of(5L))));
+                new StaffMemberView(30, List.of(), false), new StaffMemberView(31, List.of(5L), true)));
 
         assertThat(new InProcessStaffDirectory(users).staffOf(new SocietyId(1))).containsExactly(
-                new StaffMember(new UserId(30), Set.of()), new StaffMember(new UserId(31), Set.of(new TowerId(5))));
+                new StaffMember(new UserId(30), Set.of(), false), new StaffMember(new UserId(31), Set.of(new TowerId(5)), true));
     }
 }

@@ -25,7 +25,7 @@ class InProcessStaffDirectory implements StaffDirectory {
     public List<StaffMember> staffOf(SocietyId societyId) {
         return users.staffOf(new StaffOfSocietyQuery(societyId.value())).stream()
                 .map(staff -> new StaffMember(new UserId(staff.userId()),
-                        staff.towerIds().stream().map(TowerId::new).collect(Collectors.toSet())))
+                        staff.towerIds().stream().map(TowerId::new).collect(Collectors.toSet()), staff.towerManager()))
                 .toList();
     }
 }

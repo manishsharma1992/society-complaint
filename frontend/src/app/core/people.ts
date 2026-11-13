@@ -15,10 +15,10 @@ export class People {
   private readonly asked = new Set<number>();
   readonly names = signal<Record<number, string>>({});
 
-  /** Whom an admin can assign work to. */
-  staff(): Observable<Person[]> {
+  /** Whom an admin can assign work to (tower admins: for work they pass on, e.g. lifts). */
+  staff(role: 'STAFF' | 'TOWER_ADMIN' = 'STAFF'): Observable<Person[]> {
     return this.http
-      .get<Person[]>(`${API}/identity/societies/${SOCIETY_ID}/users`, { params: { role: 'STAFF' } })
+      .get<Person[]>(`${API}/identity/societies/${SOCIETY_ID}/users`, { params: { role } })
       .pipe(tap((people) => this.remember(people)));
   }
 

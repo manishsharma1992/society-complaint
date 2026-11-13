@@ -17,6 +17,9 @@ import com.mycity.runwal.shared.id.SocietyId;
 import com.mycity.runwal.shared.id.UserId;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -49,18 +52,29 @@ public class UserDirectoryService {
                 .toList();
     }
 
-    /** For other contexts (no caller check): approved staff and the towers they work in. Ids only, no names. */
+    /**
+     * For other contexts (no caller check): approved staff and the towers they work in, then the tower managers
+     * who are not also staff. Ids only, no names.
+     */
     @Transactional(readOnly = true)
     public List<StaffMemberView> staffOf(StaffOfSocietyQuery query) {
         SocietyId societyId = new SocietyId(query.societyId());
-        return users.findWithRole(Role.STAFF, societyId).stream()
+        List<StaffMemberView> staff = active(Role.STAFF, societyId);
+        Set<Long> staffIds = staff.stream().map(StaffMemberView::userId).collect(Collectors.toSet());
+        return Stream.concat(staff.stream(),
+                active(Role.TOWER_ADMIN, societyId).stream().filter(m -> !staffIds.contains(m.userId()))).toList();
+    }
+
+    private List<StaffMemberView> active(Role role, SocietyId societyId) {
+        return users.findWithRole(role, societyId).stream()
                 .filter(user -> user.status() == UserStatus.ACTIVE)
                 .map(user -> {
-                    List<RoleAssignment> staffRoles = user.roles().stream()
-                            .filter(r -> r.role() == Role.STAFF && r.societyId().equals(societyId)).toList();
-                    boolean everywhere = staffRoles.stream().anyMatch(r -> r.towerId() == null);
+                    List<RoleAssignment> roles = user.roles().stream()
+                            .filter(r -> r.role() == role && r.societyId().equals(societyId)).toList();
+                    boolean everywhere = roles.stream().anyMatch(r -> r.towerId() == null);
                     return new StaffMemberView(user.id().value(), everywhere ? List.of()
-                            : staffRoles.stream().map(r -> r.towerId().value()).distinct().sorted().toList());
+                            : roles.stream().map(r -> r.towerId().value()).distinct().sorted().toList(),
+                            role == Role.TOWER_ADMIN);
                 })
                 .toList();
     }

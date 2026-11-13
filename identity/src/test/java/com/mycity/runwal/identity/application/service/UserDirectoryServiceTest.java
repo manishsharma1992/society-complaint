@@ -88,8 +88,13 @@ class UserDirectoryServiceTest {
     }
 
     @Test
-    void otherContextsGetTheApprovedStaffAndWhereTheyWork() {
+    void otherContextsGetTheApprovedStaffAndWhereTheyWorkThenTheTowerManagers() {
+        users.save(new AppUser(new UserId(8), PhoneNumber.parse("9876543208"), Instant.parse("2026-10-25T08:00:00Z"),
+                "Kiran (B2 Admin and Electrician)", UserStatus.ACTIVE, null, null,
+                List.of(new RoleAssignment(Role.STAFF, RUNWAL, new TowerId(7)),
+                        new RoleAssignment(Role.TOWER_ADMIN, RUNWAL, new TowerId(7)))));
         assertThat(directory.staffOf(new StaffOfSocietyQuery(1))).containsExactlyInAnyOrder(
-                new StaffMemberView(3, List.of()), new StaffMemberView(5, List.of(7L)));
+                new StaffMemberView(3, List.of(), false), new StaffMemberView(5, List.of(7L), false),
+                new StaffMemberView(8, List.of(7L), false), new StaffMemberView(2, List.of(7L), true));
     }
 }

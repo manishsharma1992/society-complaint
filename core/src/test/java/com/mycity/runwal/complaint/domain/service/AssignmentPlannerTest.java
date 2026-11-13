@@ -34,6 +34,7 @@ class AssignmentPlannerTest {
     private static final TowerId C1 = new TowerId(7);
     private static final UserId RAJU = new UserId(30);
     private static final UserId SUNIL = new UserId(31);
+    private static final UserId B2_MANAGER = new UserId(2);
 
     private final AssignmentPlanner planner = new AssignmentPlanner();
 
@@ -55,7 +56,7 @@ class AssignmentPlannerTest {
         Complaint leak = complaint(1, PLUMBING, B2, Duration.ofHours(2));   // due in 22 h
         Complaint lift = complaint(2, LIFT, B2, Duration.ofHours(1));       // due in 3 h: more urgent
         List<PlannedAssignment> plan = planner.plan(List.of(leak, lift),
-                List.of(new StaffMember(RAJU, Set.of()), new StaffMember(SUNIL, Set.of())),
+                List.of(new StaffMember(RAJU, Set.of(), false), new StaffMember(SUNIL, Set.of(), false)),
                 List.of(skills(RAJU, PLUMBING), skills(SUNIL, PLUMBING, LIFT)));
 
         assertThat(plan).containsExactly(
@@ -67,7 +68,7 @@ class AssignmentPlannerTest {
     void eachStaffMemberGetsOneJobAndTheRestWait() {
         List<PlannedAssignment> plan = planner.plan(
                 List.of(complaint(1, PLUMBING, B2, Duration.ofHours(3)), complaint(2, PLUMBING, B2, Duration.ofHours(1))),
-                List.of(new StaffMember(RAJU, Set.of())), List.of(skills(RAJU, PLUMBING)));
+                List.of(new StaffMember(RAJU, Set.of(), false)), List.of(skills(RAJU, PLUMBING)));
 
         assertThat(plan).containsExactly(new PlannedAssignment(new ComplaintId(1), RAJU));
     }
@@ -77,7 +78,7 @@ class AssignmentPlannerTest {
         Complaint liftInC1 = complaint(1, LIFT, C1, Duration.ofHours(1));
         Complaint leakInC1 = complaint(2, PLUMBING, C1, Duration.ofHours(1));
         List<PlannedAssignment> plan = planner.plan(List.of(liftInC1, leakInC1),
-                List.of(new StaffMember(RAJU, Set.of(B2)), new StaffMember(SUNIL, Set.of())),
+                List.of(new StaffMember(RAJU, Set.of(B2), false), new StaffMember(SUNIL, Set.of(), false)),
                 List.of(skills(RAJU, PLUMBING, LIFT), skills(SUNIL, PLUMBING)));
 
         assertThat(plan).as("Raju only works in B2; Sunil does not do lifts")
@@ -87,8 +88,26 @@ class AssignmentPlannerTest {
     @Test
     void towerStaffAlsoTakeSocietyWideAreasAndStaffWithoutSkillsGetNothing() {
         Complaint clubhouse = complaint(1, PLUMBING, null, Duration.ofHours(1));
-        assertThat(planner.plan(List.of(clubhouse), List.of(new StaffMember(RAJU, Set.of(B2))), List.of(skills(RAJU, PLUMBING))))
+        assertThat(planner.plan(List.of(clubhouse), List.of(new StaffMember(RAJU, Set.of(B2), false)), List.of(skills(RAJU, PLUMBING))))
                 .containsExactly(new PlannedAssignment(clubhouse.id(), RAJU));
-        assertThat(planner.plan(List.of(clubhouse), List.of(new StaffMember(SUNIL, Set.of())), List.of())).isEmpty();
+        assertThat(planner.plan(List.of(clubhouse), List.of(new StaffMember(SUNIL, Set.of(), false)), List.of())).isEmpty();
+    }
+
+    @Test
+    void theTowerManagerOnCallTakesEveryLiftInTheirTowerAfterStaffOnShift() {
+        StaffMember manager = new StaffMember(B2_MANAGER, Set.of(B2), true);
+        Complaint liftInB2 = complaint(1, LIFT, B2, Duration.ofHours(2));
+        Complaint otherLiftInB2 = complaint(2, LIFT, B2, Duration.ofHours(1));
+        Complaint liftInC1 = complaint(3, LIFT, C1, Duration.ofHours(1));
+        Complaint clubhouseLift = complaint(4, LIFT, null, Duration.ofHours(1));
+
+        assertThat(planner.plan(List.of(liftInB2, otherLiftInB2, liftInC1, clubhouseLift), List.of(manager),
+                List.of(skills(B2_MANAGER, LIFT))))
+                .as("their own tower only; a society-wide area waits for an admin")
+                .containsExactly(new PlannedAssignment(liftInB2.id(), B2_MANAGER),
+                        new PlannedAssignment(otherLiftInB2.id(), B2_MANAGER));
+        assertThat(planner.plan(List.of(liftInB2), List.of(new StaffMember(SUNIL, Set.of(), false), manager),
+                List.of(skills(SUNIL, LIFT), skills(B2_MANAGER, LIFT))))
+                .containsExactly(new PlannedAssignment(liftInB2.id(), SUNIL));
     }
 }

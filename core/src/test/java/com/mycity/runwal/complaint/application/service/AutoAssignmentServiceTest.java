@@ -55,6 +55,7 @@ class AutoAssignmentServiceTest {
             new ComplaintCategory(new ComplaintCategoryId(3), SOCIETY, "Lift", Duration.ofHours(4), true);
     private static final UserId RAJU = new UserId(30);
     private static final UserId SUNIL = new UserId(31);
+    private static final UserId TOWER_MANAGER = new UserId(2);
 
     private final InMemoryComplaints complaints = new InMemoryComplaints();
     private final Settings settings = new Settings();
@@ -66,7 +67,8 @@ class AutoAssignmentServiceTest {
 
     private final AutoAssignmentService service = new AutoAssignmentService(settings, skills, complaints,
             RaiseComplaintServiceTest.categories(PLUMBING, LIFT), new AddOn(), society -> Set.copyOf(onDuty),
-            society -> List.of(new StaffMember(RAJU, Set.of()), new StaffMember(SUNIL, Set.of())),
+            society -> List.of(new StaffMember(RAJU, Set.of(), false), new StaffMember(SUNIL, Set.of(), false),
+                    new StaffMember(TOWER_MANAGER, Set.of(new TowerId(3)), true)),
             new AssignmentPlanner(), new ComplaintAccessPolicy(), caller, published::addAll,
             Clock.fixed(NOW, ZoneOffset.UTC), new NoTransactions());
 
@@ -117,6 +119,18 @@ class AutoAssignmentServiceTest {
         other.resolve(RAJU, NOW, "Fixed");
         assertThat(service.assignWaiting(SOCIETY)).as("free again").isEqualTo(1);
         assertThat(leak.assignedTo()).contains(RAJU);
+    }
+
+    @Test
+    void liftsGoToTheTowerManagerAtAnyHourEvenWithOtherLiftsOpen() {
+        settings.on = true;
+        skills.set(TOWER_MANAGER, LIFT);
+        Complaint first = waiting(LIFT);
+        Complaint second = waiting(LIFT);
+
+        assertThat(service.assignWaiting(SOCIETY)).as("no shift needed, no one-job limit").isEqualTo(2);
+        assertThat(first.assignedTo()).contains(TOWER_MANAGER);
+        assertThat(second.assignedTo()).contains(TOWER_MANAGER);
     }
 
     @Test

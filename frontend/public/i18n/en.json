@@ -513,7 +513,7 @@
       "title": "Assign automatically",
       "about": "Waiting complaints go to a free staff member on shift who handles their category, the most urgent first. Admins can still assign by hand.",
       "staffTitle": "Who handles what",
-      "staffLead": "Tick the categories each staff member handles. Staff with none are only assigned by hand.",
+      "staffLead": "Tick the categories each staff member handles. Staff with none are only assigned by hand. Tower managers get their tower's complaints of a category at any hour, e.g. lifts serviced by the lift company.",
       "noStaff": "No staff members yet."
     }
   },

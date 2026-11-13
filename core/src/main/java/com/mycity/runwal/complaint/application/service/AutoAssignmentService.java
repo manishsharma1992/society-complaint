@@ -40,7 +40,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * Automatic assignment: when a staff member frees up (resolves or rejects their job, starts a shift), a complaint
- * arrives, or the admin changes the setup, waiting complaints go to free staff on shift who handle their category.
+ * arrives, or the admin changes the setup, waiting complaints go to free staff on shift who handle their category,
+ * or else to the tower manager when the admin gave them that category (e.g. lifts, serviced by an outside company).
  * The society admin switches it on and says who handles what; admins can still assign by hand.
  */
 @ApplicationService
@@ -96,11 +97,14 @@ public class AutoAssignmentService {
      */
     public synchronized int assignWaiting(SocietyId societyId) {
         List<PlannedAssignment> plan = readOnly.execute(status -> plan(societyId));
+        Set<UserId> onCall = staffDirectory.staffOf(societyId).stream().filter(StaffMember::onCall)
+                .map(StaffMember::id).collect(Collectors.toSet());
         int assigned = 0;
         for (PlannedAssignment step : plan == null ? List.<PlannedAssignment>of() : plan) {
             Boolean done = writing.execute(status -> complaints.findById(societyId, step.complaintId())
                     .filter(complaint -> complaint.status() == ComplaintStatus.OPEN)
-                    .filter(complaint -> busyStaff(societyId).stream().noneMatch(step.staffId()::equals))
+                    .filter(complaint -> onCall.contains(step.staffId())
+                            || busyStaff(societyId).stream().noneMatch(step.staffId()::equals))
                     .map(complaint -> {
                         complaint.assignAutomatically(step.staffId(), clock.instant());
                         complaints.save(complaint);
@@ -124,7 +128,7 @@ public class AutoAssignmentService {
         Set<UserId> working = onDuty.onDuty(societyId);
         Set<UserId> busy = busyStaff(societyId);
         List<StaffMember> free = staffDirectory.staffOf(societyId).stream()
-                .filter(staff -> working.contains(staff.id()) && !busy.contains(staff.id()))
+                .filter(staff -> staff.onCall() || working.contains(staff.id()) && !busy.contains(staff.id()))
                 .toList();
         return free.isEmpty() ? List.of() : planner.plan(waiting, free, skills.findBySociety(societyId));
     }

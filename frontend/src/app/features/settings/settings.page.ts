@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { AutoAssignment, ComplaintsApi } from '../../core/complaints';
 import { Category, Tower } from '../../core/models';
 import { People, Person } from '../../core/people';
@@ -154,7 +154,10 @@ export default class SettingsPage {
     if (this.roles.isSocietyAdmin()) {
       this.complaints.autoAssignment().subscribe({ next: (a) => this.auto.set(a), error: () => this.auto.set(null) });
       this.complaints.categories().subscribe((c) => this.categories.set(c));
-      inject(People).staff().subscribe((s) => this.staff.set(s));
+      const people = inject(People);
+      forkJoin([people.staff(), people.staff('TOWER_ADMIN')]).subscribe(([staff, managers]) =>
+        this.staff.set([...staff, ...managers.filter((m) => !staff.some((s) => s.id === m.id))]),
+      );
     }
   }
 
