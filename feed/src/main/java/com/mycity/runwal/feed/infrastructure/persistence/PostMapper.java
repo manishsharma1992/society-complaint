@@ -8,6 +8,8 @@ import com.mycity.runwal.feed.domain.model.post.PostId;
 import com.mycity.runwal.feed.domain.model.post.PostReport;
 import com.mycity.runwal.feed.domain.model.post.PostSlug;
 import com.mycity.runwal.feed.domain.model.post.ShownTower;
+import com.mycity.runwal.feed.domain.model.post.Video;
+import com.mycity.runwal.feed.domain.model.post.VideoFacts;
 import com.mycity.runwal.shared.id.SocietyId;
 import com.mycity.runwal.shared.id.TowerId;
 import com.mycity.runwal.shared.id.UserId;
@@ -34,8 +36,8 @@ final class PostMapper {
 
     /**
      * Copies the parts of a post that change: status, first publication, the moderation log (only ever appended)
-     * the open reports (only appended, or all cleared when the post is published again) and the photos (only
-     * appended).
+     * the open reports (only appended, or all cleared when the post is published again), the photos (only
+     * appended) and the videos (appended; a video's processing state changes in place).
      */
     static void updateEntity(Post post, PostJpaEntity entity) {
         entity.status = post.status();
@@ -55,6 +57,15 @@ final class PostMapper {
         for (int i = entity.evidence.size(); i < evidence.size(); i++) {
             entity.evidence.add(toEntity(evidence.get(i), i + 1));
         }
+        List<Video> videos = post.videos();
+        for (int i = 0; i < videos.size(); i++) {
+            if (i == entity.videos.size()) {
+                PostVideoJpaEntity added = new PostVideoJpaEntity();
+                added.position = i + 1;
+                entity.videos.add(added);
+            }
+            copy(videos.get(i), entity.videos.get(i));
+        }
     }
 
     static Post toDomain(PostJpaEntity entity) {
@@ -70,7 +81,8 @@ final class PostMapper {
                 entity.publishedAt,
                 entity.moderation.stream().map(PostMapper::toSnapshot).toList(),
                 entity.reports.stream().map(PostMapper::toReport).toList(),
-                entity.evidence.stream().map(PostMapper::toEvidence).toList());
+                entity.evidence.stream().map(PostMapper::toEvidence).toList(),
+                entity.videos.stream().map(PostMapper::toVideo).toList());
     }
 
     private static PostEvidenceJpaEntity toEntity(Evidence evidence, int position) {
@@ -88,6 +100,25 @@ final class PostMapper {
     private static Evidence toEvidence(PostEvidenceJpaEntity entity) {
         return new Evidence(entity.storageKey, entity.contentType, entity.sizeBytes, entity.widthPx, entity.heightPx,
                 entity.uploadedAt);
+    }
+
+    private static void copy(Video video, PostVideoJpaEntity entity) {
+        entity.storageKey = video.storageKey();
+        entity.contentType = video.contentType();
+        entity.sizeBytes = video.sizeBytes();
+        entity.uploadedAt = video.uploadedAt();
+        entity.status = video.status();
+        entity.widthPx = video.facts() == null ? null : video.facts().widthPx();
+        entity.heightPx = video.facts() == null ? null : video.facts().heightPx();
+        entity.durationMs = video.facts() == null ? null : video.facts().durationMs();
+        entity.failureReason = video.failureReason();
+    }
+
+    private static Video toVideo(PostVideoJpaEntity entity) {
+        VideoFacts facts = entity.durationMs == null ? null
+                : new VideoFacts(entity.widthPx, entity.heightPx, entity.durationMs);
+        return new Video(entity.storageKey, entity.contentType, entity.sizeBytes, entity.uploadedAt, entity.status,
+                facts, entity.failureReason);
     }
 
     private static PostModerationJpaEntity toEntity(ModerationSnapshot entry) {

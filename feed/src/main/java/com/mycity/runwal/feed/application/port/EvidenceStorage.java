@@ -2,6 +2,7 @@ package com.mycity.runwal.feed.application.port;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.OptionalLong;
 import java.util.function.Function;
@@ -20,6 +21,9 @@ public interface EvidenceStorage {
 
     /** Streams the object to {@code reader} and closes the stream afterwards. */
     <T> T read(String storageKey, Function<InputStream, T> reader);
+
+    /** Stores a file the server made itself (e.g. a re-encoded video) under this key. */
+    void put(String storageKey, Path file, String contentType);
 
     /** Deletes the object; nothing happens when there is none. */
     void delete(String storageKey);

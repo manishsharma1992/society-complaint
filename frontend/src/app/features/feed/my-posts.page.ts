@@ -36,6 +36,11 @@ import { LanguageService } from '../../core/language';
                   <span class="badge" [attr.data-status]="post.status">{{ t('myPosts.status.' + post.status) }}</span>
                 </div>
                 <p class="muted small">{{ when(post.submittedAt) }} · {{ t('myPosts.photos', { count: post.evidence.length }) }}</p>
+                @for (video of post.videos; track $index) {
+                  <p class="small" [class.reason]="video.status === 'FAILED'" [class.muted]="video.status !== 'FAILED'">
+                    {{ t('myPosts.video.' + video.status, { reason: video.failureReason }) }}
+                  </p>
+                }
                 @if (reasonOf(post); as reason) {
                   <p class="reason">{{ t('myPosts.reason', { reason: reason }) }}</p>
                 }

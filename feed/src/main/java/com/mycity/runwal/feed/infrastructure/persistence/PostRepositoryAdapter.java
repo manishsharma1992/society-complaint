@@ -5,6 +5,7 @@ import com.mycity.runwal.feed.domain.model.post.PostId;
 import com.mycity.runwal.feed.domain.model.post.PostRepository;
 import com.mycity.runwal.feed.domain.model.post.PostSlug;
 import com.mycity.runwal.feed.domain.model.post.PostStatus;
+import com.mycity.runwal.feed.domain.model.post.VideoStatus;
 import com.mycity.runwal.shared.id.SocietyId;
 import com.mycity.runwal.shared.id.UserId;
 import jakarta.persistence.EntityManager;
@@ -36,6 +37,11 @@ class PostRepositoryAdapter implements PostRepository {
         jpaRepository.findById(post.id().value()).ifPresentOrElse(
                 existing -> PostMapper.updateEntity(post, existing),
                 () -> entityManager.persist(PostMapper.toNewEntity(post)));
+    }
+
+    @Override
+    public List<Post> findWithVideoProcessing() {
+        return jpaRepository.findWithVideoIn(VideoStatus.PROCESSING).stream().map(PostMapper::toDomain).toList();
     }
 
     @Override

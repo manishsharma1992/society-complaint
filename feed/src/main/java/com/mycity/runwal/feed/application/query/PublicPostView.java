@@ -11,15 +11,16 @@ import java.util.TreeMap;
 
 /**
  * A published post as the public sees it: "Verified resident", the tower only if the author chose to show it, the
- * photos (short-lived links) and how many reacted with each emoji. Deliberately has no author and no internal ID.
+ * photos and READY videos (short-lived links) and how many reacted with each emoji. Deliberately has no author and no internal ID.
  */
 public record PublicPostView(String slug, String title, String body, String tower, Instant publishedAt,
-                             List<EvidenceView> evidence, Map<String, Integer> reactions) {
+                             List<EvidenceView> evidence, List<VideoView> videos, Map<String, Integer> reactions) {
 
     public static PublicPostView of(Post post, ReactionCounts reactions, EvidenceStorage storage) {
         return new PublicPostView(post.slug().value(), post.content().title(), post.content().body(),
                 post.shownTower().map(ShownTower::label).orElse(null), post.publishedAt().orElse(null),
-                post.evidence().stream().map(e -> EvidenceView.of(e, storage)).toList(), byName(reactions));
+                post.evidence().stream().map(e -> EvidenceView.of(e, storage)).toList(),
+                VideoView.watchable(post.videos(), storage), byName(reactions));
     }
 
     /** Emoji name -> count, only emoji someone chose. */

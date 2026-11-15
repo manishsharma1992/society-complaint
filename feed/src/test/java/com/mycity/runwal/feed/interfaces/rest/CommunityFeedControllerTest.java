@@ -28,7 +28,7 @@ class CommunityFeedControllerTest {
     private static final FeedPostView POST = new FeedPostView("abcdefgh2345", "No gym", "Brochure p.4", "Palava",
             "B2 Radiant", Instant.parse("2026-11-06T06:00:00Z"),
             List.of(new EvidenceView("https://bucket.test/feed/2/7/a.jpg?get", "image/jpeg", 1600, 1200)),
-            Map.of("THUMBS_UP", 4));
+            List.of(), Map.of("THUMBS_UP", 4));
 
     @Autowired
     private MockMvc mockMvc;

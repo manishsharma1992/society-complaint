@@ -11,6 +11,9 @@ import com.mycity.runwal.feed.domain.model.post.PostRepository;
 import com.mycity.runwal.feed.domain.model.post.PostSlug;
 import com.mycity.runwal.feed.domain.model.post.PostStatus;
 import com.mycity.runwal.feed.domain.model.post.ShownTower;
+import com.mycity.runwal.feed.domain.model.post.Video;
+import com.mycity.runwal.feed.domain.model.post.VideoFacts;
+import com.mycity.runwal.feed.domain.model.post.VideoStatus;
 import com.mycity.runwal.feed.domain.model.reaction.Emoji;
 import com.mycity.runwal.feed.domain.model.reaction.Reaction;
 import com.mycity.runwal.feed.domain.model.reaction.ReactionRepository;
@@ -123,6 +126,47 @@ class FeedPersistenceTest {
         Post restored = posts.findById(RUNWAL, post.id()).orElseThrow();
         assertThat(restored.openReports()).isEmpty();
         assertThat(restored.moderationLog()).hasSize(4);
+    }
+
+    @Test
+    void aVideoIsStoredWhileProcessingAndUpdatedInPlaceWhenReady() {
+        Post post = newPost("abcdefgh2347");
+        String key = post.evidenceKeyPrefix() + "v1.mov";
+        post.addVideo(Video.uploaded(key, 1_200_000, NOW));
+        posts.save(post);
+        flushAndClear();
+
+        Post loaded = posts.findById(RUNWAL, post.id()).orElseThrow();
+        assertThat(loaded.videos()).singleElement().satisfies(video -> {
+            assertThat(video.status()).isEqualTo(VideoStatus.PROCESSING);
+            assertThat(video.contentType()).isEqualTo("video/quicktime");
+            assertThat(video.facts()).isNull();
+        });
+
+        loaded.videoProcessed(key, new VideoFacts(720, 1280, 6_000));
+        posts.save(loaded);
+        flushAndClear();
+
+        assertThat(posts.findById(RUNWAL, post.id()).orElseThrow().videos()).singleElement().satisfies(video -> {
+            assertThat(video.status()).isEqualTo(VideoStatus.READY);
+            assertThat(video.facts()).isEqualTo(new VideoFacts(720, 1280, 6_000));
+            assertThat(video.uploadedAt()).isEqualTo(NOW);
+        });
+    }
+
+    @Test
+    void aFailedVideoKeepsItsReason() {
+        Post post = newPost("abcdefgh2348");
+        String key = post.evidenceKeyPrefix() + "v1.mp4";
+        post.addVideo(Video.uploaded(key, 1_200_000, NOW));
+        post.videoFailed(key, "A video can be at most 60 seconds long");
+        posts.save(post);
+        flushAndClear();
+
+        assertThat(posts.findById(RUNWAL, post.id()).orElseThrow().videos()).singleElement().satisfies(video -> {
+            assertThat(video.status()).isEqualTo(VideoStatus.FAILED);
+            assertThat(video.failureReason()).isEqualTo("A video can be at most 60 seconds long");
+        });
     }
 
     @Test

@@ -30,4 +30,7 @@ public interface PostRepository {
 
     /** How many posts the author submitted at or after this moment (for the daily limit). */
     int countSubmittedSince(UserId author, Instant since);
+
+    /** Posts with a video still waiting to be processed, e.g. because the app restarted meanwhile. */
+    List<Post> findWithVideoProcessing();
 }

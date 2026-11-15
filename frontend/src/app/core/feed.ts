@@ -13,6 +13,33 @@ export interface FeedPhoto {
   heightPx: number;
 }
 
+/** A ready video: the server's copy without metadata, and a frame to show before it plays (short-lived links). */
+export interface FeedVideo {
+  url: string;
+  posterUrl: string;
+  widthPx: number;
+  heightPx: number;
+  durationMs: number;
+}
+
+/** What the server accepts for a video, checked again there: one per post, counted with the photos. */
+export const VIDEO_TYPES = ['video/mp4', 'video/quicktime', 'video/webm'];
+export const MAX_VIDEO_BYTES = 50 * 1024 * 1024;
+export const MAX_VIDEO_SECONDS = 60;
+
+export type VideoStatus = 'PROCESSING' | 'READY' | 'FAILED';
+
+/** A video as its author and moderators see it: links only once READY, a reason when FAILED. */
+export interface OwnVideo {
+  status: VideoStatus;
+  url: string | null;
+  posterUrl: string | null;
+  widthPx: number | null;
+  heightPx: number | null;
+  durationMs: number | null;
+  failureReason: string | null;
+}
+
 /** The emoji anyone can react with, in the order they are shown. */
 export const EMOJI = [
   { name: 'THUMBS_UP', glyph: '👍' },
@@ -37,6 +64,7 @@ export interface FeedPost {
   tower: string | null;
   publishedAt: string;
   photos: FeedPhoto[];
+  videos: FeedVideo[];
   reactions: Reactions;
 }
 
@@ -53,6 +81,7 @@ export interface OwnPost {
   submittedAt: string;
   publishedAt: string | null;
   evidence: (FeedPhoto & { contentType: string })[];
+  videos: OwnVideo[];
   moderation: { status: PostStatus; at: string; reason: string | null }[];
   reports: { reason: string; reportedAt: string }[];
 }
@@ -106,18 +135,18 @@ export class FeedApi {
   }
 
   /**
-   * Uploads each photo straight to the bucket and attaches it, one after another, emitting the post after each;
-   * the server checks type, size and metadata.
+   * Uploads each photo or video straight to the bucket and attaches it, one after another, emitting the post after
+   * each; the server checks type, size and metadata, and re-encodes a video before anyone can watch it.
    */
-  attachPhotos(postId: number, photos: Blob[]): Observable<OwnPost> {
-    return from(photos).pipe(
-      concatMap((photo) =>
+  attachEvidence(postId: number, files: Blob[]): Observable<OwnPost> {
+    return from(files).pipe(
+      concatMap((file) =>
         this.http
-          .post<UploadTicket>(`${BASE}/posts/${postId}/evidence/upload-url`, { contentType: photo.type, sizeBytes: photo.size })
+          .post<UploadTicket>(`${BASE}/posts/${postId}/evidence/upload-url`, { contentType: file.type, sizeBytes: file.size })
           .pipe(
             switchMap((ticket) =>
               this.http
-                .put(ticket.uploadUrl, photo, { headers: { 'Content-Type': ticket.contentType }, responseType: 'text' })
+                .put(ticket.uploadUrl, file, { headers: { 'Content-Type': ticket.contentType }, responseType: 'text' })
                 .pipe(map(() => ticket.uploadKey)),
             ),
             switchMap((uploadKey) => this.http.post<OwnPost>(`${BASE}/posts/${postId}/evidence`, { uploadKey })),

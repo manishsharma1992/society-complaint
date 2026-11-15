@@ -13,6 +13,12 @@ export function relativeTime(iso: string, lang: Lang, now = Date.now()): string 
   return rtf.format(Math.round(seconds / 86400), 'day');
 }
 
+/** A video's length as m:ss, e.g. 0:06 (digits are the same in every language here). */
+export function clipLength(durationMs: number): string {
+  const total = Math.round(durationMs / 1000);
+  return `${Math.floor(total / 60)}:${String(total % 60).padStart(2, '0')}`;
+}
+
 export function dateTime(iso: string, lang: Lang): string {
   return new Intl.DateTimeFormat(localeOf(lang), { weekday: 'short', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' }).format(new Date(iso));
 }

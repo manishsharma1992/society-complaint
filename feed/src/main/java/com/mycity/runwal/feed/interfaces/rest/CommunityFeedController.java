@@ -41,10 +41,12 @@ class CommunityFeedController {
     }
 
     record FeedPostResponse(String slug, String title, String body, String society, String tower,
-                            Instant publishedAt, List<PhotoResponse> photos, Map<String, Integer> reactions) {
+                            Instant publishedAt, List<PhotoResponse> photos, List<PublicPostResponse.Video> videos,
+                            Map<String, Integer> reactions) {
         static FeedPostResponse of(FeedPostView view) {
             return new FeedPostResponse(view.slug(), view.title(), view.body(), view.society(), view.tower(),
-                    view.publishedAt(), view.evidence().stream().map(PhotoResponse::of).toList(), view.reactions());
+                    view.publishedAt(), view.evidence().stream().map(PhotoResponse::of).toList(),
+                    view.videos().stream().map(PublicPostResponse.Video::of).toList(), view.reactions());
         }
     }
 

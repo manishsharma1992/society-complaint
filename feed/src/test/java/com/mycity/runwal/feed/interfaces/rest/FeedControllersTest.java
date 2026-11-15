@@ -29,6 +29,7 @@ import com.mycity.runwal.feed.application.query.ModerationView;
 import com.mycity.runwal.feed.application.query.PostView;
 import com.mycity.runwal.feed.application.query.PublicPostView;
 import com.mycity.runwal.feed.application.query.ReportView;
+import com.mycity.runwal.feed.application.query.VideoView;
 import com.mycity.runwal.feed.application.service.ActionNotAllowedException;
 import com.mycity.runwal.feed.application.service.EvidenceService;
 import com.mycity.runwal.feed.application.service.ModerationService;
@@ -54,7 +55,8 @@ class FeedControllersTest {
     private static final Instant NOW = Instant.parse("2026-11-01T06:00:00Z");
     private static final PostView PENDING = new PostView(7, "abcdefgh2345", "No gym", "Facts", "B2 Radiant",
             "PENDING_REVIEW", NOW, null, List.of(new EvidenceView("https://bucket.test/feed/1/7/a.jpg?get", "image/jpeg",
-            1600, 1200)), List.of(new ModerationView("PENDING_REVIEW", NOW, null)),
+            1600, 1200)), List.of(new VideoView("FAILED", null, null, null, null, null,
+            "A video can be at most 60 seconds long")), List.of(new ModerationView("PENDING_REVIEW", NOW, null)),
             List.of(new ReportView("Names a guard", NOW)));
 
     @Autowired
@@ -83,6 +85,8 @@ class FeedControllersTest {
                 .andExpect(jsonPath("$.status").value("PENDING_REVIEW"))
                 .andExpect(jsonPath("$.tower").value("B2 Radiant"))
                 .andExpect(jsonPath("$.evidence[0].widthPx").value(1600))
+                .andExpect(jsonPath("$.videos[0].status").value("FAILED"))
+                .andExpect(jsonPath("$.videos[0].failureReason").value("A video can be at most 60 seconds long"))
                 .andReturn().getResponse().getContentAsString();
         assertThat(json).doesNotContainIgnoringCase("author");
     }
@@ -104,6 +108,8 @@ class FeedControllersTest {
     void publicReadsAreCacheableAndCarryNoAuthorOrId() throws Exception {
         PublicPostView view = new PublicPostView("abcdefgh2345", "No gym", "Facts", null, NOW,
                 List.of(new EvidenceView("https://bucket.test/feed/1/7/a.jpg?get", "image/jpeg", 1600, 1200)),
+                List.of(new VideoView("READY", "https://bucket.test/feed/1/7/v-play.mp4?get",
+                        "https://bucket.test/feed/1/7/v-poster.jpg?get", 720, 1280, 6000L, null)),
                 Map.of("HEART", 2));
         given(publicFeedService.list(new ListPublicPostsQuery(1, 0, 20))).willReturn(List.of(view));
         given(publicFeedService.get(new GetPublicPostQuery("abcdefgh2345"))).willReturn(Optional.of(view));
@@ -113,6 +119,10 @@ class FeedControllersTest {
                 .andExpect(header().string("Cache-Control", "max-age=60, public"))
                 .andExpect(jsonPath("$[0].slug").value("abcdefgh2345"))
                 .andExpect(jsonPath("$[0].photos[0].widthPx").value(1600))
+                .andExpect(jsonPath("$[0].videos[0].url").value("https://bucket.test/feed/1/7/v-play.mp4?get"))
+                .andExpect(jsonPath("$[0].videos[0].posterUrl").value("https://bucket.test/feed/1/7/v-poster.jpg?get"))
+                .andExpect(jsonPath("$[0].videos[0].durationMs").value(6000))
+                .andExpect(jsonPath("$[0].videos[0].status").doesNotExist())
                 .andExpect(jsonPath("$[0].reactions.HEART").value(2))
                 .andReturn().getResponse().getContentAsString();
         assertThat(list).doesNotContainIgnoringCase("author").doesNotContain("\"id\"");

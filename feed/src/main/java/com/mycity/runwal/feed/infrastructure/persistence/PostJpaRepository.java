@@ -1,6 +1,7 @@
 package com.mycity.runwal.feed.infrastructure.persistence;
 
 import com.mycity.runwal.feed.domain.model.post.PostStatus;
+import com.mycity.runwal.feed.domain.model.post.VideoStatus;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
@@ -40,6 +41,9 @@ interface PostJpaRepository extends JpaRepository<PostJpaEntity, Long> {
 
     @Query("select count(p) from PostJpaEntity p where p.authorId = :authorId and p.submittedAt >= :since")
     long countSubmittedSince(@Param("authorId") long authorId, @Param("since") Instant since);
+
+    @Query("select distinct p from PostJpaEntity p join p.videos v where v.status = :status")
+    List<PostJpaEntity> findWithVideoIn(@Param("status") VideoStatus status);
 
     @Query(value = "select nextval('feed.post_id_seq')", nativeQuery = true)
     long nextId();

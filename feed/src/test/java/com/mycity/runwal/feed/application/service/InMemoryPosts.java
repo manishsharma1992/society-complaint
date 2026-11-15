@@ -5,6 +5,7 @@ import com.mycity.runwal.feed.domain.model.post.PostId;
 import com.mycity.runwal.feed.domain.model.post.PostRepository;
 import com.mycity.runwal.feed.domain.model.post.PostSlug;
 import com.mycity.runwal.feed.domain.model.post.PostStatus;
+import com.mycity.runwal.feed.domain.model.post.VideoStatus;
 import com.mycity.runwal.shared.id.SocietyId;
 import com.mycity.runwal.shared.id.UserId;
 import java.time.Instant;
@@ -28,6 +29,13 @@ final class InMemoryPosts implements PostRepository {
     @Override
     public void save(Post post) {
         posts.put(post.id(), post);
+    }
+
+    @Override
+    public List<Post> findWithVideoProcessing() {
+        return posts.values().stream()
+                .filter(p -> p.videos().stream().anyMatch(v -> v.status() == VideoStatus.PROCESSING))
+                .toList();
     }
 
     @Override

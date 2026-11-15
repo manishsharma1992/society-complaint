@@ -7,9 +7,11 @@ import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.OptionalLong;
 import java.util.function.Function;
+import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -76,6 +78,11 @@ public class S3EvidenceStorageAdapter implements EvidenceStorage, AutoCloseable 
         } catch (IOException e) {
             throw new UncheckedIOException("Could not read " + storageKey, e);
         }
+    }
+
+    @Override
+    public void put(String storageKey, Path file, String contentType) {
+        s3.putObject(r -> r.bucket(bucket).key(storageKey).contentType(contentType), RequestBody.fromFile(file));
     }
 
     @Override

@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, computed, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideCamera, lucideImagePlus, lucideX } from '@ng-icons/lucide';
+import { lucideCamera, lucideImagePlus, lucideVideo, lucideX } from '@ng-icons/lucide';
 import { Observable, of, switchMap, tap, toArray } from 'rxjs';
-import { FeedApi, OwnPost } from '../../core/feed';
+import { FeedApi, MAX_VIDEO_BYTES, MAX_VIDEO_SECONDS, OwnPost, VIDEO_TYPES } from '../../core/feed';
 import { Flat } from '../../core/models';
 import { ResidencyApi } from '../../core/residency';
 import { SessionStore } from '../../core/session';
@@ -19,16 +19,34 @@ const MAX_BODY = 4000;
 interface Picked {
   blob: Blob;
   url: string;
+  video?: true;
+}
+
+/** The video's length in seconds, or null when this browser cannot read it (the server checks it anyway). */
+function videoSeconds(file: Blob): Promise<number | null> {
+  return new Promise((resolve) => {
+    const video = document.createElement('video');
+    const url = URL.createObjectURL(file);
+    const done = (seconds: number | null) => {
+      URL.revokeObjectURL(url);
+      resolve(seconds !== null && Number.isFinite(seconds) ? seconds : null);
+    };
+    video.preload = 'metadata';
+    video.onloadedmetadata = () => done(video.duration);
+    video.onerror = () => done(null);
+    video.src = url;
+  });
 }
 
 /**
  * A resident documents a problem for the feed. The content policy comes first. Photos are resized and re-encoded on
- * the phone (which strips their location); the server checks them again. A moderator reviews before anyone sees it.
+ * the phone (which strips their location); the server checks them again. One short video can be added too; the
+ * server re-encodes it without its location before anyone can watch it. A moderator reviews before anyone sees it.
  */
 @Component({
   selector: 'app-new-post-page',
   imports: [TranslocoDirective, RouterLink, HlmButtonImports, NgIcon],
-  providers: [provideIcons({ lucideCamera, lucideImagePlus, lucideX })],
+  providers: [provideIcons({ lucideCamera, lucideImagePlus, lucideVideo, lucideX })],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ng-container *transloco="let t">
@@ -72,8 +90,14 @@ interface Picked {
             <div class="thumbs">
               @for (p of photos(); track p.url; let i = $index) {
                 <span class="thumb">
-                  <img [src]="p.url" [alt]="t('newPost.photoAlt', { n: i + 1 })" />
-                  <button type="button" class="remove" (click)="removePhoto(i)" [attr.aria-label]="t('newPost.removePhoto', { n: i + 1 })">
+                  @if (p.video) {
+                    <!-- #t=0.1: browsers (Safari above all) draw no picture for an unplayed video otherwise -->
+                    <video [src]="p.url + '#t=0.1'" muted playsinline preload="metadata" [attr.aria-label]="t('newPost.videoAlt')"></video>
+                  } @else {
+                    <img [src]="p.url" [alt]="t('newPost.photoAlt', { n: i + 1 })" />
+                  }
+                  <button type="button" class="remove" (click)="removePhoto(i)"
+                          [attr.aria-label]="p.video ? t('newPost.removeVideo') : t('newPost.removePhoto', { n: i + 1 })">
                     <ng-icon name="lucideX" aria-hidden="true" />
                   </button>
                 </span>
@@ -91,7 +115,15 @@ interface Picked {
                   <span>{{ t('newPost.gallery') }}</span>
                   <input type="file" accept="image/*" multiple (change)="addPhotos($any($event.target))" />
                 </label>
+                @if (!hasVideo()) {
+                  <label class="picker press">
+                    <ng-icon name="lucideVideo" aria-hidden="true" />
+                    <span>{{ t('newPost.video') }}</span>
+                    <input type="file" [attr.accept]="videoTypes" (change)="addVideo($any($event.target))" />
+                  </label>
+                }
               </div>
+              <p class="muted small">{{ t('newPost.videoHint', { seconds: maxVideoSeconds }) }}</p>
             }
             @if (preparing()) { <p class="muted small">{{ t('newPost.preparing') }}</p> }
           </div>
@@ -133,10 +165,10 @@ interface Picked {
     .num { font-variant-numeric: tabular-nums; }
     .thumbs { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
     .thumb { position: relative; width: 88px; height: 88px; border-radius: 10px; overflow: hidden; background: var(--color-paper-2); }
-    .thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .thumb img, .thumb video { width: 100%; height: 100%; object-fit: cover; display: block; }
     .remove { position: absolute; top: 2px; right: 2px; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; border: 0; background: color-mix(in oklab, var(--color-ink) 65%, transparent); color: var(--color-paper); cursor: pointer; }
     /* the same camera / gallery picker as raising a complaint */
-    .pickers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-xs); }
+    .pickers { display: grid; grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr)); gap: var(--space-xs); }
     .picker {
       position: relative; overflow: hidden; cursor: pointer; min-height: 96px; display: flex; flex-direction: column;
       align-items: center; justify-content: center; gap: var(--space-xs); padding: var(--space-sm); text-align: center;
@@ -161,6 +193,8 @@ export default class NewPostPage implements OnDestroy {
   private photosSent = 0;
 
   protected readonly maxPhotos = MAX_PHOTOS;
+  protected readonly maxVideoSeconds = MAX_VIDEO_SECONDS;
+  protected readonly videoTypes = VIDEO_TYPES.join(',');
   protected readonly maxTitle = MAX_TITLE;
   protected readonly maxBody = MAX_BODY;
   protected readonly ticked = signal(false);
@@ -169,6 +203,7 @@ export default class NewPostPage implements OnDestroy {
   protected readonly body = signal('');
   protected readonly photos = signal<Picked[]>([]);
   protected readonly preparing = signal(false);
+  protected readonly hasVideo = computed(() => this.photos().some((p) => p.video));
   protected readonly tower = signal<Flat | null>(null);
   protected readonly showTower = signal(false);
   protected readonly busy = signal(false);
@@ -202,6 +237,28 @@ export default class NewPostPage implements OnDestroy {
     }
   }
 
+  /** One video, checked here so the author hears at once; the server checks it again and re-encodes it. */
+  protected async addVideo(input: HTMLInputElement): Promise<void> {
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file || this.hasVideo() || this.photos().length >= MAX_PHOTOS) return;
+    this.error.set(null);
+    if (!VIDEO_TYPES.includes(file.type)) {
+      this.error.set(this.transloco.translate('newPost.videoType'));
+      return;
+    }
+    if (file.size > MAX_VIDEO_BYTES) {
+      this.error.set(this.transloco.translate('newPost.videoTooBig', { mb: MAX_VIDEO_BYTES / (1024 * 1024) }));
+      return;
+    }
+    const seconds = await videoSeconds(file);
+    if (seconds !== null && seconds > MAX_VIDEO_SECONDS) {
+      this.error.set(this.transloco.translate('newPost.videoTooLong', { seconds: MAX_VIDEO_SECONDS }));
+      return;
+    }
+    this.photos.update((all) => [...all, { blob: file, url: URL.createObjectURL(file), video: true }]);
+  }
+
   protected removePhoto(index: number): void {
     if (index < this.photosSent) return; // already attached to the post
     const removed = this.photos()[index];
@@ -222,7 +279,7 @@ export default class NewPostPage implements OnDestroy {
           this.created = post;
           const remaining = this.photos().slice(this.photosSent).map((p) => p.blob);
           return remaining.length
-            ? this.api.attachPhotos(post.id, remaining).pipe(tap(() => this.photosSent++), toArray())
+            ? this.api.attachEvidence(post.id, remaining).pipe(tap(() => this.photosSent++), toArray())
             : of([]);
         }),
       )

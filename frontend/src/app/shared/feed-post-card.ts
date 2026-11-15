@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
-import { relativeTime } from '../core/format';
+import { clipLength, relativeTime } from '../core/format';
 import { FeedPost } from '../core/feed';
 import { LanguageService } from '../core/language';
 import { ReactionBar } from './reaction-bar';
 
 /**
- * A published post in the feed: which society (and tower), when, what, and up to three photos; opens the post.
+ * A published post in the feed: which society (and tower), when, what, and up to three pictures (a video's poster
+ * first, marked with its length); opens the post, where the video plays.
  * The emoji row sits below the link, since buttons cannot live inside one.
  */
 @Component({
@@ -26,18 +27,26 @@ import { ReactionBar } from './reaction-bar';
         </p>
         <h2>{{ post().title }}</h2>
         <p class="body">{{ post().body }}</p>
-        @if (post().photos.length > 0) {
+        @if (shown().length > 0) {
           <div class="photos" [attr.data-count]="shown().length">
             @for (photo of shown(); track photo.url; let last = $last) {
               <span class="photo">
                 <img [src]="photo.url" alt="" loading="lazy" [width]="photo.widthPx" [height]="photo.heightPx" />
+                @if (photo.length) {
+                  <span class="play" aria-hidden="true">▶ {{ photo.length }}</span>
+                }
                 @if (last && more() > 0) {
                   <span class="more">+{{ more() }}</span>
                 }
               </span>
             }
           </div>
-          <span class="sr-only">{{ t('feed.photoCount', { count: post().photos.length }) }}</span>
+          @if (post().videos.length > 0) {
+            <span class="sr-only">{{ t('feed.videoCount', { count: post().videos.length }) }}</span>
+          }
+          @if (post().photos.length > 0) {
+            <span class="sr-only">{{ t('feed.photoCount', { count: post().photos.length }) }}</span>
+          }
         }
       </a>
       <app-reaction-bar [slug]="post().slug" [reactions]="post().reactions" />
@@ -59,6 +68,7 @@ import { ReactionBar } from './reaction-bar';
     .photo { position: relative; aspect-ratio: 4 / 3; border-radius: 8px; overflow: hidden; background: var(--color-paper-2); }
     .photos[data-count='1'] .photo { aspect-ratio: 16 / 9; }
     .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .play { position: absolute; left: var(--space-2xs); bottom: var(--space-2xs); padding: 2px 8px; border-radius: var(--radius-pill); background: color-mix(in oklab, var(--color-ink) 70%, transparent); color: var(--color-paper); font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
     .more { position: absolute; inset: 0; display: grid; place-items: center; background: color-mix(in oklab, var(--color-ink) 50%, transparent); color: var(--color-paper); font-size: var(--text-lg); }
     .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   `,
@@ -73,6 +83,11 @@ export class FeedPostCard {
   protected readonly place = computed(() =>
     [this.post().society, this.post().tower].filter((part) => !!part).join(' · '),
   );
-  protected readonly shown = computed(() => this.post().photos.slice(0, 3));
-  protected readonly more = computed(() => Math.max(0, this.post().photos.length - 3));
+  /** Video posters first, then photos; only a poster has a length. */
+  private readonly pictures = computed(() => [
+    ...this.post().videos.map((v) => ({ url: v.posterUrl, widthPx: v.widthPx, heightPx: v.heightPx, length: clipLength(v.durationMs) })),
+    ...this.post().photos.map((p) => ({ ...p, length: null })),
+  ]);
+  protected readonly shown = computed(() => this.pictures().slice(0, 3));
+  protected readonly more = computed(() => Math.max(0, this.pictures().length - 3));
 }

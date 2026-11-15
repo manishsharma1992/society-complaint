@@ -6,6 +6,7 @@ import com.mycity.runwal.feed.domain.event.PostRejected;
 import com.mycity.runwal.feed.domain.event.PostRemoved;
 import com.mycity.runwal.feed.domain.event.PostReported;
 import com.mycity.runwal.feed.domain.event.PostSubmitted;
+import com.mycity.runwal.feed.domain.event.VideoUploaded;
 import com.mycity.runwal.feed.domain.exception.InvalidPostException;
 import com.mycity.runwal.feed.domain.exception.InvalidPostTransitionException;
 import com.mycity.runwal.feed.domain.exception.PostingLimitReachedException;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 /**
  * Documented evidence a verified resident publishes to the society's public feed. Nothing is public until a
@@ -43,12 +45,14 @@ public class Post extends AbstractAggregateRoot {
     private final List<ModerationEntry> moderationLog;
     private final List<PostReport> openReports;
     private final List<Evidence> evidence;
+    private final List<Video> videos;
     private PostStatus status;
     private Instant publishedAt;
 
     private Post(PostId id, SocietyId societyId, PostSlug slug, UserId author, PostContent content,
                  ShownTower shownTower, Instant submittedAt, PostStatus status, Instant publishedAt,
-                 List<ModerationEntry> moderationLog, List<PostReport> openReports, List<Evidence> evidence) {
+                 List<ModerationEntry> moderationLog, List<PostReport> openReports, List<Evidence> evidence,
+                 List<Video> videos) {
         this.id = Objects.requireNonNull(id, "id");
         this.societyId = Objects.requireNonNull(societyId, "societyId");
         this.slug = Objects.requireNonNull(slug, "slug");
@@ -61,6 +65,7 @@ public class Post extends AbstractAggregateRoot {
         this.moderationLog = moderationLog;
         this.openReports = openReports;
         this.evidence = evidence;
+        this.videos = videos;
     }
 
     /**
@@ -77,7 +82,7 @@ public class Post extends AbstractAggregateRoot {
         List<ModerationEntry> log = new ArrayList<>();
         log.add(new ModerationEntry(1, null, PostStatus.PENDING_REVIEW, null, at, null));
         Post post = new Post(id, societyId, slug, author, content, shownTower, at, PostStatus.PENDING_REVIEW,
-                null, log, new ArrayList<>(), new ArrayList<>());
+                null, log, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         post.recordEvent(new PostSubmitted(id, societyId, at));
         return post;
     }
@@ -86,15 +91,21 @@ public class Post extends AbstractAggregateRoot {
     public static Post reconstitute(PostId id, SocietyId societyId, PostSlug slug, UserId author,
                                     PostContent content, ShownTower shownTower, Instant submittedAt,
                                     PostStatus status, Instant publishedAt, List<ModerationSnapshot> moderationLog,
-                                    List<PostReport> openReports, List<Evidence> evidence) {
+                                    List<PostReport> openReports, List<Evidence> evidence, List<Video> videos) {
         return new Post(id, societyId, slug, author, content, shownTower, submittedAt, status, publishedAt,
                 new ArrayList<>(moderationLog.stream().map(ModerationEntry::from).toList()),
-                new ArrayList<>(openReports), new ArrayList<>(evidence));
+                new ArrayList<>(openReports), new ArrayList<>(evidence), new ArrayList<>(videos));
     }
 
-    /** A moderator publishes a pending post, or restores a hidden one; open reports count as reviewed. */
+    /**
+     * A moderator publishes a pending post, or restores a hidden one; open reports count as reviewed. A post whose
+     * video is still being processed cannot be published: the moderator has to be able to watch it first.
+     */
     public void publish(UserId moderator, Instant at) {
         Objects.requireNonNull(moderator, "moderator");
+        if (videos.stream().anyMatch(v -> v.status() == VideoStatus.PROCESSING)) {
+            throw new InvalidPostException("The video is still being processed; publish the post once it is ready");
+        }
         moveTo(PostStatus.PUBLISHED, moderator, at, null);
         if (publishedAt == null) {
             publishedAt = at;
@@ -146,7 +157,8 @@ public class Post extends AbstractAggregateRoot {
     }
 
     /**
-     * Checks that the post can take a photo of this type and size now, and returns the key to upload it under.
+     * Checks that the post can take a photo or video of this type and size now, and returns the key to upload it
+     * under.
      * Uploads go to a key of their own: {@link #evidenceKeyFor} later moves the file to a key the uploader has
      * no link for, so a checked photo cannot be swapped afterwards.
      *
@@ -154,8 +166,16 @@ public class Post extends AbstractAggregateRoot {
      */
     public String newUploadKey(String contentType, long sizeBytes, String uniqueName) {
         requireRoomForEvidence();
-        Evidence.checkContent(contentType, sizeBytes);
-        String key = uploadKeyPrefix() + uniqueName + "." + Evidence.fileExtensionFor(contentType);
+        String extension;
+        if (Video.isVideoType(contentType)) {
+            requireRoomForVideo();
+            Video.checkContent(contentType, sizeBytes);
+            extension = Video.fileExtensionFor(contentType);
+        } else {
+            Evidence.checkContent(contentType, sizeBytes);
+            extension = Evidence.fileExtensionFor(contentType);
+        }
+        String key = uploadKeyPrefix() + uniqueName + "." + extension;
         Evidence.checkKey(key);
         return key;
     }
@@ -164,9 +184,12 @@ public class Post extends AbstractAggregateRoot {
     public String evidenceKeyFor(String uploadKey, String uniqueName) {
         Evidence.checkKey(uploadKey);
         if (!uploadKey.startsWith(uploadKeyPrefix())) {
-            throw new InvalidPostException("The photo was not uploaded for this post");
+            throw new InvalidPostException("The file was not uploaded for this post");
         }
-        String key = evidenceKeyPrefix() + uniqueName + "." + Evidence.fileExtensionFor(Evidence.contentTypeOf(uploadKey));
+        String extension = Video.isVideoKey(uploadKey)
+                ? Video.fileExtensionFor(Video.contentTypeOf(uploadKey))
+                : Evidence.fileExtensionFor(Evidence.contentTypeOf(uploadKey));
+        String key = evidenceKeyPrefix() + uniqueName + "." + extension;
         Evidence.checkKey(key);
         return key;
     }
@@ -175,23 +198,71 @@ public class Post extends AbstractAggregateRoot {
     public void addEvidence(Evidence photo) {
         Objects.requireNonNull(photo, "photo");
         requireRoomForEvidence();
-        String key = photo.storageKey();
-        if (!key.startsWith(evidenceKeyPrefix()) || key.startsWith(uploadKeyPrefix())) {
-            throw new InvalidPostException("The photo does not belong to this post");
-        }
-        if (evidence.stream().anyMatch(e -> e.storageKey().equals(key))) {
-            throw new InvalidPostException("This photo is already attached");
-        }
+        requireOwnNewKey(photo.storageKey());
         evidence.add(photo);
+    }
+
+    /** Adds an uploaded video, still to be processed; like photos, only while the post waits for review. */
+    public void addVideo(Video video) {
+        Objects.requireNonNull(video, "video");
+        requireRoomForEvidence();
+        requireRoomForVideo();
+        if (video.status() != VideoStatus.PROCESSING) {
+            throw new InvalidPostException("A video is added before it is processed");
+        }
+        requireOwnNewKey(video.storageKey());
+        videos.add(video);
+        recordEvent(new VideoUploaded(id, societyId, video.storageKey(), video.uploadedAt()));
+    }
+
+    /** The server has re-encoded the video stored under this key; it can now be watched. */
+    public void videoProcessed(String storageKey, VideoFacts playable) {
+        replaceVideo(storageKey, video -> video.ready(playable));
+    }
+
+    /** The server could not process the video stored under this key; it will never be shown. */
+    public void videoFailed(String storageKey, String reason) {
+        replaceVideo(storageKey, video -> video.failed(reason));
+    }
+
+    private void replaceVideo(String storageKey, UnaryOperator<Video> change) {
+        for (int i = 0; i < videos.size(); i++) {
+            if (videos.get(i).storageKey().equals(storageKey)) {
+                videos.set(i, change.apply(videos.get(i)));
+                return;
+            }
+        }
+        throw new InvalidPostException("This post has no video stored under " + storageKey);
+    }
+
+    private void requireOwnNewKey(String key) {
+        if (!key.startsWith(evidenceKeyPrefix()) || key.startsWith(uploadKeyPrefix())) {
+            throw new InvalidPostException("The file does not belong to this post");
+        }
+        if (evidence.stream().anyMatch(e -> e.storageKey().equals(key))
+                || videos.stream().anyMatch(v -> v.storageKey().equals(key))) {
+            throw new InvalidPostException("This file is already attached");
+        }
     }
 
     private void requireRoomForEvidence() {
         if (status != PostStatus.PENDING_REVIEW) {
-            throw new InvalidPostException("Photos can only be added while the post waits for review");
+            throw new InvalidPostException("Photos and videos can only be added while the post waits for review");
         }
-        if (evidence.size() >= MAX_EVIDENCE) {
-            throw new InvalidPostException("A post can have at most " + MAX_EVIDENCE + " photos");
+        if (evidence.size() + liveVideos() >= MAX_EVIDENCE) {
+            throw new InvalidPostException("A post can have at most " + MAX_EVIDENCE + " photos and videos");
         }
+    }
+
+    private void requireRoomForVideo() {
+        if (liveVideos() >= Video.MAX_PER_POST) {
+            throw new InvalidPostException("A post can have at most " + Video.MAX_PER_POST + " video");
+        }
+    }
+
+    /** A failed video is never shown, so it does not take a place: the author can add the video again. */
+    private long liveVideos() {
+        return videos.stream().filter(v -> v.status() != VideoStatus.FAILED).count();
     }
 
     /** Every checked photo of this post is stored under this prefix. */
@@ -277,6 +348,11 @@ public class Post extends AbstractAggregateRoot {
     /** The photos, in the order they were added. */
     public List<Evidence> evidence() {
         return List.copyOf(evidence);
+    }
+
+    /** The videos, in the order they were added, in every state; only READY ones may be shown. */
+    public List<Video> videos() {
+        return List.copyOf(videos);
     }
 
     /** Reports since the post was last published (reviewed). */

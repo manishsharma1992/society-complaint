@@ -73,6 +73,12 @@ class PostJpaEntity {
     @BatchSize(size = 50)
     List<PostEvidenceJpaEntity> evidence = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "post_id", nullable = false)
+    @OrderBy("position")
+    @BatchSize(size = 50)
+    List<PostVideoJpaEntity> videos = new ArrayList<>();
+
     protected PostJpaEntity() {
     }
 

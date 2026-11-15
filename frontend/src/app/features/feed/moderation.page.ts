@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@ang
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
-import { dateTime } from '../../core/format';
+import { clipLength, dateTime } from '../../core/format';
 import { Decision, FeedApi, OwnPost } from '../../core/feed';
 import { LanguageService } from '../../core/language';
 
@@ -41,6 +41,14 @@ type Queue = 'PENDING_REVIEW' | 'HIDDEN';
                 <p class="meta">{{ post.tower ?? t('moderation.noTower') }} · {{ when(post.submittedAt) }}</p>
                 <h2>{{ post.title }}</h2>
                 <p class="body">{{ post.body }}</p>
+                @for (video of post.videos; track $index) {
+                  @if (video.status === 'READY') {
+                    <video class="video" controls playsinline preload="none" [poster]="video.posterUrl!" [src]="video.url!"
+                           [attr.aria-label]="t('post.videoLabel', { length: length(video.durationMs!) })"></video>
+                  } @else if (video.status === 'PROCESSING') {
+                    <p class="muted small" role="status">{{ t('moderation.videoProcessing') }}</p>
+                  }
+                }
                 @if (post.evidence.length) {
                   <div class="photos">
                     @for (photo of post.evidence; track photo.url; let i = $index) {
@@ -104,6 +112,7 @@ type Queue = 'PENDING_REVIEW' | 'HIDDEN';
     h2 { font-size: var(--text-lg); }
     .body { white-space: pre-line; color: var(--color-ink-2); }
     .photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: var(--space-2xs); }
+    .video { display: block; width: auto; max-width: 100%; height: auto; max-height: 60vh; border-radius: 8px; background: var(--color-ink); }
     .photo { aspect-ratio: 1; border-radius: 8px; overflow: hidden; background: var(--color-paper-2); }
     .photo img { width: 100%; height: 100%; object-fit: cover; }
     .reports { padding: var(--space-sm); border-radius: 10px; background: color-mix(in oklab, var(--color-error) 8%, var(--color-paper)); }
@@ -122,6 +131,7 @@ export default class ModerationPage {
   private readonly api = inject(FeedApi);
   private readonly lang = inject(LanguageService).current;
 
+  protected readonly length = clipLength;
   protected readonly queues: Queue[] = ['PENDING_REVIEW', 'HIDDEN'];
   protected readonly queue = signal<Queue>('PENDING_REVIEW');
   protected readonly posts = signal<OwnPost[]>([]);

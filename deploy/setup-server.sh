@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # One-time (and re-runnable) server setup for Ubuntu 24.04 on Lightsail. Run as root from the uploaded deploy folder.
-# Installs Java 25 and Nginx, creates the service user and folders, installs the systemd unit and Nginx site.
+# Installs Java 25, Nginx and ffmpeg, creates the service user and folders, installs the systemd unit and Nginx site.
 # Never overwrites an existing /etc/society-complaint/complaint.env.
 set -euo pipefail
 
@@ -9,7 +9,8 @@ HERE=$(cd "$(dirname "$0")" && pwd)
 
 echo "==> Packages"
 apt-get update -q
-apt-get install -y -q wget gpg nginx certbot
+# ffmpeg re-encodes feed videos; it parses untrusted files, so keep it updated with the system (apt upgrade)
+apt-get install -y -q wget gpg nginx certbot ffmpeg
 if ! command -v java >/dev/null || ! java -version 2>&1 | grep -q '"25'; then
     # Eclipse Temurin (Adoptium) builds of OpenJDK
     install -d /etc/apt/keyrings

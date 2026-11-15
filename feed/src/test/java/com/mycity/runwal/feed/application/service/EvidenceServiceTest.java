@@ -36,7 +36,7 @@ class EvidenceServiceTest {
     private Actor current = AUTHOR;
     private final Clock clock = Clock.fixed(Instant.parse("2026-11-01T06:00:00Z"), ZoneOffset.UTC);
     private final EvidenceService service = new EvidenceService(posts, () -> current, storage,
-            new MetadataExtractorImageInspector(), clock);
+            new MetadataExtractorImageInspector(), events -> { }, clock);
     private long postId;
 
     @BeforeEach

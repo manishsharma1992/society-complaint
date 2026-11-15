@@ -399,7 +399,8 @@
     "emptyTitle": "Nothing here yet",
     "emptyBody": "When a resident documents a problem and a moderator publishes it, it appears here.",
     "notApproved": "The feed opens once the society has approved your sign-up.",
-    "photoCount": "{{count}} photos"
+    "photoCount": "{{count}} photos",
+    "videoCount": "with a video"
   },
   "post": {
     "back": "← Feed",
@@ -411,7 +412,8 @@
     "reportReason": "What is wrong with this post?",
     "sendReport": "Send report",
     "reported": "Thank you. A moderator will look at it.",
-    "reportFailed": "The report could not be sent. Try again."
+    "reportFailed": "The report could not be sent. Try again.",
+    "videoLabel": "Video, {{length}}"
   },
   "newPost": {
     "title": "New post",
@@ -431,7 +433,7 @@
     "whatPlaceholder": "e.g. Clubhouse gym promised in the brochure is missing",
     "details": "Details",
     "detailsPlaceholder": "Where exactly, since when, and what was promised (page of the brochure, clause of the agreement)…",
-    "photos": "Photos (up to {{max}})",
+    "photos": "Photos and one video (up to {{max}})",
     "camera": "Take photo",
     "gallery": "Choose photos",
     "preparing": "Preparing photos…",
@@ -442,7 +444,14 @@
     "send": "Send for review",
     "sending": "Sending…",
     "failed": "The post could not be sent. Check your connection and try again.",
-    "reviewNote": "A moderator reviews your post before anyone else can see it."
+    "reviewNote": "A moderator reviews your post before anyone else can see it.",
+    "video": "Add video",
+    "videoHint": "One video of up to {{seconds}} seconds. The server removes its location before anyone sees it.",
+    "videoAlt": "Your video",
+    "removeVideo": "Remove the video",
+    "videoType": "Choose an MP4, MOV or WebM video.",
+    "videoTooBig": "This video is larger than {{mb}} MB. Record a shorter one.",
+    "videoTooLong": "This video is longer than {{seconds}} seconds. Trim it and add it again."
   },
   "myPosts": {
     "title": "My posts",
@@ -457,6 +466,11 @@
       "REJECTED": "Not published",
       "HIDDEN": "Hidden for review",
       "REMOVED": "Removed"
+    },
+    "video": {
+      "PROCESSING": "Video: being prepared",
+      "READY": "Video: ready",
+      "FAILED": "The video could not be used: {{reason}}"
     }
   },
   "moderation": {
@@ -486,7 +500,8 @@
       "remove": "Remove post",
       "hide": "Hide post"
     },
-    "failed": "The decision could not be saved. Try again."
+    "failed": "The decision could not be saved. Try again.",
+    "videoProcessing": "The video is still being prepared. Publish once it is ready."
   },
   "settings": {
     "back": "← Profile",

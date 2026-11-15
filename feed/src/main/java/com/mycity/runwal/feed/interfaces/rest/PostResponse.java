@@ -4,12 +4,14 @@ import com.mycity.runwal.feed.application.query.EvidenceView;
 import com.mycity.runwal.feed.application.query.ModerationView;
 import com.mycity.runwal.feed.application.query.PostView;
 import com.mycity.runwal.feed.application.query.ReportView;
+import com.mycity.runwal.feed.application.query.VideoView;
 import java.time.Instant;
 import java.util.List;
 
 /** A post with its moderation state, for its author and for moderators. Never contains the author. */
 record PostResponse(long id, String slug, String title, String body, String tower, String status,
-                    Instant submittedAt, Instant publishedAt, List<Photo> evidence, List<Moderation> moderation,
+                    Instant submittedAt, Instant publishedAt, List<Photo> evidence, List<Video> videos,
+                    List<Moderation> moderation,
                     List<Report> reports) {
 
     /** @param url a link that works for 15 minutes; every read gives a fresh one */
@@ -17,6 +19,16 @@ record PostResponse(long id, String slug, String title, String body, String towe
 
         static Photo from(EvidenceView view) {
             return new Photo(view.url(), view.contentType(), view.widthPx(), view.heightPx());
+        }
+    }
+
+    /** Links only when READY (15 minutes each); a FAILED video says why. */
+    record Video(String status, String url, String posterUrl, Integer widthPx, Integer heightPx, Long durationMs,
+                 String failureReason) {
+
+        static Video from(VideoView view) {
+            return new Video(view.status(), view.url(), view.posterUrl(), view.widthPx(), view.heightPx(),
+                    view.durationMs(), view.failureReason());
         }
     }
 
@@ -37,6 +49,7 @@ record PostResponse(long id, String slug, String title, String body, String towe
     static PostResponse from(PostView view) {
         return new PostResponse(view.id(), view.slug(), view.title(), view.body(), view.tower(), view.status(),
                 view.submittedAt(), view.publishedAt(), view.evidence().stream().map(Photo::from).toList(),
+                view.videos().stream().map(Video::from).toList(),
                 view.moderation().stream().map(Moderation::from).toList(),
                 view.reports().stream().map(Report::from).toList());
     }

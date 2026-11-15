@@ -3,7 +3,11 @@ package com.mycity.runwal.feed.application.service;
 import com.mycity.runwal.feed.application.port.EvidenceStorage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,6 +47,15 @@ final class FakeEvidenceStorage implements EvidenceStorage {
     @Override
     public <T> T read(String storageKey, Function<InputStream, T> reader) {
         return reader.apply(new ByteArrayInputStream(objects.get(storageKey)));
+    }
+
+    @Override
+    public void put(String storageKey, Path file, String contentType) {
+        try {
+            objects.put(storageKey, Files.readAllBytes(file));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     @Override

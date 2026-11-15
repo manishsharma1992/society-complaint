@@ -262,4 +262,5 @@ and `/mr/` for search engines; Google Search Console verification (a DNS TXT rec
    and the society photos (from listing sites) are replaced by residents' own or their rights confirmed.
 5. Public Feed (`feed`), in order: Post aggregate + moderation lifecycle (domain + unit tests) -> post, report and
    moderation APIs with phase 1 images -> public bucket + CDN publish/unpublish -> share endpoint -> frontend
-   screens -> legal pages. Phase 2 (server-side compression and video) only after the plan upgrade in step 2.
+   screens -> legal pages. Phase 2: video is live (2026-11-15: one per post, re-encoded by ffmpeg without metadata);
+   server-side image processing (libvips) is still to do.

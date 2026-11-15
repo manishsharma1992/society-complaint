@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, signal, ef
 import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
-import { dateTime } from '../../core/format';
+import { clipLength, dateTime } from '../../core/format';
 import { FeedApi, FeedPost } from '../../core/feed';
 import { LanguageService } from '../../core/language';
 import { ReactionBar } from '../../shared/reaction-bar';
@@ -37,6 +37,11 @@ import { ReactionBar } from '../../shared/reaction-bar';
               <h1>{{ p.title }}</h1>
               <p class="body">{{ p.body }}</p>
               <div class="photos">
+                @for (video of p.videos; track video.url) {
+                  <video class="video" controls playsinline preload="none" [poster]="video.posterUrl" [src]="video.url"
+                         [width]="video.widthPx" [height]="video.heightPx"
+                         [attr.aria-label]="t('post.videoLabel', { length: length(video.durationMs) })"></video>
+                }
                 @for (photo of p.photos; track photo.url; let i = $index) {
                   <a [href]="photo.url" target="_blank" rel="noopener" class="photo">
                     <img [src]="photo.url" [alt]="t('post.photoAlt', { n: i + 1, total: p.photos.length })"
@@ -79,6 +84,8 @@ import { ReactionBar } from '../../shared/reaction-bar';
     h1 { font-size: var(--text-2xl); text-wrap: balance; }
     .body { color: var(--color-ink); white-space: pre-line; max-width: 65ch; }
     .photos { display: grid; gap: var(--space-sm); margin-top: var(--space-xs); }
+    /* as wide as the video itself (portrait clips get no black bars), never wider than the column or taller than 80vh */
+    .video { width: auto; max-width: 100%; height: auto; max-height: 80vh; border-radius: var(--radius-card); background: var(--color-ink); }
     .photo { display: block; border-radius: var(--radius-card); overflow: hidden; background: var(--color-paper-2); }
     .photo img { width: 100%; height: auto; display: block; }
     .photo:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
@@ -110,6 +117,7 @@ export default class PostPage {
   protected readonly place = computed(() =>
     [this.post()?.society, this.post()?.tower].filter((part) => !!part).join(' · '),
   );
+  protected readonly length = clipLength;
   protected readonly reporting = signal(false);
   protected readonly reason = signal('');
   protected readonly sending = signal(false);

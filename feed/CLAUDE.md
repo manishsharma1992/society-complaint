@@ -51,12 +51,15 @@ The server had 512 MB until 2026-11-15, not enough for libvips or ffmpeg next to
   confirmed, the server streams the object and checks it with the `metadata-extractor` library. If it still
   contains GPS, EXIF device data, XMP or IPTC, the upload is rejected with a clear reason.
 
-**Phase 2 (only after the Lightsail plan is upgraded to at least 1 GB): server-side processing and video**
+**Phase 2: server-side processing and video** (video built and live 2026-11-15; libvips images still to do)
 - Evidence lifecycle: UPLOADED -> PROCESSING -> READY or FAILED. A post can be submitted for moderation only when
   all its evidence is READY.
-- Job queue: a DB table in `feed`, polled by a `@Scheduled` worker with `SELECT ... FOR UPDATE SKIP LOCKED`.
-  One job at a time; at most 3 retries; timeout 30 s per image and 5 min per video; kill the process on timeout.
-  No message broker.
+- Processing (as built for video, 2026-11-15): no job table and no polling (Neon must be able to sleep). The
+  `post_video` row is the state; `VideoUploaded` (after commit) starts it on one background thread
+  (`VideoProcessingTrigger`), one video at a time; at startup, videos still PROCESSING are processed again.
+  Encoding runs outside a transaction; the result is saved in a short one. No retries: a tool failure or timeout
+  (5 min, process killed) makes the video FAILED ("please add it again"); a FAILED video takes no place, so the
+  author can add it again. The original upload is deleted once the result is saved. No message broker.
 - Ports `ImageProcessor` and `VideoTranscoder` in `application.port`; adapters `VipsImageProcessor` and
   `FfmpegVideoTranscoder` in `infrastructure.media` (CODE-04). Call the tools through `ProcessBuilder` with an
   argument list, never through a shell. Temp files in a dedicated directory, deleted in a `finally` block.
@@ -74,6 +77,10 @@ The server had 512 MB until 2026-11-15, not enough for libvips or ffmpeg next to
     -movflags +faststart -fflags +bitexact <out.mp4>
   ```
   (If the installed ffmpeg doesn't accept the `fps` expression, keep the intent: cap at 30 fps, never increase.)
+  As built (`FfmpegVideoTranscoder`): the scale caps the **long side** at 1280 px, so portrait phone videos stay
+  720x1280 instead of shrinking to 405x720 (`scale='if(gt(iw,ih),min(1280,trunc(iw/2)*2),-2)':'if(gt(iw,ih),-2,min(1280,trunc(ih/2)*2))'`);
+  `-flags:v/-flags:a +bitexact` are added; the poster is one JPEG from the cleaned copy (the 1200x630 OG image comes
+  with the share endpoint). Locally: static ffmpeg in `~/bin` (`feed.media.tools-dir`); the test skips without it.
   Why: H.264 plays everywhere, including WhatsApp, X and all browsers; CRF gives the best quality per byte;
   `maxrate`/`bufsize` cap shaky, high-motion clips; `+faststart` lets playback start early; `-map_metadata -1`
   removes GPS and device data. Target: 5-15 MB per 60 s clip. Also produce a poster frame at 1 s
