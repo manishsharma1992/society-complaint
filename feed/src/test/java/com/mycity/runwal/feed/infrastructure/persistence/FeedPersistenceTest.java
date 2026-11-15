@@ -11,6 +11,9 @@ import com.mycity.runwal.feed.domain.model.post.PostRepository;
 import com.mycity.runwal.feed.domain.model.post.PostSlug;
 import com.mycity.runwal.feed.domain.model.post.PostStatus;
 import com.mycity.runwal.feed.domain.model.post.ShownTower;
+import com.mycity.runwal.feed.domain.model.reaction.Emoji;
+import com.mycity.runwal.feed.domain.model.reaction.Reaction;
+import com.mycity.runwal.feed.domain.model.reaction.ReactionRepository;
 import com.mycity.runwal.shared.id.SocietyId;
 import com.mycity.runwal.shared.id.TowerId;
 import com.mycity.runwal.shared.id.UserId;
@@ -18,6 +21,7 @@ import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +37,7 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers(disabledWithoutDocker = true)
-@Import({FeedSchemaConfig.class, PostRepositoryAdapter.class})
+@Import({FeedSchemaConfig.class, PostRepositoryAdapter.class, ReactionRepositoryAdapter.class})
 class FeedPersistenceTest {
 
     @Container
@@ -48,6 +52,9 @@ class FeedPersistenceTest {
 
     @Autowired
     private PostRepository posts;
+
+    @Autowired
+    private ReactionRepository reactions;
 
     @Autowired
     private EntityManager entityManager;
@@ -132,5 +139,27 @@ class FeedPersistenceTest {
         assertThat(posts.findByAuthor(RUNWAL, AUTHOR, 0, 20)).hasSize(2);
         assertThat(posts.countSubmittedSince(AUTHOR, NOW.minusSeconds(60))).isEqualTo(2);
         assertThat(posts.countSubmittedSince(AUTHOR, NOW.plusSeconds(60))).isZero();
+    }
+
+    @Test
+    void reactingAgainReplacesTheReactionAndCountsArePerPostAndEmoji() {
+        Post post = newPost("react0000001");
+        post.publish(MODERATOR, NOW);
+        posts.save(post);
+        flushAndClear();
+
+        reactions.save(Reaction.to(post, "visitor-a", Emoji.HEART, NOW));
+        reactions.save(Reaction.to(post, "visitor-b", Emoji.HEART, NOW));
+        reactions.save(Reaction.to(post, "visitor-a", Emoji.ANGRY, NOW.plusSeconds(1)));
+        flushAndClear();
+
+        assertThat(reactions.countsFor(List.of(post.id())).get(post.id()).byEmoji())
+                .isEqualTo(Map.of(Emoji.HEART, 1, Emoji.ANGRY, 1));
+
+        reactions.remove(post.id(), "visitor-b");
+        flushAndClear();
+        assertThat(reactions.countsFor(List.of(post.id())).get(post.id()).byEmoji())
+                .isEqualTo(Map.of(Emoji.ANGRY, 1));
+        assertThat(reactions.countsFor(List.of())).isEmpty();
     }
 }

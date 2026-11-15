@@ -10,8 +10,11 @@ import com.mycity.runwal.feed.application.query.NeighbourView;
 import com.mycity.runwal.feed.domain.exception.InvalidPostException;
 import com.mycity.runwal.feed.domain.model.actor.Actor;
 import com.mycity.runwal.feed.domain.model.post.Post;
+import com.mycity.runwal.feed.domain.model.post.PostId;
 import com.mycity.runwal.feed.domain.model.post.PostRepository;
 import com.mycity.runwal.feed.domain.model.post.PostSlug;
+import com.mycity.runwal.feed.domain.model.reaction.ReactionCounts;
+import com.mycity.runwal.feed.domain.model.reaction.ReactionRepository;
 import com.mycity.runwal.shared.ddd.annotation.ApplicationService;
 import com.mycity.runwal.shared.id.SocietyId;
 import java.util.List;
@@ -31,20 +34,25 @@ public class CommunityFeedService {
     private final NearbySocieties nearby;
     private final CurrentActor currentActor;
     private final EvidenceStorage storage;
+    private final ReactionRepository reactions;
 
     public CommunityFeedService(PostRepository posts, NearbySocieties nearby, CurrentActor currentActor,
-                                EvidenceStorage storage) {
+                                EvidenceStorage storage, ReactionRepository reactions) {
         this.posts = posts;
         this.nearby = nearby;
         this.currentActor = currentActor;
         this.storage = storage;
+        this.reactions = reactions;
     }
 
     @Transactional(readOnly = true)
     public List<FeedPostView> feed(CommunityFeedQuery query) {
         Map<SocietyId, String> names = neighboursOfMember(new SocietyId(query.societyId()));
-        return posts.findPublishedIn(names.keySet(), query.page(), query.size()).stream()
-                .map(post -> FeedPostView.of(post, names.get(post.societyId()), storage))
+        List<Post> page = posts.findPublishedIn(names.keySet(), query.page(), query.size());
+        Map<PostId, ReactionCounts> counts = reactions.countsFor(page.stream().map(Post::id).toList());
+        return page.stream()
+                .map(post -> FeedPostView.of(post, names.get(post.societyId()),
+                        counts.getOrDefault(post.id(), ReactionCounts.NONE), storage))
                 .toList();
     }
 
@@ -61,7 +69,9 @@ public class CommunityFeedService {
         return posts.findBySlug(slug)
                 .filter(Post::isPublished)
                 .filter(post -> names.containsKey(post.societyId()))
-                .map(post -> FeedPostView.of(post, names.get(post.societyId()), storage));
+                .map(post -> FeedPostView.of(post, names.get(post.societyId()),
+                        reactions.countsFor(List.of(post.id())).getOrDefault(post.id(), ReactionCounts.NONE),
+                        storage));
     }
 
     private Map<SocietyId, String> neighboursOfMember(SocietyId societyId) {

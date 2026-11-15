@@ -53,9 +53,9 @@ class WebSecurityConfigTest {
     }
 
     @Test
-    void theFeedNeedsALoginUntilTheLegalPagesArePublished() throws Exception {
-        mockMvc.perform(get("/feed/public/probe")).andExpect(status().isUnauthorized());
-        mockMvc.perform(get("/feed/share/probe")).andExpect(status().isUnauthorized());
+    void thePublicFeedIsOpenToEveryoneWithOrWithoutALogin() throws Exception {
+        mockMvc.perform(get("/feed/public/probe")).andExpect(status().isOk());
+        mockMvc.perform(get("/feed/share/probe")).andExpect(status().isOk());
         mockMvc.perform(get("/feed/public/probe").header("Authorization", "Bearer " + token(KEY, Instant.now().plusSeconds(60))))
                 .andExpect(status().isOk());
     }

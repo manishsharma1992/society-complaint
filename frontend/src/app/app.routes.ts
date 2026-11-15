@@ -6,6 +6,15 @@ export const routes: Routes = [
   { path: 'login', canActivate: [signedOut], loadComponent: () => import('./features/login/login.page') },
   { path: 'raise', canActivate: [signedIn, complaintsOn], loadComponent: () => import('./features/raise/raise.page') },
   { path: 'register', canActivate: [signedIn, notActive], loadComponent: () => import('./features/register/register.page') },
+  // the public feed: everyone, signed in or not, reads, reacts and reports
+  {
+    path: 'public',
+    loadComponent: () => import('./features/public/public-layout'),
+    children: [
+      { path: '', pathMatch: 'full', loadComponent: () => import('./features/public/public-feed.page') },
+      { path: ':slug', data: { openToAll: true }, loadComponent: () => import('./features/feed/post.page') },
+    ],
+  },
   {
     path: '',
     canActivate: [signedIn],

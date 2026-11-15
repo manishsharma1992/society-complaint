@@ -5,15 +5,19 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { dateTime } from '../../core/format';
 import { FeedApi, FeedPost } from '../../core/feed';
 import { LanguageService } from '../../core/language';
+import { ReactionBar } from '../../shared/reaction-bar';
 
-/** One published post: the whole text, every photo, and a way to report it (3 reports hide it for review). */
+/**
+ * One published post: the whole text, every photo, the emoji row and a way to report it (3 reports hide it for
+ * review). Signed-in members open it from their feed; everyone else from the public feed (route data openToAll).
+ */
 @Component({
   selector: 'app-post-page',
-  imports: [TranslocoDirective, RouterLink, HlmButtonImports],
+  imports: [TranslocoDirective, RouterLink, HlmButtonImports, ReactionBar],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ng-container *transloco="let t">
-      <a routerLink="/feed" class="back">{{ t('post.back') }}</a>
+      <a [routerLink]="openToAll() ? '/public' : '/feed'" class="back">{{ t('post.back') }}</a>
       @switch (state()) {
         @case ('loading') { <p class="muted" aria-busy="true">{{ t('feed.loading') }}</p> }
         @case ('missing') {
@@ -25,7 +29,9 @@ import { LanguageService } from '../../core/language';
             <article>
               <p class="meta">
                 <span class="who">{{ t('feed.verified') }}</span>
-                <span>{{ p.society }}{{ p.tower ? ' · ' + p.tower : '' }}</span>
+                @if (place()) {
+                  <span>{{ place() }}</span>
+                }
                 <span>{{ published() }}</span>
               </p>
               <h1>{{ p.title }}</h1>
@@ -38,6 +44,7 @@ import { LanguageService } from '../../core/language';
                   </a>
                 }
               </div>
+              <app-reaction-bar [slug]="p.slug" [reactions]="p.reactions" />
             </article>
 
             <section class="report" [attr.aria-label]="t('post.report')">
@@ -91,6 +98,8 @@ import { LanguageService } from '../../core/language';
 export default class PostPage {
   /** From the route. */
   readonly slug = input.required<string>();
+  /** From the route data: the public page, for everyone, signed in or not. */
+  readonly openToAll = input(false);
 
   private readonly api = inject(FeedApi);
   private readonly lang = inject(LanguageService).current;
@@ -98,6 +107,9 @@ export default class PostPage {
   protected readonly post = signal<FeedPost | null>(null);
   protected readonly state = signal<'loading' | 'ready' | 'missing' | 'error'>('loading');
   protected readonly published = computed(() => (this.post() ? dateTime(this.post()!.publishedAt, this.lang()) : ''));
+  protected readonly place = computed(() =>
+    [this.post()?.society, this.post()?.tower].filter((part) => !!part).join(' · '),
+  );
   protected readonly reporting = signal(false);
   protected readonly reason = signal('');
   protected readonly sending = signal(false);
@@ -108,7 +120,7 @@ export default class PostPage {
     effect(() => {
       const slug = this.slug();
       this.state.set('loading');
-      this.api.post(slug).subscribe({
+      (this.openToAll() ? this.api.publicPost(slug) : this.api.post(slug)).subscribe({
         next: (post) => {
           this.post.set(post);
           this.state.set('ready');

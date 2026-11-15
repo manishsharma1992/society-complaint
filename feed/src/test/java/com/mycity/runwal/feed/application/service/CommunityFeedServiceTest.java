@@ -37,7 +37,7 @@ class CommunityFeedServiceTest {
             society -> society.equals(RUNWAL)
                     ? List.of(new NeighbourView(RUNWAL, "Runwal MyCity"), new NeighbourView(PALAVA, "Palava"))
                     : List.of(),
-            () -> current, new FakeEvidenceStorage());
+            () -> current, new FakeEvidenceStorage(), new InMemoryReactions());
 
     private static Actor member(long id, SocietyId society) {
         return new Actor(new UserId(id), true, Set.of(new ActorRole(ActorRole.Part.RESIDENT, society)));

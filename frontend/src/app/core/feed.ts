@@ -4,6 +4,7 @@ import { Observable, concatMap, from, map, switchMap } from 'rxjs';
 import { API, SOCIETY_ID } from './api';
 
 const BASE = `${API}/feed/societies/${SOCIETY_ID}`;
+const PUBLIC = `${API}/feed/public`;
 
 export interface FeedPhoto {
   /** a short-lived link: every read gives a fresh one */
@@ -12,15 +13,31 @@ export interface FeedPhoto {
   heightPx: number;
 }
 
+/** The emoji anyone can react with, in the order they are shown. */
+export const EMOJI = [
+  { name: 'THUMBS_UP', glyph: '👍' },
+  { name: 'HEART', glyph: '❤️' },
+  { name: 'SURPRISED', glyph: '😮' },
+  { name: 'SAD', glyph: '😢' },
+  { name: 'ANGRY', glyph: '😡' },
+] as const;
+
+export type Emoji = (typeof EMOJI)[number]['name'];
+
+/** Emoji name -> how many reacted with it; emoji nobody chose are left out. */
+export type Reactions = Partial<Record<Emoji, number>>;
+
 /** A published post in the feed: "Verified resident" of a society; never who wrote it. */
 export interface FeedPost {
   slug: string;
   title: string;
   body: string;
-  society: string;
+  /** missing on the public feed, which shows one society */
+  society?: string;
   tower: string | null;
   publishedAt: string;
   photos: FeedPhoto[];
+  reactions: Reactions;
 }
 
 export type PostStatus = 'PENDING_REVIEW' | 'PUBLISHED' | 'REJECTED' | 'HIDDEN' | 'REMOVED';
@@ -61,6 +78,28 @@ export class FeedApi {
     return this.http.get<FeedPost>(`${BASE}/feed/${encodeURIComponent(slug)}`);
   }
 
+  /** The public feed: anyone, signed in or not. */
+  publicFeed(page: number, size = 10): Observable<FeedPost[]> {
+    return this.http.get<FeedPost[]>(`${PUBLIC}/societies/${SOCIETY_ID}/posts`, { params: { page, size } });
+  }
+
+  publicPost(slug: string): Observable<FeedPost> {
+    return this.http.get<FeedPost>(`${PUBLIC}/posts/${encodeURIComponent(slug)}`);
+  }
+
+  /** Anyone may react, one emoji per post and visitor; reacting again replaces it. Emits the new counts. */
+  react(slug: string, emoji: Emoji): Observable<Reactions> {
+    return this.http
+      .put<{ reactions: Reactions }>(`${PUBLIC}/posts/${encodeURIComponent(slug)}/reaction`, { emoji })
+      .pipe(map((r) => r.reactions));
+  }
+
+  takeBackReaction(slug: string): Observable<Reactions> {
+    return this.http
+      .delete<{ reactions: Reactions }>(`${PUBLIC}/posts/${encodeURIComponent(slug)}/reaction`)
+      .pipe(map((r) => r.reactions));
+  }
+
   /** @param showTowerId the author's own tower to show on the post, or null to show none */
   submit(title: string, body: string, showTowerId: number | null): Observable<OwnPost> {
     return this.http.post<OwnPost>(`${BASE}/posts`, { title, body, showTowerId });
@@ -91,9 +130,9 @@ export class FeedApi {
     return this.http.get<OwnPost[]>(`${BASE}/my-posts`, { params: { size: 50 } });
   }
 
-  /** Anyone signed in may report a published post; 3 reports hide it until a moderator looks. */
+  /** Anyone, signed in or not, may report a published post; 3 reports hide it until a moderator looks. */
   report(slug: string, reason: string): Observable<unknown> {
-    return this.http.post(`${API}/feed/public/posts/${encodeURIComponent(slug)}/reports`, { reason });
+    return this.http.post(`${PUBLIC}/posts/${encodeURIComponent(slug)}/reports`, { reason });
   }
 
   /** Waiting for review (default), or the posts hidden by reports. */

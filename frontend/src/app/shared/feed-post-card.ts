@@ -4,40 +4,50 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { relativeTime } from '../core/format';
 import { FeedPost } from '../core/feed';
 import { LanguageService } from '../core/language';
+import { ReactionBar } from './reaction-bar';
 
-/** A published post in the feed: which society (and tower), when, what, and up to three photos. Opens the post. */
+/**
+ * A published post in the feed: which society (and tower), when, what, and up to three photos; opens the post.
+ * The emoji row sits below the link, since buttons cannot live inside one.
+ */
 @Component({
   selector: 'app-feed-post-card',
-  imports: [TranslocoDirective, RouterLink],
+  imports: [TranslocoDirective, RouterLink, ReactionBar],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <a class="card stock press" [routerLink]="['/feed', post().slug]" *transloco="let t">
-      <p class="meta">
-        <span class="who">{{ t('feed.verified') }}</span>
-        <span>{{ post().society }}{{ post().tower ? ' · ' + post().tower : '' }}</span>
-        <span class="when">{{ published() }}</span>
-      </p>
-      <h2>{{ post().title }}</h2>
-      <p class="body">{{ post().body }}</p>
-      @if (post().photos.length > 0) {
-        <div class="photos" [attr.data-count]="shown().length">
-          @for (photo of shown(); track photo.url; let last = $last) {
-            <span class="photo">
-              <img [src]="photo.url" alt="" loading="lazy" [width]="photo.widthPx" [height]="photo.heightPx" />
-              @if (last && more() > 0) {
-                <span class="more">+{{ more() }}</span>
-              }
-            </span>
+    <article class="card stock" *transloco="let t">
+      <a class="open press" [routerLink]="[base(), post().slug]">
+        <p class="meta">
+          <span class="who">{{ t('feed.verified') }}</span>
+          @if (place()) {
+            <span>{{ place() }}</span>
           }
-        </div>
-        <span class="sr-only">{{ t('feed.photoCount', { count: post().photos.length }) }}</span>
-      }
-    </a>
+          <span class="when">{{ published() }}</span>
+        </p>
+        <h2>{{ post().title }}</h2>
+        <p class="body">{{ post().body }}</p>
+        @if (post().photos.length > 0) {
+          <div class="photos" [attr.data-count]="shown().length">
+            @for (photo of shown(); track photo.url; let last = $last) {
+              <span class="photo">
+                <img [src]="photo.url" alt="" loading="lazy" [width]="photo.widthPx" [height]="photo.heightPx" />
+                @if (last && more() > 0) {
+                  <span class="more">+{{ more() }}</span>
+                }
+              </span>
+            }
+          </div>
+          <span class="sr-only">{{ t('feed.photoCount', { count: post().photos.length }) }}</span>
+        }
+      </a>
+      <app-reaction-bar [slug]="post().slug" [reactions]="post().reactions" />
+    </article>
   `,
   styles: `
     :host { display: block; }
-    .card { display: grid; gap: var(--space-xs); padding: var(--space-md); color: inherit; text-decoration: none; }
-    .card:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+    .card { display: grid; gap: var(--space-sm); padding: var(--space-md); }
+    .open { display: grid; gap: var(--space-xs); color: inherit; text-decoration: none; border-radius: 8px; }
+    .open:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 4px; }
     .meta { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-sm); font-size: var(--text-sm); color: var(--color-ink-muted); }
     .who { color: var(--color-brand-deep); font-weight: 500; }
     .when { margin-inline-start: auto; }
@@ -55,9 +65,14 @@ import { LanguageService } from '../core/language';
 })
 export class FeedPostCard {
   readonly post = input.required<FeedPost>();
+  /** Where the post opens: the signed-in feed, or the public one. */
+  readonly base = input('/feed');
   private readonly lang = inject(LanguageService).current;
 
   protected readonly published = computed(() => relativeTime(this.post().publishedAt, this.lang()));
+  protected readonly place = computed(() =>
+    [this.post().society, this.post().tower].filter((part) => !!part).join(' · '),
+  );
   protected readonly shown = computed(() => this.post().photos.slice(0, 3));
   protected readonly more = computed(() => Math.max(0, this.post().photos.length - 3));
 }

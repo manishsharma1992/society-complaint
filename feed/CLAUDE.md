@@ -7,7 +7,7 @@ commitments the developer has not met. Published posts are public and easy to sh
 Same rules as every context: its own module (library jar packaged into `app`), schema `feed`, endpoints under
 `/feed`, DDD and ArchUnit. Cross-context needs (e.g. the poster's tower) go through ports implemented in
 `com.mycity.runwal.integration`.
-Ubiquitous language: Post, Evidence (a media item), Moderation, Report, Takedown.
+Ubiquitous language: Post, Evidence (a media item), Moderation, Report, Reaction, Takedown.
 
 ### Anonymous to the public, verified internally
 - Only logged-in, approved residents can post (via `CurrentActor`). No unauthenticated posting: it prevents spam
@@ -27,6 +27,8 @@ Ubiquitous language: Post, Evidence (a media item), Moderation, Report, Takedown
   - no names, faces, phone numbers or other personal details of individual employees or private people
   - no abusive language, no threats, no unverified allegations of crimes
 - Anyone, even without logging in, can report a published post; 3 reports hide it until a moderator reviews it.
+- Anyone, even without logging in, can react to a published post with one emoji (THUMBS_UP, HEART, SURPRISED, SAD,
+  ANGRY); one per visitor and post, keyed like reports. `PUT`/`DELETE /feed/public/posts/{slug}/reaction`.
 - Every moderation action goes to an append-only audit log (who, what, when, why).
 
 ### Media storage

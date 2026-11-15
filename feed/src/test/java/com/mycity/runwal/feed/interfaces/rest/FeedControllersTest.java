@@ -6,7 +6,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -14,9 +16,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.mycity.runwal.feed.application.command.AttachEvidenceCommand;
 import com.mycity.runwal.feed.application.command.ModeratePostCommand;
 import com.mycity.runwal.feed.application.command.ModeratePostCommand.Decision;
+import com.mycity.runwal.feed.application.command.ReactCommand;
 import com.mycity.runwal.feed.application.command.ReportPostCommand;
 import com.mycity.runwal.feed.application.command.RequestEvidenceUploadCommand;
 import com.mycity.runwal.feed.application.command.SubmitPostCommand;
+import com.mycity.runwal.feed.application.command.TakeBackReactionCommand;
 import com.mycity.runwal.feed.application.query.EvidenceUploadView;
 import com.mycity.runwal.feed.application.query.EvidenceView;
 import com.mycity.runwal.feed.application.query.GetPublicPostQuery;
@@ -34,6 +38,7 @@ import com.mycity.runwal.feed.domain.exception.EvidenceRejectedException;
 import com.mycity.runwal.feed.domain.exception.PostingLimitReachedException;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +102,9 @@ class FeedControllersTest {
 
     @Test
     void publicReadsAreCacheableAndCarryNoAuthorOrId() throws Exception {
-        PublicPostView view = new PublicPostView("abcdefgh2345", "No gym", "Facts", null, NOW);
+        PublicPostView view = new PublicPostView("abcdefgh2345", "No gym", "Facts", null, NOW,
+                List.of(new EvidenceView("https://bucket.test/feed/1/7/a.jpg?get", "image/jpeg", 1600, 1200)),
+                Map.of("HEART", 2));
         given(publicFeedService.list(new ListPublicPostsQuery(1, 0, 20))).willReturn(List.of(view));
         given(publicFeedService.get(new GetPublicPostQuery("abcdefgh2345"))).willReturn(Optional.of(view));
 
@@ -105,12 +112,36 @@ class FeedControllersTest {
                 .andExpect(status().isOk())
                 .andExpect(header().string("Cache-Control", "max-age=60, public"))
                 .andExpect(jsonPath("$[0].slug").value("abcdefgh2345"))
+                .andExpect(jsonPath("$[0].photos[0].widthPx").value(1600))
+                .andExpect(jsonPath("$[0].reactions.HEART").value(2))
                 .andReturn().getResponse().getContentAsString();
         assertThat(list).doesNotContainIgnoringCase("author").doesNotContain("\"id\"");
         mockMvc.perform(get("/feed/public/posts/abcdefgh2345"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("No gym"));
         mockMvc.perform(get("/feed/public/posts/zzzzzzzzzzzz")).andExpect(status().isNotFound());
+    }
+
+    @Test
+    void anyoneReactsToAPublishedPostAndGetsTheNewCounts() throws Exception {
+        given(publicFeedService.react(new ReactCommand("abcdefgh2345", "HEART", "127.0.0.1")))
+                .willReturn(Optional.of(Map.of("HEART", 3)));
+        given(publicFeedService.takeBackReaction(new TakeBackReactionCommand("abcdefgh2345", "127.0.0.1")))
+                .willReturn(Optional.of(Map.of("HEART", 2)));
+
+        mockMvc.perform(put("/feed/public/posts/abcdefgh2345/reaction").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"emoji\": \"HEART\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.reactions.HEART").value(3));
+        mockMvc.perform(delete("/feed/public/posts/abcdefgh2345/reaction"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.reactions.HEART").value(2));
+        mockMvc.perform(put("/feed/public/posts/zzzzzzzzzzzz/reaction").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"emoji\": \"HEART\"}"))
+                .andExpect(status().isNotFound());
+        mockMvc.perform(put("/feed/public/posts/abcdefgh2345/reaction").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"emoji\": \"\"}"))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { BrnInputOtp } from '@spartan-ng/brain/input-otp';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -18,7 +18,7 @@ type Step = 'phone' | 'code';
  */
 @Component({
   selector: 'app-login-page',
-  imports: [TranslocoDirective, BrnInputOtp, HlmInputOtpImports, HlmButtonImports, HlmSpinnerImports, LanguageSwitch, LogoMark],
+  imports: [TranslocoDirective, RouterLink, BrnInputOtp, HlmInputOtpImports, HlmButtonImports, HlmSpinnerImports, LanguageSwitch, LogoMark],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './login.page.html',
   styleUrl: './login.page.css',

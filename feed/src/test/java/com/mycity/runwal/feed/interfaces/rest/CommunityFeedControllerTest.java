@@ -14,6 +14,7 @@ import com.mycity.runwal.feed.application.service.ActionNotAllowedException;
 import com.mycity.runwal.feed.application.service.CommunityFeedService;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,8 @@ class CommunityFeedControllerTest {
 
     private static final FeedPostView POST = new FeedPostView("abcdefgh2345", "No gym", "Brochure p.4", "Palava",
             "B2 Radiant", Instant.parse("2026-11-06T06:00:00Z"),
-            List.of(new EvidenceView("https://bucket.test/feed/2/7/a.jpg?get", "image/jpeg", 1600, 1200)));
+            List.of(new EvidenceView("https://bucket.test/feed/2/7/a.jpg?get", "image/jpeg", 1600, 1200)),
+            Map.of("THUMBS_UP", 4));
 
     @Autowired
     private MockMvc mockMvc;

@@ -13,8 +13,8 @@ import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * Every request needs a valid login token ("Authorization: Bearer ...", issued by the Identity context),
- * except requesting and verifying a login code. The read-only public feed (/feed/public/**, /feed/share/**) also
- * needs a login until the Terms of Use, Content Policy, Privacy Policy and grievance officer pages are published.
+ * except requesting and verifying a login code, and the public feed (/feed/public/**: reading published posts,
+ * reacting to and reporting them; /feed/share/**: link previews), which everyone can use without logging in.
  * What a user may do is decided inside each context.
  * Stateless: no sessions or cookies, so no CSRF protection is needed.
  */
@@ -27,9 +27,7 @@ class WebSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(requests -> requests
-                        // the feed's public read and share pages open only once the legal pages are published:
-                        // until then, only signed-in users see posts
-                        .requestMatchers("/identity/login/**", "/error").permitAll()
+                        .requestMatchers("/identity/login/**", "/feed/public/**", "/feed/share/**", "/error").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(resourceServer -> resourceServer.jwt(Customizer.withDefaults()))
                 .build();

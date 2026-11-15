@@ -124,6 +124,20 @@ h1 { font-size: var(--text-2xl); max-width: none; text-wrap: balance; }
 .link:active { transform: scale(0.97); }
 .link:disabled { color: var(--color-ink-muted); cursor: default; }
 
+/* for visitors without an account: the public feed */
+.browse {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--space-xs);
+  margin-top: var(--space-md);
+  padding-top: var(--space-sm);
+  border-top: var(--rule-hair) solid var(--color-rule);
+  font-size: var(--text-sm);
+}
+/* a link, not a button: 44px tall, and free to wrap (the Hindi text is long on a phone) */
+.browse .link { display: inline-flex; align-items: center; white-space: normal; }
+
 @media (min-width: 60rem) {
   .layout {
     grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);

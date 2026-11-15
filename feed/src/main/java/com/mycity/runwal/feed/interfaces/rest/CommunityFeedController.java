@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,10 +41,10 @@ class CommunityFeedController {
     }
 
     record FeedPostResponse(String slug, String title, String body, String society, String tower,
-                            Instant publishedAt, List<PhotoResponse> photos) {
+                            Instant publishedAt, List<PhotoResponse> photos, Map<String, Integer> reactions) {
         static FeedPostResponse of(FeedPostView view) {
             return new FeedPostResponse(view.slug(), view.title(), view.body(), view.society(), view.tower(),
-                    view.publishedAt(), view.evidence().stream().map(PhotoResponse::of).toList());
+                    view.publishedAt(), view.evidence().stream().map(PhotoResponse::of).toList(), view.reactions());
         }
     }
 

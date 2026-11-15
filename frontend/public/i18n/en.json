@@ -21,7 +21,9 @@
     "resendIn": "New code in {{seconds}} s",
     "resend": "Send a new code",
     "changeNumber": "Change number",
-    "photoAlt": "The towers and garden courtyard of Runwal MyCity, Dombivli"
+    "photoAlt": "The towers and garden courtyard of Runwal MyCity, Dombivli",
+    "browseLead": "Not a resident?",
+    "browse": "See what residents have posted →"
   },
   "errors": {
     "invalidPhone": "Enter a 10-digit mobile number.",
@@ -597,5 +599,21 @@
       "3": "Photos are resized and their location data removed on your phone before upload.",
       "4": "Staff selfies and shift locations are deleted after 90 days."
     }
+  },
+  "public": {
+    "title": "What residents have documented",
+    "lead": "Problems residents of this society have documented, checked by a moderator before they appear. Anyone can react; nobody's name is shown.",
+    "postHint": "Residents of the society sign in to write a post.",
+    "signIn": "Sign in",
+    "openApp": "Open the app"
+  },
+  "reactions": {
+    "label": "Reactions",
+    "THUMBS_UP": "Agree",
+    "HEART": "Love",
+    "SURPRISED": "Surprised",
+    "SAD": "Sad",
+    "ANGRY": "Angry",
+    "failed": "Your reaction could not be saved. Try again."
   }
 }

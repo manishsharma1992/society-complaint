@@ -67,6 +67,7 @@ TEXTS = {
         "p3_d": "Only the society admin sees it, once, to approve you.",
         "band_line": "This is our home. It should be what we were promised.",
         "nav_app": "Complaints",
+        "nav_posts": "Read residents’ posts",
         "q_title": "One plumber. 650 flats.",
         "q_intro": "Today, complaints go into a WhatsApp group. Messages scroll away, the same leak is reported five times, and nobody knows who is on it. One person cannot be in every flat at once.",
         "q_waiting": "Waiting",
@@ -169,6 +170,7 @@ TEXTS = {
         "p3_d": "सिर्फ़ सोसाइटी एडमिन, एक बार, आपको मंज़ूरी देने के लिए देखते हैं।",
         "band_line": "यह हमारा घर है। यह वैसा होना चाहिए जैसा वादा किया गया था।",
         "nav_app": "शिकायतें",
+        "nav_posts": "निवासियों की पोस्ट पढ़ें",
         "q_title": "एक प्लंबर। 650 फ़्लैट।",
         "q_intro": "आज शिकायतें WhatsApp ग्रुप में जाती हैं। संदेश ऊपर खिसक जाते हैं, एक ही लीक पाँच बार बताई जाती है, और किसी को नहीं पता कि उस पर कौन काम कर रहा है। एक व्यक्ति एक साथ हर फ़्लैट में नहीं हो सकता।",
         "q_waiting": "इंतज़ार में",
@@ -271,6 +273,7 @@ TEXTS = {
         "p3_d": "फक्त सोसायटी ॲडमिन, एकदा, तुम्हाला मंजुरी देण्यासाठी पाहतात.",
         "band_line": "हे आमचे घर आहे. ते वचन दिल्याप्रमाणे असायला हवे.",
         "nav_app": "तक्रारी",
+        "nav_posts": "रहिवाशांच्या पोस्ट वाचा",
         "q_title": "एक प्लंबर. 650 फ्लॅट्स.",
         "q_intro": "आज तक्रारी WhatsApp ग्रुपमध्ये जातात. संदेश वर सरकून जातात, एकच गळती पाच वेळा सांगितली जाते, आणि त्यावर कोण काम करत आहे हे कोणालाच माहीत नसते. एक व्यक्ती एकाच वेळी प्रत्येक फ्लॅटमध्ये असू शकत नाही.",
         "q_waiting": "प्रतीक्षेत",
@@ -475,9 +478,9 @@ def footer(lang, t, kind):
     legal = "".join(li(f"{legal_base}#{sid}", title) for sid, title, _ in LEGAL[lang])
     langs = "".join(li(href, names[l], f' hreflang="{l}" lang="{l}"') for l, href in lang_paths(kind).items())
     if kind == "home":
-        site = "".join(li(h, t[k]) for h, k in (("#complaints", "nav_app"), ("#how", "nav_how"), ("#why", "nav_why"), ("#faq", "nav_faq"), ("/login", "nav_signin")))
+        site = "".join(li(h, t[k]) for h, k in (("/public", "nav_posts"), ("#complaints", "nav_app"), ("#how", "nav_how"), ("#why", "nav_why"), ("#faq", "nav_faq"), ("/login", "nav_signin")))
     else:
-        site = li(t["path"], UI[lang]["back_home"]) + li("/login", t["nav_signin"])
+        site = li(t["path"], UI[lang]["back_home"]) + li("/public", t["nav_posts"]) + li("/login", t["nav_signin"])
     updated = f"<span>{e(UPDATED[lang])}</span>" if kind == "legal" else ""
     return (f'<footer class="site-foot"><div class="shell foot">'
             f'<div class="about"><a class="brand" href="{t["path"]}">{LOGO}<span>Runwal MyCity</span></a><p>{e(t["footer_independent"])}</p></div>'

@@ -161,7 +161,7 @@ CODE-xx); every context's `ArchitectureTest` runs them. Read the classes for the
 
 ## Security (who is calling, who may do what)
 - The app module checks the login token (JWT, HS256, signed with a key derived from AUTH_SECRET) on every request;
-  only `/identity/login/**` and the read-only feed endpoints `/feed/public/**` and `/feed/share/**` are public.
+  only `/identity/login/**` and the public feed (`/feed/public/**`: read, react, report; `/feed/share/**`) are public.
   Stateless, no sessions.
 - Each context learns the caller through its own outbound port (`application.port.CurrentActor`, or `CurrentUser` in
   Identity), implemented in `infrastructure.security` by translating the token claims into the context's own model
@@ -205,9 +205,12 @@ CODE-xx); every context's `ArchitectureTest` runs them. Read the classes for the
   given categories too (lifts: City Lift's AMC technician has no app): they are "on call", so no shift, any number
   of jobs, only complaints in their own towers, and staff on shift come first. The history note
   "Assigned automatically" is translated by the web app; residents of an open complaint are told it waits.
-- The feed is the home page and, for now, only for signed-in approved members: published posts from their society
-  and every society within `feed.nearby-meters` (10 km) that uses the feed (`GET /feed/societies/{id}/feed`).
-  `/feed/public/**` and `/feed/share/**` need a login until the legal pages are published.
+- The feed is the home page for signed-in approved members: published posts from their society and every society
+  within `feed.nearby-meters` (10 km) that uses the feed (`GET /feed/societies/{id}/feed`). Everyone else sees the
+  society's published posts at `/public` (web app, no login; `GET /feed/public/societies/{id}/posts`).
+- Reactions (`feed`, its own `Reaction` aggregate): anyone, signed in or not, reacts to a published post with one of
+  five emoji, one per visitor and post (a keyed hash of the address and the post, as for reports); reacting again
+  replaces it. Counts come with every post. No comments yet.
 - Staff report (`core`, `GET /complaint/societies/{id}/reports/staff`): per staff member, complaints raised in the
   period and assigned to them (counts, median time to start and to fix, share fixed within SLA) plus their current
   backlog. Society admin sees everyone, a tower admin only their tower, staff only themselves. The Angular screen
@@ -250,8 +253,8 @@ and `/mr/` for search engines; Google Search Console verification (a DNS TXT rec
 
 ## Next step
 1. Before real residents: SMS through MSG91 (after DLT approval); remove the demo users and `OTP_DEMO_CODE`;
-   delete the SMOKE TEST complaints; have the Hindi and Marathi texts reviewed by native speakers; rotate the Neon
-   password.
+   delete the SMOKE TEST complaints; take down the example feed posts (`deploy/demo-feed.sh remove`); have the
+   Hindi and Marathi texts reviewed by native speakers; rotate the Neon password.
 2. After the demo: decide the Lightsail plan (1 GB or 4 GB), then consider splitting the contexts into services.
 3. Notifications (`notification-service`): tell residents when their complaint changes, staff when work is assigned.
 4. Later hardening: a Content-Security-Policy header (allow the photo bucket's address for images and uploads, and

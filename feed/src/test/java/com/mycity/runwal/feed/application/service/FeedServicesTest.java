@@ -5,8 +5,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.mycity.runwal.feed.application.command.ModeratePostCommand;
 import com.mycity.runwal.feed.application.command.ModeratePostCommand.Decision;
+import com.mycity.runwal.feed.application.command.ReactCommand;
 import com.mycity.runwal.feed.application.command.ReportPostCommand;
 import com.mycity.runwal.feed.application.command.SubmitPostCommand;
+import com.mycity.runwal.feed.application.command.TakeBackReactionCommand;
 import com.mycity.runwal.feed.application.port.CurrentActor;
 import com.mycity.runwal.feed.application.port.ResidentTowers;
 import com.mycity.runwal.feed.application.query.GetPublicPostQuery;
@@ -29,6 +31,7 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -55,8 +58,9 @@ class FeedServicesTest {
             published::addAll, storage, clock);
     private final ModerationService moderation = new ModerationService(posts, new FeedAccessPolicy(), currentActor,
             published::addAll, storage, clock);
+    private final InMemoryReactions reactions = new InMemoryReactions();
     private final PublicFeedService publicFeed = new PublicFeedService(posts,
-            (address, slug) -> "key-" + address, published::addAll, clock);
+            (address, slug) -> "key-" + address, published::addAll, reactions, storage, clock);
 
     private static Actor actor(long id, boolean active, ActorRole.Part part) {
         return new Actor(new UserId(id), active, Set.of(new ActorRole(part, SOCIETY)));
@@ -148,5 +152,36 @@ class FeedServicesTest {
     void malformedLinksAreSimplyNotFound() {
         assertThat(publicFeed.get(new GetPublicPostQuery("../../etc"))).isEmpty();
         assertThat(publicFeed.report(new ReportPostCommand(null, "x", "1.1.1.1"))).isFalse();
+    }
+
+    @Test
+    void anyoneReactsOncePerPostAndCanChangeOrTakeBackTheirReaction() {
+        PostView post = submit(null);
+        assertThat(publicFeed.react(new ReactCommand(post.slug(), "HEART", "1.1.1.1"))).isEmpty();
+        current = ADMIN;
+        moderation.decide(new ModeratePostCommand(1, post.id(), Decision.PUBLISH, null));
+
+        publicFeed.react(new ReactCommand(post.slug(), "HEART", "1.1.1.1"));
+        publicFeed.react(new ReactCommand(post.slug(), "HEART", "2.2.2.2"));
+        assertThat(publicFeed.react(new ReactCommand(post.slug(), "ANGRY", "1.1.1.1")))
+                .hasValue(Map.of("HEART", 1, "ANGRY", 1));
+        assertThat(publicFeed.list(new ListPublicPostsQuery(1, 0, 20))).singleElement()
+                .satisfies(view -> assertThat(view.reactions()).isEqualTo(Map.of("HEART", 1, "ANGRY", 1)));
+
+        assertThat(publicFeed.takeBackReaction(new TakeBackReactionCommand(post.slug(), "1.1.1.1")))
+                .hasValue(Map.of("HEART", 1));
+        assertThat(publicFeed.get(new GetPublicPostQuery(post.slug()))).hasValueSatisfying(
+                view -> assertThat(view.reactions()).isEqualTo(Map.of("HEART", 1)));
+    }
+
+    @Test
+    void onlyTheKnownEmojiAreAccepted() {
+        PostView post = submit(null);
+        current = ADMIN;
+        moderation.decide(new ModeratePostCommand(1, post.id(), Decision.PUBLISH, null));
+
+        assertThatThrownBy(() -> publicFeed.react(new ReactCommand(post.slug(), "POOP", "1.1.1.1")))
+                .isInstanceOf(InvalidPostException.class);
+        assertThat(publicFeed.react(new ReactCommand("../../etc", "HEART", "1.1.1.1"))).isEmpty();
     }
 }
