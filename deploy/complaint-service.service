@@ -11,7 +11,8 @@ Group=complaint
 EnvironmentFile=/etc/society-complaint/complaint.env
 # app.jar (the one Spring Boot app, all contexts) is a symlink to the current release in /opt/society-complaint/releases.
 # Bound to 127.0.0.1: only Nginx on this machine can reach the service.
-ExecStart=/usr/bin/java -Xms128m -Xmx384m -jar /opt/society-complaint/app.jar --server.address=127.0.0.1 --server.port=8081
+# Heap sized for the 2 GB plan: leaves room for Nginx, the OS and later media tools (ffmpeg).
+ExecStart=/usr/bin/java -Xms256m -Xmx1g -jar /opt/society-complaint/app.jar --server.address=127.0.0.1 --server.port=8081
 # JVM exits with 143 on SIGTERM (normal systemctl stop)
 SuccessExitStatus=143
 Restart=on-failure

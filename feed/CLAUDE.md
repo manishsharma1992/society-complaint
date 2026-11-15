@@ -40,7 +40,7 @@ Ubiquitous language: Post, Evidence (a media item), Moderation, Report, Reaction
   Media of pending or rejected posts never becomes public.
 
 ### Media compression and metadata, in two phases
-The server has 512 MB today, which is not enough for libvips or ffmpeg next to the JVM. So:
+The server had 512 MB until 2026-11-15, not enough for libvips or ffmpeg next to the JVM; it now has 2 GB, so phase 2 can start. So:
 
 **Phase 1 (now): images only**
 - At most 5 photos per post; JPEG/PNG/WebP; at most 5 MB each; check the type by magic bytes, not by extension;
@@ -86,7 +86,7 @@ The server has 512 MB today, which is not enough for libvips or ffmpeg next to t
 - WhatsApp and X read Open Graph tags without running JavaScript, so the Angular app alone gives blank previews.
   Nginx routes `/p/{slug}` to a small public endpoint in the feed context, `GET /feed/share/{slug}`, which returns
   minimal HTML with `og:title`, `og:description` and `og:image` (the public CDN URL), then loads the Angular post
-  page. No Angular SSR and no Node process: there is no memory for it on 512 MB.
+  page. No Angular SSR and no Node process: keep memory for the JVM and media tools.
 - Public read endpoints (`/feed/public/**`, `/feed/share/**`) need no login and are cacheable; everything else needs
   the token.
 

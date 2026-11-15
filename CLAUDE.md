@@ -76,10 +76,10 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - Frontend: Angular web app in `frontend/`, mobile-first and also desktop (see **Frontend** below)
 - Database: PostgreSQL on **Neon** (Free plan, region AWS Singapore `aws-ap-southeast-1`)
 - Hosting: **AWS Lightsail**, Singapore region (same region as the DB). Nginx in front routes `/api/<service>/**` to each service and serves the Angular build.
-  - **For now (until after the demo to the society secretary): the 512 MB plan and ONE Spring Boot app.** Every bounded context
+  - **For now: the 2 GB plan (upgraded from 512 MB on 2026-11-15, `-Xmx1g`) and ONE Spring Boot app.** Every bounded context
     is still its own Maven module, package, schema and ArchUnit boundary, but they are packaged into a single JVM.
     Cross-context calls go through the same `application.port` interfaces, implemented in-process instead of over HTTP.
-    Split into separate services only when the plan is upgraded (1 GB or 4 GB, decided after the demo).
+    Split into separate services only when there is a reason to (the 2 GB plan has room for one or two more JVMs).
 - Photo storage: **Lightsail Object Storage** (S3-compatible, Singapore), private bucket. The database stores only the
   object key (`complaints/{societyId}/{complaintId}/<uuid>.<ext>`), never a public URL; clients upload and view through
   short-lived presigned URLs. Bucket credentials come from environment variables, like the DB credentials.
@@ -246,7 +246,7 @@ Angular web app; its conventions are in `frontend/CLAUDE.md`, the public homepag
 - Each Spring Boot service needs roughly 250-400 MB RAM. Set `-Xmx` per service and size the Lightsail plan for the number of running services.
 
 ## Where things stand (2026-11-08)
-Live at https://runwalltdfakepromises.com (web app) and /api (one Spring Boot app, 512 MB Lightsail). Done: all
+Live at https://runwalltdfakepromises.com (web app) and /api (one Spring Boot app, 2 GB Lightsail with a static IP). Done: all
 contexts with their REST APIs, phone + OTP login, self sign-up with approval, photos, comments, the full complaint
 lifecycle, and the web app for residents, staff and admins in three languages. A public homepage at `/`, `/hi/`
 and `/mr/` for search engines; Google Search Console verification (a DNS TXT record) is the owner's step.
@@ -255,7 +255,7 @@ and `/mr/` for search engines; Google Search Console verification (a DNS TXT rec
 1. Before real residents: SMS through MSG91 (after DLT approval); remove the demo users and `OTP_DEMO_CODE`;
    delete the SMOKE TEST complaints; take down the example feed posts (`deploy/demo-feed.sh remove`); have the
    Hindi and Marathi texts reviewed by native speakers; rotate the Neon password.
-2. After the demo: decide the Lightsail plan (1 GB or 4 GB), then consider splitting the contexts into services.
+2. The Lightsail plan is 2 GB since 2026-11-15; consider splitting the contexts into services only when needed.
 3. Notifications (`notification-service`): tell residents when their complaint changes, staff when work is assigned.
 4. Later hardening: a Content-Security-Policy header (allow the photo bucket's address for images and uploads, and
    Google Fonts for the homepage). Before the homepage is shared widely: a lawyer reviews it with the domain name,

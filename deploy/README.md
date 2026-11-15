@@ -123,5 +123,5 @@ Re-run it after editing the file (the new rules replace the old ones).
 
 ## Later
 
-- Residency and Identity run inside the same app while the instance has 512 MB (see CLAUDE.md). After upgrading, split
+- Residency and Identity run inside the same app for now (2 GB instance, see CLAUDE.md). When needed, split
   them out: one systemd unit, env file and Nginx `location /api/<service>/` per service, each with its own Neon role.
