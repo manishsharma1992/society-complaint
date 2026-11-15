@@ -63,9 +63,11 @@ This website collects limited personal data: only what is needed to verify that 
 
 **Where it is stored**: On servers in Singapore (the database on Neon, photographs on Amazon Web Services Lightsail), with access limited to the website operators.
 
+**Translation**: When someone taps “Translate” on a feed post or a complaint, its text (title, description and comments) is sent to a machine translation service only to translate it: Google Cloud Translation for Marathi, Amazon Translate (Singapore) for English and Hindi. Only the text is sent, never photographs, or the name and mobile number from your account. These services may process the text outside India. Translations of published feed posts are kept with the post; translations of complaints are not stored. Please do not write personal details in the text of a complaint.
+
 **Retention**: Mobile numbers are retained only as long as needed for verification and account management. Staff selfies and locations are deleted automatically 90 days after the shift started. You may request deletion by contacting the Grievance Officer below.
 
-**Sharing**: We do not sell or share personal data with third parties except as required by law or court order. When sign-in codes are sent by SMS, your number is passed to the SMS provider only to deliver the code.
+**Sharing**: We do not sell or share personal data with third parties except as required by law or court order. When sign-in codes are sent by SMS, your number is passed to the SMS provider only to deliver the code. Text that someone asks to translate is passed to the translation service only to translate it (see Translation above).
 
 **Your rights**: You may request access, correction, or erasure of your personal data by writing to the Grievance Officer below.
 
@@ -146,9 +148,11 @@ Complaints regarding content or these policies will be acknowledged within 24 ho
 
 **डेटा कहाँ रखा जाता है**: सिंगापुर के सर्वरों पर (डेटाबेस Neon पर, फ़ोटो Amazon Web Services Lightsail पर), जिन तक केवल वेबसाइट संचालकों की पहुँच है।
 
+**अनुवाद**: जब कोई फ़ीड पोस्ट या शिकायत पर “अनुवाद करें” दबाता है, तो उसका टेक्स्ट (शीर्षक, विवरण और टिप्पणियाँ) केवल अनुवाद के लिए एक मशीन अनुवाद सेवा को भेजा जाता है: मराठी के लिए Google Cloud Translation, अंग्रेज़ी और हिंदी के लिए Amazon Translate (सिंगापुर)। केवल टेक्स्ट भेजा जाता है; फ़ोटो, या आपके खाते का नाम और मोबाइल नंबर कभी नहीं। ये सेवाएँ टेक्स्ट को भारत के बाहर प्रोसेस कर सकती हैं। प्रकाशित फ़ीड पोस्ट के अनुवाद पोस्ट के साथ रखे जाते हैं; शिकायतों के अनुवाद सहेजे नहीं जाते। कृपया शिकायत के टेक्स्ट में निजी जानकारी न लिखें।
+
 **अवधि**: मोबाइल नंबर केवल तब तक रखे जाते हैं जब तक पुष्टि और खाते के प्रबंधन के लिए ज़रूरी हों। स्टाफ़ की सेल्फ़ी और लोकेशन शिफ़्ट शुरू होने के 90 दिन बाद अपने आप हटा दी जाती हैं। हटाने का अनुरोध आप नीचे दिए गए शिकायत अधिकारी से कर सकते हैं।
 
-**साझा करना**: हम निजी डेटा न बेचते हैं, न किसी तीसरे पक्ष से साझा करते हैं, सिवाय कानून या न्यायालय के आदेश के। जब साइन-इन कोड SMS से भेजे जाएँगे, तब आपका नंबर केवल कोड पहुँचाने के लिए SMS सेवा प्रदाता को दिया जाएगा।
+**साझा करना**: हम निजी डेटा न बेचते हैं, न किसी तीसरे पक्ष से साझा करते हैं, सिवाय कानून या न्यायालय के आदेश के। जब साइन-इन कोड SMS से भेजे जाएँगे, तब आपका नंबर केवल कोड पहुँचाने के लिए SMS सेवा प्रदाता को दिया जाएगा। जिस टेक्स्ट का अनुवाद माँगा जाता है, वह केवल अनुवाद के लिए अनुवाद सेवा को दिया जाता है (ऊपर अनुवाद देखें)।
 
 **आपके अधिकार**: आप नीचे दिए गए शिकायत अधिकारी को लिखकर अपने निजी डेटा तक पहुँच, सुधार या उसे मिटाने का अनुरोध कर सकते हैं।
 
@@ -229,9 +233,11 @@ Complaints regarding content or these policies will be acknowledged within 24 ho
 
 **माहिती कुठे ठेवली जाते**: सिंगापूरमधील सर्व्हरवर (डेटाबेस Neon वर, फोटो Amazon Web Services Lightsail वर), जिथे फक्त वेबसाइट संचालकांना प्रवेश आहे.
 
+**भाषांतर**: एखाद्या फीड पोस्टवर किंवा तक्रारीवर कोणी “भाषांतर करा” दाबल्यास, त्याचा मजकूर (शीर्षक, वर्णन आणि टिप्पण्या) फक्त भाषांतरासाठी यंत्र भाषांतर सेवेकडे पाठवला जातो: मराठीसाठी Google Cloud Translation, इंग्रजी आणि हिंदीसाठी Amazon Translate (सिंगापूर). फक्त मजकूर पाठवला जातो; फोटो, किंवा तुमच्या खात्यातील नाव आणि मोबाइल नंबर कधीच नाही. या सेवा मजकुरावर भारताबाहेर प्रक्रिया करू शकतात. प्रकाशित फीड पोस्टची भाषांतरे पोस्टसोबत ठेवली जातात; तक्रारींची भाषांतरे साठवली जात नाहीत. कृपया तक्रारीच्या मजकुरात वैयक्तिक माहिती लिहू नका.
+
 **कालावधी**: मोबाइल नंबर फक्त पडताळणी आणि खाते व्यवस्थापनासाठी आवश्यक असेपर्यंत ठेवले जातात. कर्मचाऱ्यांचे सेल्फी आणि ठिकाण शिफ्ट सुरू झाल्यापासून 90 दिवसांनी आपोआप काढून टाकले जातात. काढून टाकण्याची विनंती तुम्ही खाली दिलेल्या तक्रार अधिकाऱ्याकडे करू शकता.
 
-**माहिती देणे**: आम्ही वैयक्तिक माहिती विकत नाही किंवा कोणत्याही त्रयस्थ पक्षाला देत नाही, कायद्याने किंवा न्यायालयाच्या आदेशाने आवश्यक असेल तेव्हा सोडून. साइन-इन कोड SMS ने पाठवले जातील तेव्हा तुमचा नंबर फक्त कोड पोहोचवण्यासाठी SMS सेवा पुरवठादाराला दिला जाईल.
+**माहिती देणे**: आम्ही वैयक्तिक माहिती विकत नाही किंवा कोणत्याही त्रयस्थ पक्षाला देत नाही, कायद्याने किंवा न्यायालयाच्या आदेशाने आवश्यक असेल तेव्हा सोडून. साइन-इन कोड SMS ने पाठवले जातील तेव्हा तुमचा नंबर फक्त कोड पोहोचवण्यासाठी SMS सेवा पुरवठादाराला दिला जाईल. ज्या मजकुराचे भाषांतर मागितले जाते, तो फक्त भाषांतरासाठी भाषांतर सेवेला दिला जातो (वर भाषांतर पाहा).
 
 **तुमचे अधिकार**: खाली दिलेल्या तक्रार अधिकाऱ्याला लिहून तुम्ही तुमच्या वैयक्तिक माहितीत प्रवेश, दुरुस्ती किंवा ती पुसून टाकण्याची विनंती करू शकता.
 
