@@ -101,8 +101,9 @@ The server had 512 MB until 2026-11-15, not enough for libvips or ffmpeg next to
 - Screens: Feed and Post (public, no login), New post (residents; shows the content policy first), Moderation queue
   (SOCIETY_ADMIN). All texts in en, hi and mr.
 - Post content stays as the author wrote it. Readers can ask for a machine translation into en, hi or mr
-  (`GET /feed/public/posts/{slug}/translations/{language}`, public): Amazon Translate (`AmazonTranslateClient`,
-  source language detected), stored per post and language in `post_translation` (`PostTranslation` aggregate), so
+  (`GET /feed/public/posts/{slug}/translations/{language}`, public): Marathi through Google Cloud Translation
+  (`GoogleTranslateClient`, key `GOOGLE_TRANSLATE_API_KEY`; Amazon dropped words from Marathi), English and Hindi
+  through Amazon Translate (`AmazonTranslateClient`); source language detected; routed in `FeedTranslationConfig`; stored per post and language in `post_translation` (`PostTranslation` aggregate), so
   each post is sent at most once per language. Own IAM keys `TRANSLATE_ACCESS_KEY`/`TRANSLATE_SECRET_KEY`
   (translate:TranslateText, comprehend:DetectDominantLanguage); without them the endpoint answers 503. The web
   app labels it "machine translated" and keeps the original one tap away.

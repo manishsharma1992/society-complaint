@@ -63,3 +63,6 @@ feed:
     region: ${TRANSLATE_REGION:ap-southeast-1}
     access-key: ${TRANSLATE_ACCESS_KEY:}
     secret-key: ${TRANSLATE_SECRET_KEY:}
+    # Google Cloud Translation for Marathi (Amazon dropped words). An API key restricted to the Cloud Translation
+    # API. Leave unset to translate Marathi with Amazon too.
+    google-api-key: ${GOOGLE_TRANSLATE_API_KEY:}

@@ -211,11 +211,13 @@ CODE-xx); every context's `ArchitectureTest` runs them. Read the classes for the
 - Reactions (`feed`, its own `Reaction` aggregate): anyone, signed in or not, reacts to a published post with one of
   five emoji, one per visitor and post (a keyed hash of the address and the post, as for reports); reacting again
   replaces it. Counts come with every post. No comments yet.
-- Translate button (Amazon Translate, source language detected): feed posts (stored per post and language, see
+- Translate button (Marathi: Google Cloud Translation, since Amazon dropped words; English and Hindi: Amazon
+  Translate; source language detected): feed posts (stored per post and language, see
   `feed/CLAUDE.md`) and complaints (`GET /complaint/societies/{id}/complaints/{cid}/translations/{lang}`: title,
   description and comments, for whoever may read the complaint; not stored, recent texts kept in memory). One
   client, `feed`'s `AmazonTranslateClient`; complaints reach it through `integration.InProcessComplaintTranslator`.
-  Keys `TRANSLATE_ACCESS_KEY`/`TRANSLATE_SECRET_KEY`; without them the button answers "not available".
+  Keys `TRANSLATE_ACCESS_KEY`/`TRANSLATE_SECRET_KEY` and `GOOGLE_TRANSLATE_API_KEY` (without it Marathi uses
+  Amazon; without the Amazon keys the button answers "not available").
 - Staff report (`core`, `GET /complaint/societies/{id}/reports/staff`): per staff member, complaints raised in the
   period and assigned to them (counts, median time to start and to fix, share fixed within SLA) plus their current
   backlog. Society admin sees everyone, a tower admin only their tower, staff only themselves. The Angular screen
