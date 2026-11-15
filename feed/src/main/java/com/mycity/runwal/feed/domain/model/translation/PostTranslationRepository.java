@@ -11,4 +11,7 @@ public interface PostTranslationRepository {
 
     /** Stores the translation; if one for this post and language is already there, that one is kept. */
     void save(PostTranslation translation);
+
+    /** Forgets the stored translation, if any, so a new one can be saved. */
+    void remove(PostId post, Language language);
 }

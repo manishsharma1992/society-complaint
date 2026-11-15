@@ -106,7 +106,9 @@ The server had 512 MB until 2026-11-15, not enough for libvips or ffmpeg next to
   through Amazon Translate (`AmazonTranslateClient`); source language detected; routed in `FeedTranslationConfig`; stored per post and language in `post_translation` (`PostTranslation` aggregate), so
   each post is sent at most once per language. Own IAM keys `TRANSLATE_ACCESS_KEY`/`TRANSLATE_SECRET_KEY`
   (translate:TranslateText, comprehend:DetectDominantLanguage); without them the endpoint answers 503. The web
-  app labels it "machine translated" and keeps the original one tap away.
+  app labels it "machine translated" and keeps the original one tap away. The society admin can have a bad
+  stored translation made again ("Translate again", `POST /feed/societies/{id}/moderation/posts/{slug}/translations/{language}`);
+  the old one is replaced only once the new one has arrived, and the server log records who did it.
 
 ### Before launch
 - Terms of Use, Community Guidelines (the content policy), Privacy Policy and Grievance Redressal are published in

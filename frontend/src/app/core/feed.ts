@@ -128,6 +128,14 @@ export class FeedApi {
     return this.http.get<PostTranslation>(`${PUBLIC}/posts/${encodeURIComponent(slug)}/translations/${lang}`);
   }
 
+  /** The society admin has a bad translation made again; emits the new one. */
+  redoTranslation(slug: string, lang: Lang): Observable<PostTranslation> {
+    return this.http.post<PostTranslation>(
+      `${BASE}/moderation/posts/${encodeURIComponent(slug)}/translations/${lang}`,
+      {},
+    );
+  }
+
   /** Anyone may react, one emoji per post and visitor; reacting again replaces it. Emits the new counts. */
   react(slug: string, emoji: Emoji): Observable<Reactions> {
     return this.http

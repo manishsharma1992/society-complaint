@@ -229,5 +229,10 @@ class FeedPersistenceTest {
         assertThat(stored.title()).isEqualTo("जिम नाही");
         assertThat(stored.translatedAt()).isEqualTo(NOW);
         assertThat(translations.find(post.id(), Language.HI)).isEmpty();
+
+        translations.remove(post.id(), Language.MR);
+        translations.save(PostTranslation.of(post, Language.MR, "redone", "redone", NOW.plusSeconds(2)));
+        flushAndClear();
+        assertThat(translations.find(post.id(), Language.MR).orElseThrow().title()).isEqualTo("redone");
     }
 }

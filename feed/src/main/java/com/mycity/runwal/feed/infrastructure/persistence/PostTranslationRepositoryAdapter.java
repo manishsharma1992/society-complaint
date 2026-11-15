@@ -28,4 +28,9 @@ class PostTranslationRepositoryAdapter implements PostTranslationRepository {
         jpaRepository.insertIfAbsent(translation.postId().value(), translation.language().name(),
                 translation.title(), translation.body(), translation.translatedAt());
     }
+
+    @Override
+    public void remove(PostId post, Language language) {
+        jpaRepository.deleteByPost(post.value(), language);
+    }
 }

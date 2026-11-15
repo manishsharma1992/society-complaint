@@ -12,6 +12,10 @@ interface PostTranslationJpaRepository extends JpaRepository<PostTranslationJpaE
 
     Optional<PostTranslationJpaEntity> findByPostIdAndLanguage(long postId, Language language);
 
+    @Modifying(flushAutomatically = true)
+    @Query("delete from PostTranslationJpaEntity t where t.postId = :postId and t.language = :language")
+    void deleteByPost(@Param("postId") long postId, @Param("language") Language language);
+
     /** One statement, so two readers asking at once cannot both insert. */
     @Modifying
     @Query(value = """

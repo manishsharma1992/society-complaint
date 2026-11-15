@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.mycity.runwal.feed.application.command.AttachEvidenceCommand;
 import com.mycity.runwal.feed.application.command.ModeratePostCommand;
 import com.mycity.runwal.feed.application.command.ModeratePostCommand.Decision;
+import com.mycity.runwal.feed.application.command.RedoTranslationCommand;
 import com.mycity.runwal.feed.application.command.ReactCommand;
 import com.mycity.runwal.feed.application.command.ReportPostCommand;
 import com.mycity.runwal.feed.application.command.RequestEvidenceUploadCommand;
@@ -154,6 +155,22 @@ class FeedControllersTest {
         mockMvc.perform(get("/feed/public/posts/zzzzzzzzzzzz/translations/mr")).andExpect(status().isNotFound());
         mockMvc.perform(get("/feed/public/posts/abcdefgh2345/translations/hi"))
                 .andExpect(status().isServiceUnavailable());
+    }
+
+    @Test
+    void theSocietyAdminRedoesATranslation() throws Exception {
+        given(postTranslationService.redo(new RedoTranslationCommand(1, "abcdefgh2345", "mr")))
+                .willReturn(Optional.of(new PostTranslationView("mr", "पाणी झिरपत आहे", "बांधकामाचा दर्जा")));
+        given(postTranslationService.redo(new RedoTranslationCommand(1, "abcdefgh2345", "hi")))
+                .willThrow(new ActionNotAllowedException("Only the society admin can redo a translation"));
+
+        mockMvc.perform(post("/feed/societies/1/moderation/posts/abcdefgh2345/translations/mr"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("पाणी झिरपत आहे"));
+        mockMvc.perform(post("/feed/societies/1/moderation/posts/zzzzzzzzzzzz/translations/mr"))
+                .andExpect(status().isNotFound());
+        mockMvc.perform(post("/feed/societies/1/moderation/posts/abcdefgh2345/translations/hi"))
+                .andExpect(status().isForbidden());
     }
 
     @Test

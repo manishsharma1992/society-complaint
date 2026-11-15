@@ -1,9 +1,11 @@
 package com.mycity.runwal.feed.interfaces.rest;
 
 import com.mycity.runwal.feed.application.command.ModeratePostCommand;
+import com.mycity.runwal.feed.application.command.RedoTranslationCommand;
 import com.mycity.runwal.feed.application.command.ModeratePostCommand.Decision;
 import com.mycity.runwal.feed.application.query.ModerationQueueQuery;
 import com.mycity.runwal.feed.application.service.ModerationService;
+import com.mycity.runwal.feed.application.service.PostTranslationService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -23,9 +25,20 @@ import org.springframework.web.bind.annotation.RestController;
 class ModerationController {
 
     private final ModerationService moderationService;
+    private final PostTranslationService postTranslationService;
 
-    ModerationController(ModerationService moderationService) {
+    ModerationController(ModerationService moderationService, PostTranslationService postTranslationService) {
         this.moderationService = moderationService;
+        this.postTranslationService = postTranslationService;
+    }
+
+    /** Makes a published post's machine translation again (e.g. after a bad one); returns the new one. */
+    @PostMapping("/posts/{slug}/translations/{language}")
+    ResponseEntity<PublicFeedController.TranslationResponse> redoTranslation(@PathVariable long societyId,
+                                                                             @PathVariable String slug,
+                                                                             @PathVariable String language) {
+        return ResponseEntity.of(postTranslationService.redo(new RedoTranslationCommand(societyId, slug, language))
+                .map(t -> new PublicFeedController.TranslationResponse(t.language(), t.title(), t.body())));
     }
 
     /** Posts waiting for review (default), or e.g. ?status=HIDDEN for posts hidden by reports. */

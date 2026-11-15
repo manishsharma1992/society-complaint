@@ -5,6 +5,7 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { clipLength, dateTime } from '../../core/format';
 import { FeedApi, FeedPost, PostTranslation } from '../../core/feed';
 import { LanguageService } from '../../core/language';
+import { Roles } from '../../core/roles';
 import { ReactionBar } from '../../shared/reaction-bar';
 
 const DEVANAGARI = /[ऀ-ॿ]/;
@@ -41,7 +42,13 @@ const DEVANAGARI = /[ऀ-ॿ]/;
               @if (translated()) {
                 <div class="translate">
                   <p class="muted small" role="status">{{ t('post.machineTranslated') }}</p>
-                  <button hlmBtn variant="ghost" size="lg" type="button" class="link-btn" (click)="translation.set(null)">{{ t('post.showOriginal') }}</button>
+                  <div class="translate-actions">
+                    <button hlmBtn variant="ghost" size="lg" type="button" class="link-btn" (click)="translation.set(null)">{{ t('post.showOriginal') }}</button>
+                    @if (isSocietyAdmin()) {
+                      <button hlmBtn variant="ghost" size="lg" type="button" class="link-btn" [disabled]="translating()" [attr.aria-busy]="translating()" (click)="translate(p, true)">{{ t('post.translateAgain') }}</button>
+                    }
+                  </div>
+                  @if (translateFailed()) { <p class="warn" role="alert">{{ t('post.translateFailed') }}</p> }
                 </div>
               } @else if (canTranslate()) {
                 <div class="translate">
@@ -98,6 +105,7 @@ const DEVANAGARI = /[ऀ-ॿ]/;
     .body { color: var(--color-ink); white-space: pre-line; max-width: 65ch; }
     .translate { display: grid; gap: var(--space-2xs); justify-items: start; }
     .link-btn { color: var(--color-brand-deep); padding-inline: 0; }
+    .translate-actions { display: flex; flex-wrap: wrap; gap: var(--space-md); }
     .photos { display: grid; gap: var(--space-sm); margin-top: var(--space-xs); }
     /* as wide as the video itself (portrait clips get no black bars), never wider than the column or taller than 80vh */
     .video { width: auto; max-width: 100%; height: auto; max-height: 80vh; border-radius: var(--radius-card); background: var(--color-ink); }
@@ -125,6 +133,8 @@ export default class PostPage {
 
   private readonly api = inject(FeedApi);
   private readonly lang = inject(LanguageService).current;
+  /** The server checks it too; here it only decides whether to offer "Translate again". */
+  protected readonly isSocietyAdmin = inject(Roles).isSocietyAdmin;
 
   protected readonly post = signal<FeedPost | null>(null);
   protected readonly state = signal<'loading' | 'ready' | 'missing' | 'error'>('loading');
@@ -166,10 +176,11 @@ export default class PostPage {
     });
   }
 
-  protected translate(post: FeedPost): void {
+  /** @param again the society admin has a bad stored translation made again */
+  protected translate(post: FeedPost, again = false): void {
     this.translating.set(true);
     this.translateFailed.set(false);
-    this.api.translation(post.slug, this.lang()).subscribe({
+    (again ? this.api.redoTranslation(post.slug, this.lang()) : this.api.translation(post.slug, this.lang())).subscribe({
       next: (translation) => {
         this.translation.set(translation);
         this.translating.set(false);

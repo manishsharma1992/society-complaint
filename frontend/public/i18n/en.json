@@ -417,6 +417,7 @@
     "translate": "Translate into English",
     "machineTranslated": "Machine translated. The resident's own words may differ.",
     "showOriginal": "Show original",
+    "translateAgain": "Translate again",
     "translateFailed": "Translation is not available right now. Please try again later.",
     "videoLabel": "Video, {{length}}"
   },
