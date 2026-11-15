@@ -3,6 +3,14 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, concatMap, from, map, of, shareReplay, switchMap, tap, toArray, catchError } from 'rxjs';
 import { API, SOCIETY_ID } from './api';
 import { Category, Complaint, ComplaintStatus, Scope } from './models';
+import { Lang } from './language';
+
+export interface ComplaintTranslation {
+  language: Lang;
+  title: string;
+  description: string | null;
+  comments: { sequence: number; text: string }[];
+}
 
 export interface NewComplaint {
   scope: Scope;
@@ -95,6 +103,11 @@ export class ComplaintsApi {
   categories(): Observable<Category[]> {
     this.categories$ ??= this.http.get<Category[]>(`${BASE}/categories`).pipe(shareReplay(1));
     return this.categories$;
+  }
+
+  /** The complaint's title, description and comments machine-translated into the reader's language. */
+  translation(id: number, lang: Lang): Observable<ComplaintTranslation> {
+    return this.http.get<ComplaintTranslation>(`${BASE}/complaints/${id}/translations/${lang}`);
   }
 
   comment(id: number, text: string): Observable<Complaint> {

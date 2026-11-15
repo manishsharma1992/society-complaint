@@ -1,6 +1,7 @@
 package com.mycity.runwal.complaint.interfaces.rest;
 
 import com.mycity.runwal.complaint.application.service.ActionNotAllowedException;
+import com.mycity.runwal.complaint.application.service.TranslationUnavailableException;
 import com.mycity.runwal.shared.ddd.DomainException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -15,6 +16,14 @@ class ApiExceptionHandler {
     ProblemDetail handleNotAllowed(ActionNotAllowedException exception) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, exception.getMessage());
         problem.setTitle("Not allowed");
+        return problem;
+    }
+
+    @ExceptionHandler(TranslationUnavailableException.class)
+    ProblemDetail handleTranslationUnavailable(TranslationUnavailableException exception) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE,
+                "Translation is not available right now; please try again later");
+        problem.setTitle("Translation not available");
         return problem;
     }
 

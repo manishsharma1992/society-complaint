@@ -166,6 +166,7 @@
     "noComments": "No comments yet.",
     "addComment": "Add a comment",
     "commentHelp": "Visible to everyone who can see this complaint.",
+    "machineTranslated": "Machine translated. The original words may differ.",
     "send": "Send comment",
     "commentFailed": "Could not send the comment. Try again.",
     "commentsOff": "This complaint is finished, so comments are closed.",
@@ -413,6 +414,10 @@
     "sendReport": "Send report",
     "reported": "Thank you. A moderator will look at it.",
     "reportFailed": "The report could not be sent. Try again.",
+    "translate": "Translate into English",
+    "machineTranslated": "Machine translated. The resident's own words may differ.",
+    "showOriginal": "Show original",
+    "translateFailed": "Translation is not available right now. Please try again later.",
     "videoLabel": "Video, {{length}}"
   },
   "newPost": {

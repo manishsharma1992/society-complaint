@@ -3,9 +3,11 @@ import { RouterLink } from '@angular/router';
 import { TranslocoDirective } from '@jsverse/transloco';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { clipLength, dateTime } from '../../core/format';
-import { FeedApi, FeedPost } from '../../core/feed';
+import { FeedApi, FeedPost, PostTranslation } from '../../core/feed';
 import { LanguageService } from '../../core/language';
 import { ReactionBar } from '../../shared/reaction-bar';
+
+const DEVANAGARI = /[ऀ-ॿ]/;
 
 /**
  * One published post: the whole text, every photo, the emoji row and a way to report it (3 reports hide it for
@@ -34,8 +36,19 @@ import { ReactionBar } from '../../shared/reaction-bar';
                 }
                 <span>{{ published() }}</span>
               </p>
-              <h1>{{ p.title }}</h1>
-              <p class="body">{{ p.body }}</p>
+              <h1 [attr.lang]="translated()?.language">{{ translated()?.title ?? p.title }}</h1>
+              <p class="body" [attr.lang]="translated()?.language">{{ translated()?.body ?? p.body }}</p>
+              @if (translated()) {
+                <div class="translate">
+                  <p class="muted small" role="status">{{ t('post.machineTranslated') }}</p>
+                  <button hlmBtn variant="ghost" size="lg" type="button" class="link-btn" (click)="translation.set(null)">{{ t('post.showOriginal') }}</button>
+                </div>
+              } @else if (canTranslate()) {
+                <div class="translate">
+                  <button hlmBtn variant="outline" size="lg" type="button" [disabled]="translating()" [attr.aria-busy]="translating()" (click)="translate(p)">{{ t('post.translate') }}</button>
+                  @if (translateFailed()) { <p class="warn" role="alert">{{ t('post.translateFailed') }}</p> }
+                </div>
+              }
               <div class="photos">
                 @for (video of p.videos; track video.url) {
                   <video class="video" controls playsinline preload="none" [poster]="video.posterUrl" [src]="video.url"
@@ -83,6 +96,8 @@ import { ReactionBar } from '../../shared/reaction-bar';
     .who { color: var(--color-brand-deep); font-weight: 500; }
     h1 { font-size: var(--text-2xl); text-wrap: balance; }
     .body { color: var(--color-ink); white-space: pre-line; max-width: 65ch; }
+    .translate { display: grid; gap: var(--space-2xs); justify-items: start; }
+    .link-btn { color: var(--color-brand-deep); padding-inline: 0; }
     .photos { display: grid; gap: var(--space-sm); margin-top: var(--space-xs); }
     /* as wide as the video itself (portrait clips get no black bars), never wider than the column or taller than 80vh */
     .video { width: auto; max-width: 100%; height: auto; max-height: 80vh; border-radius: var(--radius-card); background: var(--color-ink); }
@@ -123,11 +138,24 @@ export default class PostPage {
   protected readonly sending = signal(false);
   protected readonly reported = signal(false);
   protected readonly reportFailed = signal(false);
+  protected readonly translation = signal<PostTranslation | null>(null);
+  /** Only while it is in the language the reader has chosen; switching language shows the original again. */
+  protected readonly translated = computed(() =>
+    this.translation()?.language === this.lang() ? this.translation() : null,
+  );
+  protected readonly translating = signal(false);
+  protected readonly translateFailed = signal(false);
+  /** An English reader needs no button for a post with no Hindi or Marathi letters in it. */
+  protected readonly canTranslate = computed(() => {
+    const p = this.post();
+    return !!p && (this.lang() !== 'en' || DEVANAGARI.test(p.title + p.body));
+  });
 
   constructor() {
     effect(() => {
       const slug = this.slug();
       this.state.set('loading');
+      this.translation.set(null);
       (this.openToAll() ? this.api.publicPost(slug) : this.api.post(slug)).subscribe({
         next: (post) => {
           this.post.set(post);
@@ -135,6 +163,21 @@ export default class PostPage {
         },
         error: (e) => this.state.set(e?.status === 404 ? 'missing' : 'error'),
       });
+    });
+  }
+
+  protected translate(post: FeedPost): void {
+    this.translating.set(true);
+    this.translateFailed.set(false);
+    this.api.translation(post.slug, this.lang()).subscribe({
+      next: (translation) => {
+        this.translation.set(translation);
+        this.translating.set(false);
+      },
+      error: () => {
+        this.translateFailed.set(true);
+        this.translating.set(false);
+      },
     });
   }
 

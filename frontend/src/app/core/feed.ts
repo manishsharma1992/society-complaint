@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, concatMap, from, map, switchMap } from 'rxjs';
 import { API, SOCIETY_ID } from './api';
+import { Lang } from './language';
 
 const BASE = `${API}/feed/societies/${SOCIETY_ID}`;
 const PUBLIC = `${API}/feed/public`;
@@ -94,6 +95,12 @@ interface UploadTicket {
   contentType: string;
 }
 
+export interface PostTranslation {
+  language: Lang;
+  title: string;
+  body: string;
+}
+
 /** Posts, photos, reports and moderation of the residents' feed. */
 @Injectable({ providedIn: 'root' })
 export class FeedApi {
@@ -114,6 +121,11 @@ export class FeedApi {
 
   publicPost(slug: string): Observable<FeedPost> {
     return this.http.get<FeedPost>(`${PUBLIC}/posts/${encodeURIComponent(slug)}`);
+  }
+
+  /** The post machine-translated into the reader's language (anyone; made once on the server, then stored). */
+  translation(slug: string, lang: Lang): Observable<PostTranslation> {
+    return this.http.get<PostTranslation>(`${PUBLIC}/posts/${encodeURIComponent(slug)}/translations/${lang}`);
   }
 
   /** Anyone may react, one emoji per post and visitor; reacting again replaces it. Emits the new counts. */

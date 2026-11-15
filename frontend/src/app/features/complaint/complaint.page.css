@@ -147,3 +147,5 @@ h2 { font-size: var(--text-lg); font-weight: var(--serif-small); margin-bottom: 
   background: var(--color-stock);
   color: var(--color-ink-2);
 }
+.translate { display: grid; gap: var(--space-2xs); justify-items: start; }
+.link-btn { color: var(--color-brand-deep); padding-inline: 0; }

@@ -57,3 +57,9 @@ workforce:
 # that has the Feed add-on on.
 feed:
   nearby-meters: 10000
+  # Amazon Translate for the Translate button on posts. Its own IAM user, allowed only translate:TranslateText and
+  # comprehend:DetectDominantLanguage (to detect the post's language). Leave the keys unset to switch it off.
+  translate:
+    region: ${TRANSLATE_REGION:ap-southeast-1}
+    access-key: ${TRANSLATE_ACCESS_KEY:}
+    secret-key: ${TRANSLATE_SECRET_KEY:}

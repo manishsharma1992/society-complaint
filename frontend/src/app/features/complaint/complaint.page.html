@@ -26,7 +26,7 @@
       </div>
     }
     @default {
-      @if (complaint(); as c) {
+      @if (shown(); as c) {
         <div class="layout">
           <div class="main">
             <h1 class="visually-hidden">{{ c.title }}</h1>
@@ -41,7 +41,19 @@
             }
 
             @if (c.description) {
-              <p class="description">{{ c.description }}</p>
+              <p class="description" [attr.lang]="translated()?.language">{{ c.description }}</p>
+            }
+
+            @if (translated()) {
+              <div class="translate">
+                <p class="help" role="status">{{ t('detail.machineTranslated') }}</p>
+                <button hlmBtn variant="ghost" size="lg" type="button" class="link-btn" (click)="translation.set(null)">{{ t('post.showOriginal') }}</button>
+              </div>
+            } @else if (canTranslate()) {
+              <div class="translate">
+                <button hlmBtn variant="outline" size="lg" type="button" [disabled]="translating()" [attr.aria-busy]="translating()" (click)="translate(c.id)">{{ t('post.translate') }}</button>
+                @if (translateFailed()) { <p class="error" role="alert">{{ t('post.translateFailed') }}</p> }
+              </div>
             }
 
             @if (nextStep() || mayReject()) {

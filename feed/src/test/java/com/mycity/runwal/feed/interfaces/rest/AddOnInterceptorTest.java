@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.mycity.runwal.feed.application.port.FeedAddOn;
 import com.mycity.runwal.feed.application.service.EvidenceService;
 import com.mycity.runwal.feed.application.service.ModerationService;
+import com.mycity.runwal.feed.application.service.PostTranslationService;
 import com.mycity.runwal.feed.application.service.PostingService;
 import com.mycity.runwal.feed.application.service.PublicFeedService;
 import com.mycity.runwal.shared.id.SocietyId;
@@ -35,6 +36,9 @@ class AddOnInterceptorTest {
 
     @MockitoBean
     private PublicFeedService publicFeedService;
+
+    @MockitoBean
+    private PostTranslationService postTranslationService;
 
     @MockitoBean
     private EvidenceService evidenceService;

@@ -8,7 +8,7 @@ import { lucideChevronLeft, lucideX } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmSpinnerImports } from '@spartan-ng/helm/spinner';
 import { Observable, forkJoin } from 'rxjs';
-import { ComplaintsApi } from '../../core/complaints';
+import { ComplaintTranslation, ComplaintsApi } from '../../core/complaints';
 import { dateTime } from '../../core/format';
 import { LanguageService } from '../../core/language';
 import { Complaint, isOngoing } from '../../core/models';
@@ -101,11 +101,41 @@ export default class ComplaintPage {
   protected readonly reasonValid = computed(() => this.reason().trim().length > 0 && this.reason().trim().length <= 500);
   /** Newest first: what happened last is what people come to see. */
   protected readonly history = computed(() => [...(this.complaint()?.history ?? [])].reverse());
+  protected readonly translation = signal<ComplaintTranslation | null>(null);
+  protected readonly translating = signal(false);
+  protected readonly translateFailed = signal(false);
+  /** Only while it is in the language the reader has chosen; switching language shows the original again. */
+  protected readonly translated = computed(() =>
+    this.translation()?.language === this.lang() ? this.translation() : null,
+  );
+  /** The complaint with its words translated when asked; comments added since keep their own words. */
+  protected readonly shown = computed<Complaint | null>(() => {
+    const complaint = this.complaint();
+    const translation = this.translated();
+    if (!complaint || !translation) return complaint;
+    const texts = new Map(translation.comments.map((c) => [c.sequence, c.text]));
+    return {
+      ...complaint,
+      title: translation.title,
+      description: translation.description,
+      comments: complaint.comments.map((c) => ({ ...c, text: texts.get(c.sequence) ?? c.text })),
+    };
+  });
+  /** An English reader needs no button for a complaint with no Hindi or Marathi letters in it. */
+  protected readonly canTranslate = computed(() => {
+    const c = this.complaint();
+    if (!c) return false;
+    const words = [c.title, c.description ?? '', ...c.comments.map((m) => m.text)].join(' ');
+    return this.lang() !== 'en' || /[ऀ-ॿ]/.test(words);
+  });
   protected readonly draftValid = computed(() => this.draft().trim().length > 0 && this.draft().trim().length <= 1000);
 
   constructor() {
     this.api.autoAssignment().subscribe({ next: (a) => this.autoAssign.set(a.on), error: () => this.autoAssign.set(false) });
-    effect(() => this.load(Number(this.id())));
+    effect(() => {
+      this.translation.set(null);
+      this.load(Number(this.id()));
+    });
     if (this.roles.isAdmin()) {
       this.people.staff().subscribe({ next: (staff) => this.staff.set(staff), error: () => {} });
     }
@@ -124,6 +154,21 @@ export default class ComplaintPage {
       },
       error: (e: unknown) =>
         this.state.set(e instanceof HttpErrorResponse && (e.status === 404 || e.status === 403) ? 'missing' : 'error'),
+    });
+  }
+
+  protected translate(id: number): void {
+    this.translating.set(true);
+    this.translateFailed.set(false);
+    this.api.translation(id, this.lang()).subscribe({
+      next: (translation) => {
+        this.translation.set(translation);
+        this.translating.set(false);
+      },
+      error: () => {
+        this.translateFailed.set(true);
+        this.translating.set(false);
+      },
     });
   }
 

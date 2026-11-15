@@ -5,6 +5,8 @@ import com.mycity.runwal.feed.application.command.ReportPostCommand;
 import com.mycity.runwal.feed.application.command.TakeBackReactionCommand;
 import com.mycity.runwal.feed.application.query.GetPublicPostQuery;
 import com.mycity.runwal.feed.application.query.ListPublicPostsQuery;
+import com.mycity.runwal.feed.application.query.TranslatePostQuery;
+import com.mycity.runwal.feed.application.service.PostTranslationService;
 import com.mycity.runwal.feed.application.service.PublicFeedService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -33,9 +35,11 @@ class PublicFeedController {
     private static final CacheControl CACHE = CacheControl.maxAge(Duration.ofMinutes(1)).cachePublic();
 
     private final PublicFeedService publicFeedService;
+    private final PostTranslationService postTranslationService;
 
-    PublicFeedController(PublicFeedService publicFeedService) {
+    PublicFeedController(PublicFeedService publicFeedService, PostTranslationService postTranslationService) {
         this.publicFeedService = publicFeedService;
+        this.postTranslationService = postTranslationService;
     }
 
     @GetMapping("/societies/{societyId}/posts")
@@ -53,6 +57,15 @@ class PublicFeedController {
     ResponseEntity<PublicPostResponse> get(@PathVariable String slug) {
         return publicFeedService.get(new GetPublicPostQuery(slug))
                 .map(post -> ResponseEntity.ok().cacheControl(CACHE).body(PublicPostResponse.from(post)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /** The post machine-translated into en, hi or mr; made on the first request, stored for everyone after. */
+    @GetMapping("/posts/{slug}/translations/{language}")
+    ResponseEntity<TranslationResponse> translation(@PathVariable String slug, @PathVariable String language) {
+        return postTranslationService.translate(new TranslatePostQuery(slug, language))
+                .map(t -> ResponseEntity.ok().cacheControl(CACHE)
+                        .body(new TranslationResponse(t.language(), t.title(), t.body())))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -80,5 +93,9 @@ class PublicFeedController {
 
     /** @param reactions emoji name -> how many reacted with it; emoji nobody chose are left out */
     record ReactionsResponse(Map<String, Integer> reactions) {
+    }
+
+    /** Machine translated: the web app labels it so and keeps the original one tap away. */
+    record TranslationResponse(String language, String title, String body) {
     }
 }

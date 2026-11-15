@@ -17,6 +17,9 @@ import com.mycity.runwal.feed.domain.model.post.VideoStatus;
 import com.mycity.runwal.feed.domain.model.reaction.Emoji;
 import com.mycity.runwal.feed.domain.model.reaction.Reaction;
 import com.mycity.runwal.feed.domain.model.reaction.ReactionRepository;
+import com.mycity.runwal.feed.domain.model.translation.Language;
+import com.mycity.runwal.feed.domain.model.translation.PostTranslation;
+import com.mycity.runwal.feed.domain.model.translation.PostTranslationRepository;
 import com.mycity.runwal.shared.id.SocietyId;
 import com.mycity.runwal.shared.id.TowerId;
 import com.mycity.runwal.shared.id.UserId;
@@ -40,7 +43,8 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers(disabledWithoutDocker = true)
-@Import({FeedSchemaConfig.class, PostRepositoryAdapter.class, ReactionRepositoryAdapter.class})
+@Import({FeedSchemaConfig.class, PostRepositoryAdapter.class, ReactionRepositoryAdapter.class,
+        PostTranslationRepositoryAdapter.class})
 class FeedPersistenceTest {
 
     @Container
@@ -58,6 +62,9 @@ class FeedPersistenceTest {
 
     @Autowired
     private ReactionRepository reactions;
+
+    @Autowired
+    private PostTranslationRepository translations;
 
     @Autowired
     private EntityManager entityManager;
@@ -205,5 +212,22 @@ class FeedPersistenceTest {
         assertThat(reactions.countsFor(List.of(post.id())).get(post.id()).byEmoji())
                 .isEqualTo(Map.of(Emoji.ANGRY, 1));
         assertThat(reactions.countsFor(List.of())).isEmpty();
+    }
+
+    @Test
+    void aTranslationIsStoredOncePerPostAndLanguage() {
+        Post post = newPost("translate001");
+        post.publish(MODERATOR, NOW);
+        posts.save(post);
+        flushAndClear();
+
+        translations.save(PostTranslation.of(post, Language.MR, "जिम नाही", "माहितीपत्रक पान 4", NOW));
+        translations.save(PostTranslation.of(post, Language.MR, "second", "second", NOW.plusSeconds(1)));
+        flushAndClear();
+
+        PostTranslation stored = translations.find(post.id(), Language.MR).orElseThrow();
+        assertThat(stored.title()).isEqualTo("जिम नाही");
+        assertThat(stored.translatedAt()).isEqualTo(NOW);
+        assertThat(translations.find(post.id(), Language.HI)).isEmpty();
     }
 }

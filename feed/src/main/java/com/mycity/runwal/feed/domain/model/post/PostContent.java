@@ -5,7 +5,7 @@ import com.mycity.runwal.shared.ddd.annotation.ValueObject;
 
 /**
  * What a post says: a short title and the documented facts (what, where, when, and what was promised).
- * Written by the author and never translated.
+ * Written by the author and never changed; readers can ask for a machine translation (a separate PostTranslation).
  */
 @ValueObject
 public record PostContent(String title, String body) {

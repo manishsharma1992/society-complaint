@@ -26,15 +26,19 @@ import com.mycity.runwal.feed.application.query.EvidenceView;
 import com.mycity.runwal.feed.application.query.GetPublicPostQuery;
 import com.mycity.runwal.feed.application.query.ListPublicPostsQuery;
 import com.mycity.runwal.feed.application.query.ModerationView;
+import com.mycity.runwal.feed.application.query.PostTranslationView;
 import com.mycity.runwal.feed.application.query.PostView;
 import com.mycity.runwal.feed.application.query.PublicPostView;
 import com.mycity.runwal.feed.application.query.ReportView;
+import com.mycity.runwal.feed.application.query.TranslatePostQuery;
 import com.mycity.runwal.feed.application.query.VideoView;
 import com.mycity.runwal.feed.application.service.ActionNotAllowedException;
 import com.mycity.runwal.feed.application.service.EvidenceService;
 import com.mycity.runwal.feed.application.service.ModerationService;
+import com.mycity.runwal.feed.application.service.PostTranslationService;
 import com.mycity.runwal.feed.application.service.PostingService;
 import com.mycity.runwal.feed.application.service.PublicFeedService;
+import com.mycity.runwal.feed.application.service.TranslationUnavailableException;
 import com.mycity.runwal.feed.domain.exception.EvidenceRejectedException;
 import com.mycity.runwal.feed.domain.exception.PostingLimitReachedException;
 import java.time.Instant;
@@ -70,6 +74,9 @@ class FeedControllersTest {
 
     @MockitoBean
     private PublicFeedService publicFeedService;
+
+    @MockitoBean
+    private PostTranslationService postTranslationService;
 
     @MockitoBean
     private EvidenceService evidenceService;
@@ -130,6 +137,23 @@ class FeedControllersTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("No gym"));
         mockMvc.perform(get("/feed/public/posts/zzzzzzzzzzzz")).andExpect(status().isNotFound());
+    }
+
+    @Test
+    void anyoneReadsAPublishedPostTranslated() throws Exception {
+        given(postTranslationService.translate(new TranslatePostQuery("abcdefgh2345", "mr")))
+                .willReturn(Optional.of(new PostTranslationView("mr", "जिम नाही", "माहितीपत्रक पान 4")));
+        given(postTranslationService.translate(new TranslatePostQuery("abcdefgh2345", "hi")))
+                .willThrow(new TranslationUnavailableException("down", null));
+
+        mockMvc.perform(get("/feed/public/posts/abcdefgh2345/translations/mr"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.language").value("mr"))
+                .andExpect(jsonPath("$.title").value("जिम नाही"))
+                .andExpect(jsonPath("$.body").value("माहितीपत्रक पान 4"));
+        mockMvc.perform(get("/feed/public/posts/zzzzzzzzzzzz/translations/mr")).andExpect(status().isNotFound());
+        mockMvc.perform(get("/feed/public/posts/abcdefgh2345/translations/hi"))
+                .andExpect(status().isServiceUnavailable());
     }
 
     @Test
