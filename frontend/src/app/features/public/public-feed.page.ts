@@ -53,7 +53,7 @@ const PAGE_SIZE = 10;
     :host { display: block; }
     .head { padding-block: var(--space-sm) var(--space-md); }
     h1 { font-size: var(--text-2xl); text-wrap: balance; }
-    .lead { color: var(--color-ink-2); max-width: 60ch; }
+    .lead { color: var(--color-ink-2); max-width: 60ch; margin-top: var(--space-sm); }
     .notice { padding: var(--space-md) 0; color: var(--color-ink-2); display: grid; gap: var(--space-sm); justify-items: start; }
     .empty { padding: var(--space-xl) 0; display: grid; gap: var(--space-md); color: var(--color-ink-2); max-width: 60ch; }
     .empty h2 { font-size: var(--text-xl); color: var(--color-ink); }

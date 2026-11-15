@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Puts five example posts on the feed for a demo, or takes them down again. Runs against the live API with the
+# Puts five example posts, with illustrations stamped "EXAMPLE PHOTO", on the feed for a demo, or takes them down. Runs against the live API with the
 # demo accounts: the demo resident (9000000004) writes the posts, the demo society admin (9000000001) publishes them.
 # The posts are invented examples and say so in the title and the first line; take them down after the demo.
 #
@@ -15,6 +15,7 @@ SOCIETY=1
 RESIDENT=9000000004
 ADMIN=9000000001
 MARK="Example post:"
+IMAGES="$(cd "$(dirname "$0")" && pwd)/demo-feed" # rendered from demo-feed/scenes.html
 : "${OTP_DEMO_CODE:?set OTP_DEMO_CODE to the demo code set on the server}"
 
 # The JSON bodies go through pipes: macOS's bash 3.2 misparses quotes and braces inside $(...).
@@ -35,13 +36,13 @@ get() { # token path
 
 NOTE="EXAMPLE FOR A DEMO: this is not a real report. It shows how a resident documents a promise."
 
-# title|tower to show (7 = B2 Radiant, or empty)|promised|today
+# title|tower to show (7 = B2 Radiant, or empty)|images in demo-feed/|promised|today
 POSTS=(
-  "Boundary wall around Phase 1|7|A boundary wall around Phase 1 (brochure, page —).|Two stretches near the back gate have no wall; the open side faces the main road."
-  "Swimming pool at the clubhouse||A swimming pool open to residents at possession (amenities list).|The pool area is fenced off. Residents have not been given an opening date."
-  "Internal road to tower B2|7|Finished internal roads to every tower (approved plan).|About 80 m of the road to B2 is unpaved; water stands there after rain."
-  "Rainwater harvesting||Rainwater harvesting for the whole layout (brochure, page —).|Residents could not find the pits or tanks; the society office has asked where they are."
-  "Children's play area||Play equipment for three age groups (brochure, page —).|Equipment for one age group is installed; the other two areas are empty lawn."
+  "Boundary wall around Phase 1|7|wall-1.jpg,wall-2.jpg|A boundary wall around Phase 1 (brochure, page —).|Two stretches near the back gate have no wall; the open side faces the main road."
+  "Swimming pool at the clubhouse||pool-1.jpg|A swimming pool open to residents at possession (amenities list).|The pool area is fenced off. Residents have not been given an opening date."
+  "Internal road to tower B2|7|road-1.jpg|Finished internal roads to every tower (approved plan).|About 80 m of the road to B2 is unpaved; water stands there after rain."
+  "Rainwater harvesting||rain-1.jpg|Rainwater harvesting for the whole layout (brochure, page —).|Residents could not find the pits or tanks; the society office has asked where they are."
+  "Children's play area||play-1.jpg|Play equipment for three age groups (brochure, page —).|Equipment for one age group is installed; the other two areas are empty lawn."
 )
 
 post_json() { # title body tower
@@ -49,14 +50,29 @@ post_json() { # title body tower
     '{title: $t, body: $b, showTowerId: (if $tower == "" then null else ($tower | tonumber) end)}'
 }
 
+attach() { # token postId file: the same three steps as the app (upload link, upload, attach)
+  local ticket key url size
+  size=$(wc -c <"$3" | tr -d ' ')
+  ticket=$(jq -n --argjson size "$size" '{contentType: "image/jpeg", sizeBytes: $size}' |
+    send POST "$1" "/feed/societies/$SOCIETY/posts/$2/evidence/upload-url")
+  key=$(jq -r .uploadKey <<<"$ticket")
+  url=$(jq -r .uploadUrl <<<"$ticket")
+  curl -fsS -X PUT "$url" -H 'Content-Type: image/jpeg' --data-binary "@$3" >/dev/null
+  jq -n --arg key "$key" '{uploadKey: $key}' |
+    send POST "$1" "/feed/societies/$SOCIETY/posts/$2/evidence" >/dev/null
+}
+
 create() {
   local resident admin
   resident=$(login "$RESIDENT")
   admin=$(login "$ADMIN")
   for entry in "${POSTS[@]}"; do
-    IFS='|' read -r title tower promised today <<<"$entry"
+    IFS='|' read -r title tower images promised today <<<"$entry"
     body=$(printf '%s\n\nPromised: %s\n\nToday: %s' "$NOTE" "$promised" "$today")
     id=$(post_json "$title" "$body" "$tower" | send POST "$resident" "/feed/societies/$SOCIETY/posts" | jq -r .id)
+    for image in ${images//,/ }; do
+      attach "$resident" "$id" "$IMAGES/$image"
+    done
     echo '{}' | send POST "$admin" "/feed/societies/$SOCIETY/moderation/$id/publish" >/dev/null
     echo "published $id: $MARK $title"
   done
