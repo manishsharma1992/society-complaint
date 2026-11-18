@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, catchError, map, of, shareReplay, tap } from 'rxjs';
 import { API, SOCIETY_ID } from './api';
+import { HAS_COMPLAINTS, HAS_FEED } from '../site';
 
 export type AddOnName = 'FEED' | 'COMPLAINTS';
 
@@ -67,6 +68,7 @@ export class SocietyStore {
   }
 
   private isOn(name: AddOnName): boolean {
+    if (!(name === 'FEED' ? HAS_FEED : HAS_COMPLAINTS)) return false;
     const society = this.society();
     return society === null ? true : society.addOns.some((a) => a.addOn === name && a.on);
   }

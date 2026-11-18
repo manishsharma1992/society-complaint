@@ -4,6 +4,7 @@ import { Observable, map } from 'rxjs';
 import { SOCIETY_ID } from './api';
 import { SessionStore } from './session';
 import { SocietyStore } from './society';
+import { HAS_COMPLAINTS, HAS_FEED } from '../site';
 
 /**
  * What the signed-in user's roles let them do, used only to decide what to show: the server checks every action
@@ -36,8 +37,8 @@ export class Roles {
    */
   home(): string {
     if (this.user() && this.user()!.status !== 'ACTIVE') return '/register';
-    if (this.society.feedOn()) return '/feed';
-    if (this.society.complaintsOn()) {
+    if (HAS_FEED && this.society.feedOn()) return '/feed';
+    if (HAS_COMPLAINTS && this.society.complaintsOn()) {
       if (this.isAdmin()) return '/assign';
       if (this.isStaff()) return '/jobs';
       return '/complaints';

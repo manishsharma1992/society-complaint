@@ -26,7 +26,7 @@ import { AddOn, AddOnName, Society, SocietyStore } from '../../core/society';
 
       @if (store.society(); as society) {
         <ul class="list ruled">
-          @for (a of society.addOns; track a.addOn) {
+          @for (a of complaintsAddOn(society); track a.addOn) {
             <li class="row">
               <div class="text">
                 <h2>{{ t('settings.addOn.' + a.addOn + '.name') }}</h2>
@@ -99,7 +99,7 @@ import { AddOn, AddOnName, Society, SocietyStore } from '../../core/society';
         @if (failed()) { <p class="warn" role="alert">{{ t('settings.failed') }}</p> }
         <p class="muted small note">{{ t('settings.note') }}</p>
       } @else {
-        <p class="muted" aria-busy="true">{{ t('feed.loading') }}</p>
+        <p class="muted" aria-busy="true">{{ t('app.loading') }}</p>
       }
     </ng-container>
   `,
@@ -159,6 +159,11 @@ export default class SettingsPage {
         this.staff.set([...staff, ...managers.filter((m) => !staff.some((s) => s.id === m.id))]),
       );
     }
+  }
+
+  /** This app is about complaints: the other add-on is not its business. */
+  protected complaintsAddOn(society: Society): AddOn[] {
+    return society.addOns.filter((a) => a.addOn === 'COMPLAINTS');
   }
 
   protected handles(auto: AutoAssignment, staffId: number, categoryId: number): boolean {

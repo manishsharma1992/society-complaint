@@ -34,7 +34,7 @@ export function sectionsFor(v: Viewer): HelpSection[] {
     [v.active && v.complaintsOn && v.admin, { id: 'review', steps: 3 }],
     [v.active && v.feedOn && v.societyAdmin, { id: 'moderate', steps: 3 }],
     [v.active && v.societyAdmin, { id: 'signups', steps: 2 }],
-    [v.active && (v.societyAdmin || v.platformOwner), { id: 'addons', steps: 2 }],
+    [v.active && v.complaintsOn && (v.societyAdmin || v.platformOwner), { id: 'addons', steps: 2 }],
     [true, { id: 'privacy', steps: 4 }],
   ];
   return all.filter(([shown]) => shown).map(([, section]) => section);

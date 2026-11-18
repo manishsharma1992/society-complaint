@@ -8,6 +8,7 @@ import { Roles } from '../../core/roles';
 import { SessionStore } from '../../core/session';
 import { SocietyStore } from '../../core/society';
 import { LanguageSwitch } from '../../shared/language-switch';
+import { HAS_COMPLAINTS, HAS_FEED } from '../../site';
 
 /** Who is signed in, their flats and roles, the language, and the way out. */
 @Component({
@@ -80,13 +81,13 @@ export default class ProfilePage {
 
   /** Admin tools that do not have a tab of their own, as far as the society's add-ons allow. */
   protected readonly manage = computed(() => {
-    const complaints = this.society.complaintsOn();
-    const feed = this.society.feedOn();
+    const complaints = HAS_COMPLAINTS && this.society.complaintsOn();
+    const feed = HAS_FEED && this.society.feedOn();
     const links: { path: string; label: string }[] = [];
     if (feed && this.roles.isSocietyAdmin()) links.push({ path: '/feed/moderation', label: 'profile.links.moderation' });
     if (complaints && this.roles.isAdmin()) links.push({ path: '/staff', label: 'profile.links.staff' }, { path: '/shifts', label: 'profile.links.shifts' });
     if (this.roles.isSocietyAdmin()) links.push({ path: '/signups', label: 'profile.links.signups' });
-    if (this.roles.isSocietyAdmin() || this.roles.isPlatformOwner()) links.push({ path: '/settings', label: 'profile.links.settings' });
+    if (HAS_COMPLAINTS && (this.roles.isSocietyAdmin() || this.roles.isPlatformOwner())) links.push({ path: '/settings', label: 'profile.links.settings' });
     return links;
   });
 

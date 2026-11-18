@@ -47,12 +47,12 @@
             @if (translated()) {
               <div class="translate">
                 <p class="help" role="status">{{ t('detail.machineTranslated') }}</p>
-                <button hlmBtn variant="ghost" size="lg" type="button" class="link-btn" (click)="translation.set(null)">{{ t('post.showOriginal') }}</button>
+                <button hlmBtn variant="ghost" size="lg" type="button" class="link-btn" (click)="translation.set(null)">{{ t('detail.showOriginal') }}</button>
               </div>
             } @else if (canTranslate()) {
               <div class="translate">
-                <button hlmBtn variant="outline" size="lg" type="button" [disabled]="translating()" [attr.aria-busy]="translating()" (click)="translate(c.id)">{{ t('post.translate') }}</button>
-                @if (translateFailed()) { <p class="error" role="alert">{{ t('post.translateFailed') }}</p> }
+                <button hlmBtn variant="outline" size="lg" type="button" [disabled]="translating()" [attr.aria-busy]="translating()" (click)="translate(c.id)">{{ t('detail.translate') }}</button>
+                @if (translateFailed()) { <p class="error" role="alert">{{ t('detail.translateFailed') }}</p> }
               </div>
             }
 

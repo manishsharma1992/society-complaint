@@ -42,6 +42,9 @@ if [ "${1:-}" = "tls" ]; then
 fi
 
 if [ "${1:-}" = "frontend" ]; then
+    # shortcut: blocked on this branch until the deploy step of the separation; ng build now makes Garden City Seva only
+    echo "!! Frontend deploy is off during the feed/complaints separation." >&2
+    exit 1
     echo "==> Building the Angular app (Node from frontend/.nvmrc)"
     (
         cd "$ROOT/frontend"

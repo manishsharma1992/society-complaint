@@ -1,0 +1,477 @@
+{
+  "app": {
+    "society": "Garden City Seva",
+    "residents": "Residents",
+    "place": "Runwal Garden City, Dombivli",
+    "road": "Off Kalyan-Shil Road",
+    "loading": "Loading…"
+  },
+  "lang": {
+    "label": "Language"
+  },
+  "login": {
+    "title": "Sign in",
+    "lead": "Raise complaints with photos and follow them until fixed.",
+    "phoneLabel": "Mobile number",
+    "phoneHelp": "We will send a 6-digit code by SMS.",
+    "sendCode": "Send code",
+    "codeTitle": "Enter the code",
+    "codeSentTo": "Sent to {{phone}}",
+    "codeLabel": "6-digit code",
+    "verify": "Sign in",
+    "resendIn": "New code in {{seconds}} s",
+    "resend": "Send a new code",
+    "changeNumber": "Change number",
+    "photoAlt": "The towers and garden courtyard of Runwal Garden City, Dombivli"
+  },
+  "errors": {
+    "invalidPhone": "Enter a 10-digit mobile number.",
+    "wrongCode": "That code is wrong or has expired. Request a new code.",
+    "tooMany": "Too many attempts. Please wait a little and try again.",
+    "network": "Could not reach the server. Check your connection and try again."
+  },
+  "nav": {
+    "main": "Main",
+    "complaints": "Complaints",
+    "profile": "Profile",
+    "assign": "To assign",
+    "jobs": "Jobs",
+    "signups": "Sign-ups",
+    "staff": "Staff"
+  },
+  "home": {
+    "title": "Complaints",
+    "raise": "Raise a complaint",
+    "emptyTitle": "No complaints yet",
+    "emptyBody": "When something needs fixing, raise it here with a photo.",
+    "error": "Could not load complaints.",
+    "retry": "Try again"
+  },
+  "card": {
+    "number": "No. {{id}}",
+    "due": "Due {{when}}",
+    "overdue": "Overdue since {{when}}",
+    "raised": "Raised {{when}}",
+    "commonArea": "Common area",
+    "wholeSociety": "whole society",
+    "photos": "Photos: {{count}}"
+  },
+  "status": {
+    "OPEN": "Open",
+    "ASSIGNED": "Assigned",
+    "IN_PROGRESS": "In progress",
+    "RESOLVED": "Resolved",
+    "CLOSED": "Closed",
+    "REJECTED": "Rejected"
+  },
+  "category": {
+    "Plumbing": "Plumbing",
+    "Electrical": "Electrical",
+    "Lift": "Lift",
+    "Water supply": "Water supply",
+    "Security": "Security",
+    "Housekeeping": "Housekeeping",
+    "Parking": "Parking",
+    "Garden & amenities": "Garden & amenities",
+    "Other": "Other"
+  },
+  "sla": {
+    "hours": "Fixed within {{n}} hours",
+    "days": "Fixed within {{n}} days"
+  },
+  "raise": {
+    "title": "New complaint",
+    "cancel": "Cancel",
+    "back": "Back",
+    "step": "Step {{n}} of 3",
+    "next": "Continue",
+    "skip": "Continue without photos",
+    "photosTitle": "Add photos",
+    "photosLead": "A photo helps staff see the problem before they come.",
+    "take": "Take photo",
+    "choose": "Choose from gallery",
+    "photosLimit": "Up to 5 photos.",
+    "remove": "Remove photo {{n}}",
+    "preparing": "Preparing photo",
+    "photoFailed": "That photo could not be read. Try another.",
+    "whereTitle": "What and where?",
+    "categoryLabel": "What kind of problem?",
+    "locationLabel": "Where is it?",
+    "myFlat": "My flat {{label}}",
+    "commonArea": "Common area",
+    "towerLabel": "Which tower?",
+    "wholeSociety": "Whole society",
+    "describeTitle": "Describe it",
+    "titleLabel": "Short title",
+    "titleHelp": "For example: Kitchen tap leaking",
+    "detailsLabel": "Details (optional)",
+    "detailsHelp": "When did it start? Anything staff should know?",
+    "submit": "Raise complaint",
+    "uploading": "Uploading photos: {{done}} of {{total}}",
+    "doneTitle": "Complaint raised",
+    "photosFailed": "Some photos could not be uploaded: {{failed}} of {{total}}.",
+    "view": "View my complaints",
+    "errorGeneric": "Could not raise the complaint. Check your connection and try again.",
+    "errorNotYours": "You can raise complaints only for your own flat or a common area.",
+    "discardQuestion": "Discard this complaint? Nothing has been sent yet.",
+    "keepEditing": "Keep editing",
+    "discard": "Discard",
+    "handledOutside": "Complaints for {{label}} are handled outside this app."
+  },
+  "profile": {
+    "title": "Profile",
+    "phone": "Mobile number",
+    "flats": "My flats",
+    "noFlats": "No flat linked yet.",
+    "roles": "Role",
+    "signOut": "Sign out",
+    "language": "Language",
+    "manage": "Manage",
+    "links": {
+      "staff": "Staff report",
+      "shifts": "Review shifts",
+      "signups": "Sign-ups",
+      "settings": "Add-ons"
+    }
+  },
+  "role": {
+    "RESIDENT": "Resident",
+    "STAFF": "Staff",
+    "TOWER_ADMIN": "Tower admin",
+    "SOCIETY_ADMIN": "Society admin"
+  },
+  "account": {
+    "VERIFIED": "Register for your flat to start raising complaints.",
+    "PENDING": "Your registration is waiting for the society’s approval.",
+    "REJECTED": "Your registration was not approved: {{reason}}",
+    "register": "Register for my flat"
+  },
+  "detail": {
+    "missingTitle": "Complaint not found",
+    "missingBody": "It may have been removed, or it belongs to another flat.",
+    "error": "Could not load this complaint.",
+    "fixedTitle": "Is it fixed?",
+    "fixedBody": "Staff marked this as resolved. If the problem is gone, close the complaint. If not, add a comment below.",
+    "closeIt": "Yes, it is fixed. Close it",
+    "closeFailed": "Could not close the complaint. Try again.",
+    "photos": "Photos",
+    "openPhoto": "Open photo {{n}}",
+    "photoOf": "Photo {{n}} of {{total}}",
+    "closePhoto": "Close photo",
+    "history": "What happened",
+    "comments": "Comments",
+    "noComments": "No comments yet.",
+    "addComment": "Add a comment",
+    "commentHelp": "Visible to everyone who can see this complaint.",
+    "machineTranslated": "Machine translated. The original words may differ.",
+    "send": "Send comment",
+    "commentFailed": "Could not send the comment. Try again.",
+    "commentsOff": "This complaint is finished, so comments are closed.",
+    "you": "You",
+    "person": "{{name}}",
+    "someone": "Someone",
+    "waitingForStaff": "All staff are busy right now. Your complaint is in the queue and will be assigned automatically to the next free staff member who handles it.",
+    "assignedAutomatically": "Assigned automatically",
+    "translate": "Translate into English",
+    "showOriginal": "Show original",
+    "translateFailed": "Translation is not available right now. Please try again later."
+  },
+  "queue": {
+    "jobs": {
+      "title": "My jobs",
+      "lead": "Assigned to you, the most urgent first.",
+      "emptyTitle": "No jobs right now",
+      "emptyBody": "New work appears here when an admin assigns it to you."
+    },
+    "assign": {
+      "title": "To assign",
+      "lead": "New complaints waiting for someone to fix them, the most urgent first.",
+      "emptyTitle": "Nothing waiting",
+      "emptyBody": "Every new complaint has been assigned."
+    }
+  },
+  "act": {
+    "assignTitle": "Who should fix this?",
+    "assign": "Assign",
+    "assignTo": "Assign to {{name}}",
+    "noStaff": "No staff members yet. Give someone the staff role first.",
+    "startTitle": "Ready to start?",
+    "startBody": "Start when you begin the work, so the resident knows it is being handled.",
+    "start": "Start work",
+    "resolveTitle": "Is the work done?",
+    "noteLabel": "What was done (optional)",
+    "noteHelp": "For example: replaced the tap washer. The resident sees this.",
+    "resolve": "Mark as resolved",
+    "closeForResident": "Usually the resident confirms the fix. Close it yourself if they cannot.",
+    "close": "Close complaint",
+    "rejectLink": "Reject this complaint",
+    "rejectTitle": "Reject this complaint",
+    "reasonLabel": "Reason",
+    "reasonHelp": "The resident sees this. For example: this is the flat owner’s own repair.",
+    "keep": "Keep it",
+    "reject": "Reject complaint",
+    "failed": "That did not work. Someone may have changed it already: reload and try again."
+  },
+  "signups": {
+    "title": "Sign-ups",
+    "lead": "People who registered for a flat. Check they live there before approving.",
+    "error": "Could not load the sign-ups.",
+    "emptyTitle": "No one waiting",
+    "emptyBody": "New sign-ups appear here.",
+    "flat": "Flat",
+    "as": "Lives there as",
+    "OWNER": "Owner",
+    "TENANT": "Tenant",
+    "approve": "Approve",
+    "notApprove": "Do not approve",
+    "reasonLabel": "Why not?",
+    "reasonHelp": "They see this reason.",
+    "reject": "Do not approve",
+    "approved": "Approved. They can now raise complaints.",
+    "rejected": "Not approved. They have been told why."
+  },
+  "register": {
+    "welcome": "Welcome. Tell us who you are and which flat you live in; the society checks and approves it, usually within a day.",
+    "nameTitle": "Your name",
+    "nameLabel": "Full name",
+    "nameHelp": "As the society knows you. Only your name and flat are asked.",
+    "flatTitle": "Your flat",
+    "floorLabel": "Which floor?",
+    "flatLabel": "Which flat?",
+    "loadingFlats": "Loading flats",
+    "asTitle": "You live in {{flat}} as",
+    "ownerHelp": "You own this flat.",
+    "tenantHelp": "You rent this flat.",
+    "reviewNote": "The society admin sees your name, flat and mobile number to check you live there.",
+    "send": "Send for approval",
+    "waitingTitle": "Waiting for approval",
+    "waitingBody": "The society admin will check your request. Once approved, you can raise complaints.",
+    "checkAgain": "Check again",
+    "stillWaiting": "Not decided yet. Check again later.",
+    "tryAgain": "You can register again below.",
+    "errorFlats": "Could not load the flats of this tower. Try again.",
+    "errorGeneric": "Could not send. Check your connection and try again.",
+    "errorRefused": "This request could not be accepted. Check the flat and try again."
+  },
+  "shift": {
+    "title": "My shift",
+    "loading": "Checking your shift…",
+    "on": "On shift",
+    "off": "Off shift",
+    "since": "Since {{time}}",
+    "offHint": "Start your shift when you begin work.",
+    "start": "Start shift",
+    "end": "End shift",
+    "failed": "That did not work. Check your connection and try again.",
+    "myReport": "My performance",
+    "inside": "Recorded inside the society.",
+    "outside": "Recorded {{km}} km from the society: your admin will review this.",
+    "noLocation": "No location was recorded: your admin will review this."
+  },
+  "report": {
+    "title": "Staff report",
+    "myTitle": "My performance",
+    "lead": "Complaints raised in the period and assigned to each staff member, how fast they were fixed, and hours on shift.",
+    "period": "Period",
+    "from": "From",
+    "to": "To",
+    "tower": "Tower",
+    "allTowers": "All towers",
+    "sortBy": "Sort by",
+    "preset": {
+      "thisMonth": "This month",
+      "lastMonth": "Last month",
+      "thisYear": "This year",
+      "lastYear": "Last year",
+      "custom": "Choose dates"
+    },
+    "needsDates": "Choose a start and an end date.",
+    "failed": "The report could not be loaded.",
+    "retry": "Try again",
+    "onDuty": "On duty now",
+    "onDutyNow": "On duty now",
+    "nobodyOnDuty": "Nobody is on shift right now.",
+    "since": "since {{time}}",
+    "emptyTitle": "No staff to show",
+    "emptyBody": "Staff appear here once they have the staff role.",
+    "col": {
+      "name": "Name",
+      "assigned": "Assigned",
+      "resolved": "Resolved",
+      "sla": "On time",
+      "toStart": "Time to start",
+      "toResolve": "Time to fix",
+      "open": "Open now",
+      "overdue": "Overdue now",
+      "hours": "Shift hours",
+      "perShift": "Fixed per 8 h"
+    },
+    "unit": {
+      "d": "{{n}} d",
+      "h": "{{n}} h",
+      "min": "{{n}} min"
+    },
+    "footnote": "Times are medians from assignment. \"On time\" is the share of fixed complaints resolved within their SLA. Shift hours cover the whole society; a shift counts for at most 16 hours.",
+    "reviewShifts": "Review shifts"
+  },
+  "clock": {
+    "startTitle": "Start shift",
+    "endTitle": "End shift",
+    "cancel": "Cancel",
+    "tryAgain": "Try again",
+    "noCamera": "The camera could not be opened. Allow camera access for this site in your browser settings: a selfie is needed to start or end a shift.",
+    "cameraLabel": "Front camera",
+    "previewAlt": "Your selfie",
+    "take": "Take selfie",
+    "retake": "Take again",
+    "useStart": "Start shift with this selfie",
+    "useEnd": "End shift with this selfie",
+    "locating": "Finding your location…",
+    "located": "Location found (within about {{meters}} m).",
+    "noLocation": "No location: allow location access, or go on without it and your admin will review the shift.",
+    "notice": {
+      "intro": "To confirm shifts are worked at the society, starting and ending a shift records:",
+      "selfie": "a selfie taken now with the front camera,",
+      "location": "where your phone is at that moment (only then, never in between),",
+      "who": "seen only by the society admin, the tower admins and you,",
+      "kept": "deleted after 90 days. Your shift times are kept for the yearly review.",
+      "ok": "I understand"
+    }
+  },
+  "shifts": {
+    "back": "← Staff report",
+    "title": "Review shifts",
+    "lead": "Check that the selfies show the staff member and that they were at the society, then confirm or dispute each shift.",
+    "range": "Period",
+    "show": "Show",
+    "ranges": {
+      "today": "Today",
+      "week": "Last 7 days",
+      "month": "This month"
+    },
+    "shows": {
+      "attention": "Needs attention",
+      "unreviewed": "Not reviewed",
+      "all": "All shifts"
+    },
+    "loading": "Loading shifts…",
+    "failed": "The shifts could not be loaded.",
+    "emptyTitle": "Nothing to review",
+    "emptyBody": "No shifts match this period and filter.",
+    "decision": {
+      "CONFIRMED": "Confirmed",
+      "DISPUTED": "Disputed"
+    },
+    "onDuty": "On duty",
+    "notReviewed": "Not reviewed",
+    "now": "now",
+    "hours": "{{hours}} h",
+    "start": "Start",
+    "end": "End",
+    "selfieAlt": "Selfie of {{name}}",
+    "selfieDeleted": "Selfie deleted after 90 days.",
+    "inside": "Inside the society ({{meters}} m from the centre)",
+    "outside": "{{km}} km from the society",
+    "noLocation": "No location",
+    "accuracy": "Phone accuracy ±{{meters}} m",
+    "map": "Open in maps",
+    "stillOn": "Still on shift.",
+    "noEvidence": "No selfie or location (recorded before they were required).",
+    "reviewedBy": "{{name}}, {{time}}",
+    "confirm": "Confirm",
+    "dispute": "Dispute",
+    "reason": "Why is this shift disputed?",
+    "sendDispute": "Dispute shift",
+    "reviewFailed": "The review could not be saved. Try again.",
+    "ownShift": "Your own shift: another admin reviews it."
+  },
+  "settings": {
+    "back": "← Profile",
+    "title": "Add-ons",
+    "lead": "Choose which parts of the app {{society}} uses.",
+    "addOn": {
+      "COMPLAINTS": {
+        "name": "Complaints",
+        "about": "Residents raise complaints; admins assign them to maintenance staff, with staff shifts and the staff report."
+      }
+    },
+    "available": "Available",
+    "on": "On",
+    "notAvailable": "Not available to this society yet.",
+    "failed": "The change could not be saved. Try again.",
+    "note": "Switching an add-on off hides it for everyone in the society. Nothing is deleted: switching it on again brings everything back.",
+    "towers": {
+      "title": "Towers using complaints",
+      "lead": "Switch off a tower that handles complaints its own way, for example with its own app. Its residents can still report society-wide areas, and it can join any time."
+    },
+    "auto": {
+      "title": "Assign automatically",
+      "about": "Waiting complaints go to a free staff member on shift who handles their category, the most urgent first. Admins can still assign by hand.",
+      "staffTitle": "Who handles what",
+      "staffLead": "Tick the categories each staff member handles. Staff with none are only assigned by hand. Tower managers get their tower's complaints of a category at any hour, e.g. lifts serviced by the lift company.",
+      "noStaff": "No staff members yet."
+    }
+  },
+  "help": {
+    "link": "How to use the app",
+    "title": "How to use the app",
+    "lead": "Short guides for what you can do here. Tap a topic to open it.",
+    "more": "Still stuck? Ask your society office or tower admin.",
+    "start": {
+      "title": "Getting started",
+      "1": "Sign in with your mobile number: we send a 6-digit code by SMS. It signs you in as soon as you type the last digit.",
+      "2": "The first time, tell us your name and your flat (tower, floor, flat; owner or tenant) and send it for approval. The society admin checks it, usually within a day.",
+      "3": "Choose English, हिन्दी or मराठी at the top of any screen. The app remembers it on this phone.",
+      "4": "Use the tabs at the bottom (or at the top on a computer). Your profile, this help and sign out are under Profile."
+    },
+    "complaint": {
+      "title": "Raising and following a complaint",
+      "1": "Under Complaints, tap \"Raise a complaint\". Add photos if you can: they help staff see the problem before they come.",
+      "2": "Choose the kind of problem and where it is: your flat, or a common area (a tower or the whole society). Then describe it.",
+      "3": "Follow it on its page: who it is assigned to, every step under \"What happened\", and comments. Add a comment if something changes.",
+      "4": "When staff mark it resolved, check the fix. If the problem is gone, tap \"Yes, it is fixed. Close it\". If not, add a comment."
+    },
+    "jobs": {
+      "title": "Doing your jobs (staff)",
+      "1": "Jobs lists the complaints assigned to you, the most urgent first.",
+      "2": "Open a job and tap \"Start work\" when you begin, so the resident knows it is being handled.",
+      "3": "When done, tap \"Mark as resolved\" and say what was done (for example: replaced the tap washer). You can add a photo of the fix."
+    },
+    "shift": {
+      "title": "Starting and ending your shift (staff)",
+      "1": "On Jobs, tap \"Start shift\" when you begin work. The first time, the app explains what it records.",
+      "2": "Take a selfie with the front camera. The app also records where your phone is at that moment, and only then.",
+      "3": "Tap \"End shift\" when you finish, with a new selfie. If you were outside the society or your location was off, your admin will look at it.",
+      "4": "\"My performance\" shows your complaints, how fast you fixed them, and your shift hours."
+    },
+    "assign": {
+      "title": "Assigning complaints (admins)",
+      "1": "\"To assign\" lists new complaints, the most urgent first. Tower admins see their own tower.",
+      "2": "Open one and choose who should fix it. The staff member sees it under Jobs at once.",
+      "3": "If it is not a real problem, use \"Reject this complaint\" and give the reason; the resident sees it."
+    },
+    "review": {
+      "title": "Staff report and shifts (admins)",
+      "1": "Profile, Manage, Staff report: per staff member, complaints assigned and fixed, how fast, how many on time, and shift hours.",
+      "2": "Profile, Manage, Review shifts: compare both selfies with the staff member and check where they were. Flagged shifts have a red edge.",
+      "3": "Tap \"Confirm\", or \"Dispute\" with a reason. You cannot review your own shift."
+    },
+    "signups": {
+      "title": "Approving sign-ups (society admin)",
+      "1": "Sign-ups lists people who registered for a flat, with their name, flat and mobile number.",
+      "2": "Check they live there, then approve, or choose \"Do not approve\" and give the reason they will see."
+    },
+    "addons": {
+      "title": "Turning parts of the app on or off",
+      "1": "Profile, Manage, Add-ons: switch Complaints on or off for everyone in the society.",
+      "2": "Switching off hides it; nothing is deleted. Switching it on again brings everything back."
+    },
+    "privacy": {
+      "title": "Your privacy",
+      "1": "Only your name, mobile number and flat are kept. Other residents see names, never mobile numbers.",
+      "2": "A complaint about your flat is seen only by your household, whoever raised it, the staff and the admins.",
+      "3": "Photos are resized and their location data removed on your phone before upload.",
+      "4": "Staff selfies and shift locations are deleted after 90 days."
+    }
+  }
+}

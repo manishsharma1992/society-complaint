@@ -8,6 +8,7 @@ import { SessionStore } from '../../core/session';
 import { SocietyStore } from '../../core/society';
 import { LanguageSwitch } from '../../shared/language-switch';
 import { LogoMark } from '../../shared/logo-mark';
+import { HAS_COMPLAINTS, HAS_FEED } from '../../site';
 
 /**
  * The signed-in frame. Phones: a top bar and a bottom tab bar (tabs navigate, never act), translucent so content
@@ -148,9 +149,9 @@ export default class Shell {
    * shift review, moderation and add-on settings are under Profile for admins.
    */
   protected readonly tabs = computed(() => {
-    const complaints = this.society.complaintsOn();
+    const complaints = HAS_COMPLAINTS && this.society.complaintsOn();
     const tabs = [
-      ...(this.society.feedOn() ? [{ path: '/feed', label: 'nav.feed', icon: 'lucideNewspaper' }] : []),
+      ...(HAS_FEED && this.society.feedOn() ? [{ path: '/feed', label: 'nav.feed', icon: 'lucideNewspaper' }] : []),
       ...(complaints && this.roles.isAdmin() ? [{ path: '/assign', label: 'nav.assign', icon: 'lucideInbox' }] : []),
       ...(complaints && this.roles.isStaff() ? [{ path: '/jobs', label: 'nav.jobs', icon: 'lucideWrench' }] : []),
       ...(complaints ? [{ path: '/complaints', label: 'nav.complaints', icon: 'lucideListChecks' }] : []),
