@@ -16,6 +16,7 @@
     <module>feed</module>
     <module>workforce</module>
     <module>app</module>
+    <module>feed-app</module>
   </modules>
 
   <properties>

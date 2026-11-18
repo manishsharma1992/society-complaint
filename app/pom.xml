@@ -9,7 +9,7 @@
 
   <artifactId>app</artifactId>
   <name>app</name>
-  <description>The one deployable Spring Boot app: runs every bounded context in a single JVM (512 MB server).</description>
+  <description>The complaint app (Garden City Seva): complaints, staff shifts, accounts and society data in one JVM.</description>
 
   <dependencies>
     <dependency>
@@ -23,10 +23,6 @@
     <dependency>
       <groupId>com.mycity.runwal</groupId>
       <artifactId>identity</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.mycity.runwal</groupId>
-      <artifactId>feed</artifactId>
     </dependency>
     <dependency>
       <groupId>com.mycity.runwal</groupId>

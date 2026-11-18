@@ -4,7 +4,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.mycity.runwal.feed.application.port.FeedAddOn;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import javax.crypto.SecretKey;
@@ -44,26 +43,14 @@ class WebSecurityConfigTest {
     @MockitoBean
     private com.mycity.runwal.workforce.application.port.ComplaintsAddOn workforceAddOn;
 
-    @MockitoBean
-    private FeedAddOn feedAddOn;
-
     @Test
     void loginEndpointsArePublic() throws Exception {
         mockMvc.perform(get("/identity/login/probe")).andExpect(status().isOk());
     }
 
     @Test
-    void thePublicFeedIsOpenToEveryoneWithOrWithoutALogin() throws Exception {
-        mockMvc.perform(get("/feed/public/probe")).andExpect(status().isOk());
-        mockMvc.perform(get("/feed/share/probe")).andExpect(status().isOk());
-        mockMvc.perform(get("/feed/public/probe").header("Authorization", "Bearer " + token(KEY, Instant.now().plusSeconds(60))))
-                .andExpect(status().isOk());
-    }
-
-    @Test
     void everythingElseNeedsAToken() throws Exception {
         mockMvc.perform(get("/complaint/probe")).andExpect(status().isUnauthorized());
-        mockMvc.perform(get("/feed/societies/1/probe")).andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -112,12 +99,7 @@ class WebSecurityConfigTest {
             return "public";
         }
 
-        @GetMapping({"/feed/public/probe", "/feed/share/probe"})
-        String publicFeedProbe() {
-            return "public";
-        }
-
-        @GetMapping({"/complaint/probe", "/feed/societies/1/probe"})
+        @GetMapping("/complaint/probe")
         String protectedProbe(@AuthenticationPrincipal Jwt jwt) {
             return "user " + jwt.getSubject();
         }

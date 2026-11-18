@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 /**
- * Starts every bounded context (complaint, residency, later identity) in one JVM. It sits in the base package
- * so component, entity and repository scanning cover all contexts; it belongs to no context itself.
+ * The complaint app: complaints, staff shifts, accounts (identity) and society data (residency) in one JVM. It sits
+ * in the base package so component, entity and repository scanning cover all its contexts.
  */
 @SpringBootApplication
 public class SocietyApplication {

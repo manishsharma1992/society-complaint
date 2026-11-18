@@ -79,6 +79,11 @@ REMOTE
     exit 0
 fi
 
+# shortcut: backend deploys are blocked while the app is split in two (app = complaints only, feed-app = feed only);
+# the live server still runs the combined jar. Remove this when the deploy step of the separation is done.
+echo "!! Backend deploy is off during the feed/complaints separation: either new jar alone would take half the live site down." >&2
+exit 1
+
 echo "==> Building and testing (architecture tests must pass before anything ships)"
 (cd "$ROOT" && mvn -q clean verify)
 

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>society-complaint</artifactId>
+    <groupId>com.mycity.runwal</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>feed-app</artifactId>
+  <name>feed-app</name>
+  <description>The public feed as its own deployable Spring Boot app.</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.mycity.runwal</groupId>
+      <artifactId>residency</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.mycity.runwal</groupId>
+      <artifactId>identity</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.mycity.runwal</groupId>
+      <artifactId>feed</artifactId>
+    </dependency>
+    <!-- checks the login token on every request -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security-oauth2-resource-server</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-webmvc-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security-oauth2-resource-server-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

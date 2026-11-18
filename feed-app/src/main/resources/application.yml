@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: feed-app
+  config:
+    # Local development: DB_URL, DB_USER, DB_PASSWORD from a git-ignored .env file in the project root
+    # (works whether the app starts from the root or from feed-app/). Real environment variables win.
+    import:
+      - optional:file:.env[.properties]
+      - optional:file:../.env[.properties]
+  datasource:
+    # Neon: jdbc:postgresql://<host>/<db>?sslmode=require  (credentials never in this file)
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 3
+      minimum-idle: 0          # let Neon scale to zero when idle
+      idle-timeout: 60000      # close idle connections after 1 minute
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate       # Flyway owns the schemas: one Flyway bean per context, each in its own schema
+
+server:
+  servlet:
+    # each context adds its own prefix: /api/feed/..., /api/residency/...
+    context-path: /api
+  # behind Nginx: trust its X-Forwarded-* headers so Location URLs use the public host and scheme
+  forward-headers-strategy: native
+
+identity:
+  # signs login tokens and hashes OTP codes; at least 32 characters, environment only
+  auth-secret: ${AUTH_SECRET}
+  otp:
+    # demo logins before real SMS works: these placeholder numbers accept OTP_DEMO_CODE (6 digits).
+    # Leave OTP_DEMO_CODE unset to turn demo logins off.
+    demo-code: ${OTP_DEMO_CODE:}
+    demo-phones: 9000000001,9000000002,9000000003,9000000004
+
+# Lightsail Object Storage bucket for feed photos and videos (private; reached only through presigned links)
+photos:
+  bucket: ${PHOTO_BUCKET}
+  region: ${PHOTO_BUCKET_REGION:ap-southeast-1}
+  access-key: ${PHOTO_ACCESS_KEY}
+  secret-key: ${PHOTO_SECRET_KEY}
+
+# The signed-in feed shows published posts from the viewer's society and every society within this many metres
+# that has the Feed add-on on.
+feed:
+  nearby-meters: 10000
+  # Amazon Translate for the Translate button on posts. Its own IAM user, allowed only translate:TranslateText and
+  # comprehend:DetectDominantLanguage (to detect the post's language). Leave the keys unset to switch it off.
+  translate:
+    region: ${TRANSLATE_REGION:ap-southeast-1}
+    access-key: ${TRANSLATE_ACCESS_KEY:}
+    secret-key: ${TRANSLATE_SECRET_KEY:}
+    # Google Cloud Translation for Marathi (Amazon dropped words). An API key restricted to the Cloud Translation
+    # API. Leave unset to translate Marathi with Amazon too.
+    google-api-key: ${GOOGLE_TRANSLATE_API_KEY:}

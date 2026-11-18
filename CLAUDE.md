@@ -90,9 +90,13 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ## Project structure
 Maven multi-module (see the poms): `shared` (kernel), `architecture-rules`, one module per context (`core`, `residency`,
-`identity`, `feed`, `workforce`), `app` (the one deployable Spring Boot app) and `frontend` (Angular).
+`identity`, `feed`, `workforce`), two deployable Spring Boot apps and `frontend` (Angular).
+- **The complaint app and the feed are being separated (decided 2026-11-18).** `app` is the complaint app, Garden City
+  Seva at gardencityseva.com (`core`, `workforce`, `identity`, `residency`); `feed-app` is the public feed at
+  runwalltdfakepromises.com (`feed`, `identity`, `residency`). They will share no server, database, bucket, login or
+  link. Until the switch the live server still runs the last combined jar, so `deploy/deploy.sh` refuses backend deploys.
 - Residency is seeded with Runwal MyCity: 10 towers, flats labelled "<tower code>-<floor><unit>", e.g. B2-503.
-- `com.mycity.runwal.integration` (in `app`) holds the in-process anticorruption adapters between contexts (e.g.
+- `com.mycity.runwal.integration` (in each app) holds the in-process anticorruption adapters between contexts (e.g.
   `InProcessFlatDirectory`: complaint's FlatDirectory port -> Residency); it is the only code that may see two contexts.
 - `notification-service` does not exist yet. Add a new module only when a baby step needs it.
 
@@ -214,8 +218,8 @@ CODE-xx); every context's `ArchitectureTest` runs them. Read the classes for the
 - Translate button (Marathi: Google Cloud Translation, since Amazon dropped words; English and Hindi: Amazon
   Translate; source language detected): feed posts (stored per post and language, see
   `feed/CLAUDE.md`) and complaints (`GET /complaint/societies/{id}/complaints/{cid}/translations/{lang}`: title,
-  description and comments, for whoever may read the complaint; not stored, recent texts kept in memory). One
-  client, `feed`'s `AmazonTranslateClient`; complaints reach it through `integration.InProcessComplaintTranslator`.
+  description and comments, for whoever may read the complaint; not stored, recent texts kept in memory). Each
+  context has its own clients in `infrastructure.client`, so the two apps share no code at run time.
   Keys `TRANSLATE_ACCESS_KEY`/`TRANSLATE_SECRET_KEY` and `GOOGLE_TRANSLATE_API_KEY` (without it Marathi uses
   Amazon; without the Amazon keys the button answers "not available").
 - Staff report (`core`, `GET /complaint/societies/{id}/reports/staff`): per staff member, complaints raised in the
