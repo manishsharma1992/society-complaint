@@ -94,7 +94,7 @@ Maven multi-module (see the poms): `shared` (kernel), `architecture-rules`, one 
 - **The complaint app and the feed are being separated (decided 2026-11-18).** `app` is the complaint app, Garden City
   Seva at gardencityseva.com (`core`, `workforce`, `identity`, `residency`); `feed-app` is the public feed at
   runwalltdfakepromises.com (`feed`, `identity`, `residency`). They will share no server, database, bucket, login or
-  link. Until the switch the live server still runs the last combined jar, so `deploy/deploy.sh` refuses backend deploys.
+  link. Until the switch the live server still runs the last combined jar; it has no site mark, so `deploy/deploy.sh` refuses it.
 - Residency is seeded with Runwal MyCity: 10 towers, flats labelled "<tower code>-<floor><unit>", e.g. B2-503.
 - `com.mycity.runwal.integration` (in each app) holds the in-process anticorruption adapters between contexts (e.g.
   `InProcessFlatDirectory`: complaint's FlatDirectory port -> Residency); it is the only code that may see two contexts.
@@ -245,8 +245,8 @@ The details (lifecycle, moderation, media phases, sharing, tests) are in `feed/C
 ## Frontend (`frontend/`)
 Angular web app; its conventions are in `frontend/CLAUDE.md`, the public homepage and legal pages in
 `frontend/landing/CLAUDE.md`.
-- Deploy: `deploy/deploy.sh frontend` (see deploy/README.md); the backend with `deploy/deploy.sh`; Nginx changes need
-  `deploy/deploy.sh setup`.
+- Deploy per site (`seva` or `feed`, see deploy/README.md): `deploy/deploy.sh <site> frontend`; the backend with
+  `deploy/deploy.sh <site>`; Nginx changes need `deploy/deploy.sh <site> setup`.
 - The public homepage states no fact about the builder itself (residents' voice only); see `frontend/landing/CLAUDE.md`.
 
 ## Neon / Spring Boot notes

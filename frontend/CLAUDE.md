@@ -19,8 +19,8 @@
   staff also Jobs; admins also To assign; the society admin also Sign-ups. Users who are not yet approved land on
   sign-up (`/register`). The UI only decides what to offer: the server checks every action.
 - `ng serve` proxies `/api` to the live server (`proxy.conf.json`). Build: `npx ng build` (budgets in angular.json).
-- Deploy: `deploy/deploy.sh frontend` (see deploy/README.md); the backend with `deploy/deploy.sh`. It installs every
+- Deploy: `deploy/deploy.sh <seva|feed> frontend` (see deploy/README.md); the backend with `deploy/deploy.sh <seva|feed>`. It installs every
   built file before the app's own `./index.html` (only that one is held back, so the homepage's `hi/` and `mr/`
-  `index.html` files ship too). Nginx changes (e.g. `location = /`) need `deploy/deploy.sh setup`.
+  `index.html` files ship too). Nginx changes (e.g. `location = /`) need `deploy/deploy.sh <site> setup`.
 - The app's screens carry `<meta name="robots" content="noindex">`: only the public homepage is for search engines.
 

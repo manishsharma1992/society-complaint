@@ -1,29 +1,41 @@
 # Deploying to AWS Lightsail
 
-One Lightsail instance (Singapore, same region as Neon) runs Nginx and the services.
-Database credentials live only on the server in `/etc/society-complaint/complaint.env` (root-only);
-systemd passes them to the service as environment variables.
+Two sites, each on its own Lightsail server (Singapore, same region as Neon). They share no server, database, bucket
+or login. Each server runs Nginx and one Spring Boot app.
+
+| Site | Domain | App | Web app | Server |
+|---|---|---|---|---|
+| `seva` | gardencityseva.com | `app` (complaints) | `frontend/dist/seva` | 1 GB, heap 512 MB |
+| `feed` | runwalltdfakepromises.com | `feed-app` (feed) | `frontend/dist/feed` | 2 GB, heap 1 GB, ffmpeg |
+
+Credentials live only on each server in `/etc/society-complaint/complaint.env` (root-only); systemd passes them to the
+service as environment variables.
 
 ```
-internet -> Nginx :443 (https://runwalltdfakepromises.com) -> /api/complaint/** -> 127.0.0.1:8081 -> Neon
-                                                                          -> /**  -> Angular build (later)
+internet -> Nginx :443 -> /api/** -> 127.0.0.1:8081 -> Neon
+                       -> /**     -> the site's web app
          -> Nginx :80  -> /.well-known/acme-challenge/ (Let's Encrypt), everything else redirects to HTTPS
 ```
 
+**Safeguard:** `setup` records the site in `/etc/society-complaint/site`. Every other command refuses a server marked
+for another site, or not marked at all. A server that already runs an app but has no mark only accepts `setup` with
+`ADOPT=yes`, which is meant for the switch-over of the server from before the separation.
+
 | File | Goes to |
 |---|---|
-| `complaint-service.service` | `/etc/systemd/system/` |
-| `nginx/society-complaint.conf` | `/etc/nginx/sites-available/` (HTTP only, until the certificate exists) |
-| `nginx/society-complaint-tls.conf` | same place, once the certificate exists |
-| `nginx/society-complaint-app.conf`, `nginx/acme-challenge.conf` | `/etc/nginx/snippets/` |
+| `sites/<site>.sh` | each site's domain, jar, heap, packages and checks |
+| `complaint-service.service` | `/etc/systemd/system/` (heap filled in) |
+| `nginx/render.sh` | builds the site's Nginx files from the templates in `nginx/` |
+| `nginx/society-complaint.conf`, `nginx/society-complaint-tls.conf` | `/etc/nginx/sites-available/` (HTTP until the certificate exists, then HTTPS) |
+| `nginx/society-complaint-app.conf`, `nginx/home.<site>.conf`, `nginx/acme-challenge.conf` | `/etc/nginx/snippets/` |
 | `complaint.env.example` | template for `/etc/society-complaint/complaint.env` |
-| `setup-server.sh` | runs on the server (via `deploy.sh setup`) |
+| `setup-server.sh` | runs on the server (via `deploy.sh <site> setup`) |
 | `deploy.sh` | runs on your laptop |
 
 ## 1. Create the instance (once, in the Lightsail console)
 
 1. Instance: **Linux/Unix -> OS Only -> Ubuntu 24.04 LTS**, region **Singapore (ap-southeast-1)**,
-   plan with at least **1 GB RAM** (each Spring Boot service needs ~250-400 MB).
+   plan with at least **1 GB RAM** for `seva`, **2 GB** for `feed` (ffmpeg re-encodes videos).
 2. **Networking -> attach a static IP**, so the address survives restarts.
 3. **Networking -> IPv4 firewall**: SSH (22) restricted to your own IP; HTTP (80) and HTTPS (443) open to everyone
    (Let's Encrypt must reach port 80, and demo users come from any network).
@@ -37,37 +49,37 @@ internet -> Nginx :443 (https://runwalltdfakepromises.com) -> /api/complaint/** 
 ## 2. Prepare the server (once)
 
 ```bash
-export LIGHTSAIL_HOST=<static-ip>
-deploy/deploy.sh setup
+export SEVA_HOST=<static-ip>     # or FEED_HOST for the feed
+deploy/deploy.sh seva setup
 ```
 
 Then put the real Neon credentials on the server (same three lines as your local `.env`):
 
 ```bash
-ssh -i ~/.ssh/LightsailDefaultKey-ap-southeast-1.pem ubuntu@$LIGHTSAIL_HOST
+ssh -i ~/.ssh/LightsailDefaultKey-ap-southeast-1.pem ubuntu@$SEVA_HOST
 sudo nano /etc/society-complaint/complaint.env
 ```
 
 Besides the DB and photo bucket settings, `complaint.env` holds `AUTH_SECRET` (signs login tokens; generate once
 with `openssl rand -hex 32`) and, for demos, `OTP_DEMO_CODE` (see the project README).
 
-HTTPS: at GoDaddy (DNS of runwalltdfakepromises.com) set the `A` record `@` to the static IP (`www` is a CNAME to `@`),
-wait until `dig +short runwalltdfakepromises.com` shows the static IP, then once:
+HTTPS: at the domain's DNS provider set the `A` record `@` to the static IP (`www` is a CNAME to `@`), wait until
+`dig +short <domain>` shows the static IP, then once:
 
 ```bash
-LETSENCRYPT_EMAIL=you@example.com deploy/deploy.sh tls   # email optional: expiry warnings
+LETSENCRYPT_EMAIL=you@example.com deploy/deploy.sh seva tls   # email optional: expiry warnings
 ```
 
 certbot renews the certificate automatically (`systemctl list-timers certbot.timer`) and reloads Nginx.
 
-Re-run `deploy/deploy.sh setup` whenever you change the systemd unit or the Nginx config.
+Re-run `deploy/deploy.sh <site> setup` whenever you change the systemd unit or the Nginx config.
 It never overwrites `complaint.env`.
 
 ## 3. Deploy a new version
 
 ```bash
-export LIGHTSAIL_HOST=<static-ip>
-deploy/deploy.sh
+export SEVA_HOST=<static-ip>
+deploy/deploy.sh seva
 ```
 
 This runs `mvn clean verify` (all tests, including the architecture rules), uploads the jar as
@@ -76,20 +88,21 @@ until it answers. The first start runs the Flyway migrations on Neon.
 
 Check it from your laptop (401 without a login token means it is up; see the project README to log in):
 ```bash
-curl -i https://runwalltdfakepromises.com/api/complaint/societies/1/complaints
+curl -i https://gardencityseva.com/api/identity/me
 ```
 
 ## 4. Deploy a new version of the web app
 
 ```bash
-export LIGHTSAIL_HOST=<static-ip>
-deploy/deploy.sh frontend
+export SEVA_HOST=<static-ip>
+deploy/deploy.sh seva frontend
 ```
 
-This builds the Angular app (Node from `frontend/.nvmrc`, through nvm), uploads it and copies it into
+This builds both web apps (Node from `frontend/.nvmrc`, through nvm), stops if either contains the other, uploads this
+site's build and copies it into
 `/var/www/society-complaint`: new files first, `index.html` last, so nobody gets a page whose scripts are not there
 yet. Files of earlier releases are removed after a week (tabs still open on an old release keep working). It then
-checks that `/`, a page link (`/complaints/7`) and a translation file answer 200.
+checks that the pages listed in `sites/<site>.sh` answer 200.
 
 Nginx (`nginx/society-complaint-app.conf`): page links get `index.html`; `index.html` and `i18n/*.json` are never
 cached, built files with a content hash in their name are cached for good, photos in `images/` for a week; a missing
