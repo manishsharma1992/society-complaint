@@ -14,6 +14,8 @@ const SITES = {
     required: [/\/feed\/public/],
     // the feed's legal pages describe the feed only: no staff shifts
     legalForbidden: /selfie|सेल्फ़ी|सेल्फी|शिफ़्ट|शिफ्ट/i,
+    // the feed's homepage says nothing about the complaint app
+    homeForbidden: /complaint|plumber|selfie|शिकायत|प्लंबर|सेल्फ़ी|तक्रार|सेल्फी|शिफ़्ट|शिफ्ट/i,
   },
 };
 
@@ -31,7 +33,7 @@ const fail = (site, message) => {
   console.error(`FAIL ${site}: ${message}`);
 };
 
-for (const [site, { dir, forbidden, required, legalForbidden }] of Object.entries(SITES)) {
+for (const [site, { dir, forbidden, required, legalForbidden, homeForbidden }] of Object.entries(SITES)) {
   const all = files(dir);
   const code = all.filter((f) => f.endsWith('.js')).map((f) => readFileSync(f, 'utf8')).join('\n');
   const i18n = Object.fromEntries(['en', 'hi', 'mr'].map((l) => [l, JSON.parse(readFileSync(join(dir, 'i18n', `${l}.json`), 'utf8'))]));
@@ -39,6 +41,11 @@ for (const [site, { dir, forbidden, required, legalForbidden }] of Object.entrie
   const text = code + pages + Object.values(i18n).map((j) => JSON.stringify(j)).join('\n');
 
   if (!all.some((f) => f === join(dir, 'index.html'))) fail(site, 'has no index.html');
+  for (const page of ['home.html', 'hi/index.html', 'mr/index.html']) {
+    const file = join(dir, page);
+    if (!all.includes(file)) fail(site, `has no ${page}`);
+    else if (homeForbidden?.test(readFileSync(file, 'utf8').replace(/शिकायत निवारण|तक्रार निवारण/g, ''))) fail(site, `${page} mentions ${homeForbidden}`);
+  }
   for (const page of ['legal', 'hi/legal', 'mr/legal']) {
     const file = join(dir, page, 'index.html');
     if (!all.includes(file)) fail(site, `has no ${page}/index.html`);

@@ -11,8 +11,8 @@
   <link rel="alternate" hreflang="mr" href="https://runwalltdfakepromises.com/mr/">
   <link rel="alternate" hreflang="x-default" href="https://runwalltdfakepromises.com/">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" content="#fbfcfa" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0b120d" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f4f7f8" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e141b" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -29,413 +29,110 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap">
-  <link rel="preload" as="image" href="/images/skyline.jpg" fetchpriority="high">
+  <link rel="stylesheet" href="{{fonts}}">
   <script type="application/ld+json">{{json_ld}}</script>
   <script>
     document.documentElement.classList.add('js');
-    {{theme_boot}}
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('still');
-    // already signed in on this phone: go straight to the app
+    // someone already signed in goes straight to their own home in the app
     try {
       const s = JSON.parse(localStorage.getItem('mycity.session') || 'null');
       if (s && new Date(s.expiresAt) > new Date()) location.replace('/start');
     } catch (e) {}
+    {{theme_boot}}
   </script>
   <style>
-    /* Hallmark · shape: scroll story, centred · genre: atmospheric · theme: brand · redesign: full
-     * paper: #0b120d night / #fbfcfa day · accent: #1b8233 · display: Noto Sans · body: Noto Sans + Noto Sans Devanagari · hero: full-screen towers, settling as you scroll · nav: edge-aligned over the photo · footer: two columns, legal line centred · signature: an example post filling in, promised then today, as you scroll
-     * axes: night/sans/green · posture: immersive · contrast: pass · fold: pass · v2.0.0 */
-    /* Hallmark · pre-emit critique: P4 H5 E4 S5 R4 V4 · weakest: E, the residents' own photos are not here yet; the post's photo frame is an honest slot for them */
-    /* Hallmark · dropped #why reasons grid and its four photos · replaced by the post story and the safety band; dropped #name earlier with the split layout */
-{{shared_css}}
-    :root {
-      --font-display: var(--font-body);
-      --text-mega: clamp(2.75rem, 6vw + 1rem, 6.5rem); --text-statement: clamp(1.5rem, 1.4vw + 1rem, 2.25rem); --text-section: clamp(2rem, 2.4vw + 1rem, 3.25rem);
-      --text-title: 1.375rem; --text-lead: clamp(1.125rem, 0.5vw + 1rem, 1.375rem); --text-body: 1.0625rem; --text-small: 0.9375rem;
-      --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px; --space-4xl: 144px;
-      --container: 1120px; --gutter: 32px; --radius-photo: 24px; --radius-panel: 18px; --radius-pill: 999px;
-      --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --dur-micro: 120ms; --dur-short: 240ms; --dur-long: 700ms;
-    }
-    @media (max-width: 40rem) { :root { --gutter: 20px; --space-4xl: 96px; --space-3xl: 64px; } }
-    *, *::before, *::after { box-sizing: border-box; }
-    [hidden] { display: none !important; }
-    ::selection { background: var(--color-accent); color: var(--color-accent-ink); }
-    html, body { overflow-x: clip; }
-    html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--header-h) + 16px); scrollbar-color: var(--surface-3) var(--surface); }
-    body { margin: 0; background: var(--surface); color: var(--on-surface); font: 400 var(--text-body)/1.6 var(--font-body); -webkit-font-smoothing: antialiased; }
-    h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; line-height: 1.08; letter-spacing: -0.025em; text-wrap: balance; overflow-wrap: break-word; min-width: 0; }
-    :lang(hi) :is(h1, h2, h3, .statement p), :lang(mr) :is(h1, h2, h3, .statement p) { letter-spacing: 0; line-height: 1.3; }
-    p { margin: 0; text-wrap: pretty; }
-    img { display: block; max-width: 100%; height: auto; }
-    a { color: inherit; text-underline-offset: 0.18em; }
-    :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
-    .container { width: 100%; max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
-    .center { text-align: center; }
-    .center > h2, .center > p { margin-inline: auto; }
-
-    .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 28px; border-radius: var(--radius-pill);
-      font: 600 var(--text-body)/1 var(--font-body); text-decoration: none; background: var(--color-accent); color: var(--color-accent-ink);
-      transition: transform var(--dur-micro) var(--ease-out), background-color var(--dur-short) var(--ease-out); touch-action: manipulation; }
-    .btn:hover { background: var(--color-accent-press); }
-    .btn:active { transform: scale(0.97); }
-    .btn.glass { background: var(--color-glass); color: var(--on-photo); }
-    .btn.glass:hover { background: var(--color-glass-strong); }
-    .actions { display: flex; justify-content: center; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-xl); }
-
-
-    /* scene 1: the towers settle as you scroll */
-    .hero { position: relative; }
-    .stick { position: relative; min-height: 100svh; overflow: hidden; display: grid; place-items: center; }
-    .hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; will-change: transform; }
-    .hero .shade { position: absolute; inset: 0; background: var(--color-scrim); opacity: 0.85; }
-    .hero .words { position: relative; z-index: 2; color: var(--on-photo); padding: 120px var(--gutter) 80px; }
-    .hero h1 { font-size: var(--text-mega); max-width: 14ch; margin-inline: auto; }
-    .hero .lead { font-size: var(--text-lead); max-width: 34ch; margin: var(--space-lg) auto 0; }
-
-    /* scene 2: the feeling, word by word */
-    .statement { position: relative; }
-    .statement .stick { background: var(--surface); }
-    .statement p { font-size: var(--text-statement); font-weight: 600; line-height: 1.25; letter-spacing: -0.015em; max-width: 36ch; margin-inline: auto; padding: var(--space-4xl) var(--gutter); text-align: center; }
-    .w { transition: color 300ms var(--ease-out); }
-    .js:not(.still) .statement .w { color: var(--unlit); }
-    .js:not(.still) .statement .w.lit { color: var(--on-surface); }
-
-    /* scene 3: an example post fills in */
-    /* every section is its own band: white and green alternate, so no two neighbours share a background */
-    .story .stick, .app, .safe, .site-foot { background: var(--surface-2); }
-    .statement .stick, .queue, .band2, #faq { background: var(--surface); }
-    .story .stick { align-content: center; padding-block: var(--space-3xl); }
-    .story h2 { font-size: var(--text-section); }
-    .story .intro { color: var(--on-surface-2); max-width: 44ch; margin-top: var(--space-md); }
-    .story-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); align-items: center; margin-top: var(--space-2xl); text-align: start; }
-    .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-lg); }
-    .steps li { transition: opacity var(--dur-short) var(--ease-out); }
-    .js:not(.still) .steps li { opacity: 0.32; }
-    .js:not(.still) .steps li.on { opacity: 1; }
-    .steps h3 { font-size: var(--text-title); margin-bottom: 4px; }
-    .steps p { color: var(--on-surface-2); }
-    .post { background: var(--surface); border-radius: var(--radius-panel); padding: var(--space-lg); display: grid; gap: var(--space-md); max-width: 460px; width: 100%; justify-self: center; }
-    .post-top { display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); font-size: var(--text-small); color: var(--on-surface-2); }
-    .tag { padding: 4px var(--space-sm); border-radius: var(--radius-pill); background: var(--surface-3); }
-    .field { display: grid; gap: 2px; transition: opacity var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out); }
-    .field b { font-size: var(--text-small); color: var(--muted); font-weight: 600; }
-    .field span { font-weight: 600; }
-    .frame { aspect-ratio: 4 / 3; border-radius: 12px; background: var(--surface-3); display: grid; place-items: center; color: var(--muted); font-size: var(--text-small); }
-    .js:not(.still) .post .field { opacity: 0; transform: translateY(8px); }
-    .js:not(.still) .post[data-step="0"] .f1, .js:not(.still) .post[data-step="1"] :is(.f1, .f2),
-    .js:not(.still) .post[data-step="2"] .field { opacity: 1; transform: none; }
-    .status .done { display: none; }
-    .js:not(.still) .post[data-step="2"] .status .wait { display: none; }
-    .js:not(.still) .post[data-step="2"] .status .done { display: inline; color: var(--link); }
-
-    /* the queue: one plumber, many flats; complaints wait in order and go to whoever frees up */
-    .queue { padding-block: 0; }
-    .queue .stick { align-content: center; padding-block: var(--space-2xl); }
-    .queue .intro { color: var(--on-surface-2); }
-    .board { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); margin-top: var(--space-xl); text-align: start; }
-    .board h3 { font-size: var(--text-small); font-weight: 600; color: var(--muted); letter-spacing: 0; margin: 0 0 var(--space-sm); }
-    .lane { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-sm); }
-    .card { position: relative; background: var(--surface-2); border-radius: var(--radius-panel); padding: var(--space-sm) var(--space-md); min-height: 64px; }
-    .card .title { font-weight: 600; }
-    .card .meta { font-size: var(--text-small); color: var(--on-surface-2); }
-    .badge { display: inline-block; margin-top: 4px; padding: 2px 10px; border-radius: var(--radius-pill); font-size: var(--text-small); font-weight: 600; }
-    .badge.go { background: var(--color-accent); color: var(--color-accent-ink); }
-    .badge.wait { background: var(--surface-3); color: var(--on-surface); }
-    .badge.free { background: var(--color-accent); color: var(--color-accent-ink); }
-    .badge.busy { background: var(--surface-3); color: var(--on-surface); }
-    .caption { margin: var(--space-lg) auto 0; max-width: 46ch; min-height: 3.2em; font-size: var(--text-lead); }
-    /* each part shows from one step to another; without motion only the final state shows */
-    .motion .queue [data-show] { transition: opacity var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out); }
-    .motion .queue [data-show]:not(.on) { opacity: 0; transform: translateY(6px); }
-    .motion .queue .caption[data-show]:not(.on) { display: none; }
-    html:not(.motion) .queue [data-show]:not([data-final]) { display: none; }
-    .slot { display: grid; }
-    .slot > * { grid-area: 1 / 1; justify-self: start; }
-    @media (min-width: 48rem) { .board { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2xl); } }
-    /* pinned on wider screens; on a phone the two lists are too tall to pin, so the steps follow the scroll past it */
-    @media (min-width: 48rem) {
-      .motion .queue { height: 320svh; }
-      .motion .queue > .stick { position: sticky; top: 0; height: 100svh; }
-    }
-
-    /* complaints, for the whole society: the app's own screens */
-    .app .intro { color: var(--on-surface-2); }
-    .device { position: relative; width: 100%; aspect-ratio: 1 / 2; border-radius: 42px; padding: 9px; background: var(--device); }
-    .device img { width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 34px; }
-    .fan { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-lg); align-items: end; max-width: 860px; margin-top: var(--space-3xl); }
-    .fan .device:nth-child(2) { transform: translateY(-48px); }
-    .walk { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); margin-top: var(--space-4xl); }
-    .wsteps { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3xl); }
-    .wstep h3 { font-size: clamp(1.75rem, 1.6vw + 1rem, 2.5rem); max-width: 22ch; }
-    .wstep p { color: var(--on-surface-2); font-size: var(--text-lead); max-width: 34ch; margin-top: var(--space-md); }
-    .wstep .device { max-width: 300px; margin: var(--space-xl) auto 0; }
-    .stage-col { display: none; }
-    .sample { margin-top: var(--space-3xl); font-size: var(--text-small); color: var(--on-surface-2); }
-    @media (min-width: 64rem) {
-      .walk { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3xl); }
-      .wsteps { gap: 0; }
-      .wstep { min-height: 80svh; display: grid; align-content: center; transition: opacity var(--dur-short) var(--ease-out); }
-      .js:not(.still) .wstep:not(.on) { opacity: 0.3; }
-      .wstep .device { display: none; }
-      .stage-col { display: block; }
-      .stage-col .device { position: sticky; top: calc(50svh - 330px); width: 330px; margin-inline: auto; }
-      .stage-col .device img { position: absolute; inset: 9px; width: calc(100% - 18px); height: calc(100% - 18px); opacity: 0; transition: opacity var(--dur-long) var(--ease-out); }
-      .stage-col .device img.on { opacity: 1; }
-    }
-
-    /* how it works */
-    section { padding-block: var(--space-4xl); }
-    section.statement, section.story { padding-block: 0; }
-    
-    h2 { font-size: var(--text-section); max-width: 22ch; }
-    .intro { max-width: 46ch; margin-top: var(--space-md); }
-    .band2 .intro { color: var(--on-surface-2); }
-    .tabs { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 4px; padding: 4px; margin-top: var(--space-xl); border-radius: var(--radius-pill); background: var(--surface-3); }
-    .tabs button { font: 600 var(--text-small)/1 var(--font-body); min-height: 44px; padding: 0 var(--space-md); border: 0; border-radius: var(--radius-pill); cursor: pointer;
-      background: transparent; color: var(--on-surface-2); transition: background-color var(--dur-short) var(--ease-out), color var(--dur-short) var(--ease-out), transform var(--dur-micro) var(--ease-out); }
-    .tabs button:hover { color: var(--on-surface); }
-    .tabs button:active { transform: scale(0.97); }
-    .tabs button[aria-selected="true"] { background: var(--surface); color: var(--on-surface); }
-    .slips { margin-top: var(--space-xl); display: grid; justify-items: center; gap: var(--space-lg); }
-    .slip { width: min(520px, 100%); text-align: start; background: var(--color-slip); color: var(--slip-ink); padding: var(--space-lg) var(--space-lg) 52px;
-      font-variant-numeric: tabular-nums; border-radius: var(--radius-panel) var(--radius-panel) 0 0; clip-path: polygon({{zigzag}}); }
-    .slip.show { animation: rise var(--dur-short) var(--ease-out) both; }
-    @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-    .slip h3 { font-size: var(--text-body); letter-spacing: 0; margin: var(--space-lg) 0 4px; }
-    .slip h3:first-child { margin-top: 0; }
-    .row { display: grid; grid-template-columns: minmax(0, max-content) minmax(20px, 1fr) max-content; gap: var(--space-xs); align-items: baseline; padding-block: 4px; }
-    .dots { overflow: hidden; white-space: nowrap; color: var(--color-dots); }
-    .dots::before { content: "· · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·"; }
-    .total { display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); min-height: 48px; margin: var(--space-lg) calc(-1 * var(--space-lg)) 0;
-      padding: var(--space-xs) var(--space-lg); background: var(--color-deep); color: var(--color-on-deep); font-weight: 600; }
-
-    /* safety: three equal promises the platform keeps */
-    .safe .trio { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); margin-top: var(--space-2xl); }
-    .safe .trio > div { border-radius: var(--radius-panel); background: var(--surface); overflow: hidden; text-align: start; }
-    .safe .trio img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
-    .safe .trio .say { padding: var(--space-lg); }
-    .safe h3 { font-size: var(--text-title); margin-bottom: var(--space-sm); }
-    .safe .trio p { color: var(--on-surface-2); }
-
-    /* scene 4: the photograph moves slower than the page */
-    .home { position: relative; height: 85svh; min-height: 520px; overflow: hidden; display: grid; place-items: center; padding: 0; }
-    .home img { position: absolute; inset: -12% 0; width: 100%; height: 124%; object-fit: cover; will-change: transform; }
-    .home .shade { position: absolute; inset: 0; background: var(--color-scrim); }
-    .home p { position: relative; z-index: 2; color: var(--on-photo); font-size: var(--text-statement); font-weight: 600; line-height: 1.2; max-width: 22ch; text-align: center; padding-inline: var(--gutter); }
-
-    /* questions */
-    .facts { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-xs); margin: var(--space-lg) 0 0; padding: 0; }
-    .facts li { padding: var(--space-xs) var(--space-md); border-radius: var(--radius-pill); background: var(--surface-3); font-size: var(--text-small); color: var(--on-surface-2); }
-    .qa { max-width: 760px; margin: var(--space-2xl) auto 0; display: grid; gap: var(--space-sm); text-align: start; }
-    details { background: var(--surface-2); border-radius: var(--radius-panel); }
-    summary { min-height: 60px; display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding: var(--space-sm) var(--space-lg);
-      cursor: pointer; list-style: none; font-weight: 600; border-radius: var(--radius-panel); }
-    summary::-webkit-details-marker { display: none; }
-    summary::after { content: ""; flex: none; width: 9px; height: 9px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
-      transform: translateY(-2px) rotate(45deg); transition: transform var(--dur-short) var(--ease-out); }
-    details[open] summary::after { transform: translateY(2px) rotate(225deg); }
-    details p { padding: 0 var(--space-lg) var(--space-lg); color: var(--on-surface-2); max-width: 64ch; }
-
-    .join { position: relative; overflow: hidden; background: var(--color-deep); color: var(--color-on-deep); }
-    .join > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-    .join > .shade { position: absolute; inset: 0; background: var(--color-scrim-strong); }
-    .join > .container { position: relative; z-index: 2; }
-    .join h2 { font-size: var(--text-mega); max-width: 14ch; }
-    .join .note { margin-top: var(--space-md); font-size: var(--text-small); }
-    .join .btn { background: var(--color-on-deep); color: var(--color-deep); }
-    .join .btn:hover { background: var(--on-photo); }
-
-
-    @media (min-width: 48rem) {
-      .story-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3xl); }
-      .safe .trio { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-lg); }
-    }
-    /* the scroll scenes get their length only when motion is welcome; otherwise every section is one plain screen */
-    .js:not(.still) .hero { height: 170svh; }
-    .js:not(.still) .statement { height: 200svh; }
-    .js:not(.still) .story { height: 260svh; }
-    .js:not(.still) :is(.hero, .statement, .story) > .stick { position: sticky; top: 0; height: 100svh; min-height: 0; }
-    /* on a phone the post is taller than the screen: the story is a plain section there, everything shown */
-    @media (max-width: 47.99rem) {
-      .js:not(.still) .story { height: auto; }
-      .js:not(.still) .story > .stick { position: relative; height: auto; }
-      .js:not(.still) .story .steps li { opacity: 1; }
-      .js:not(.still) .story .post .field { opacity: 1; transform: none; }
-      .story-grid { margin-top: var(--space-xl); gap: var(--space-xl); }
-    }
-    /* entrances: hidden only once Motion has loaded and will reveal them */
-    .motion [data-rise] > * { opacity: 0; }
-    @media (prefers-reduced-motion: reduce) {
-      .slip.show { animation: none; }
-      .btn, .tabs button, summary::after, .w, .steps li, .field { transition: none; }
-    }
+{{css}}
   </style>
 </head>
 <body>
   {{header}}
 
   <main id="main">
-    <div class="hero" data-scene="hero">
-      <div class="stick">
-        <img src="/images/skyline.jpg" width="1200" height="675" alt="{{alt_skyline}}" fetchpriority="high">
-        <div class="shade"></div>
-        <div class="words center">
+    <section class="hero">
+      <div class="container">
+        <div>
           <h1>{{h1}}</h1>
           <p class="lead">{{lead}}</p>
           <div class="actions">
+            <a class="btn btn--primary" href="/public">{{nav_posts}}</a>
             <a class="btn" href="/login">{{cta_voice}}</a>
-            <a class="btn glass" href="/public">{{nav_posts}}</a>
-            <a class="btn glass" href="#complaints">{{nav_app}}</a>
           </div>
         </div>
+        <figure class="plate crop"><img src="/images/skyline.jpg" width="1200" height="675" alt="{{alt_skyline}}" fetchpriority="high"></figure>
       </div>
-    </div>
-
-    <section class="statement" data-scene="words" aria-label="{{h1}}">
-      <div class="stick"><p>{{statement}}</p></div>
     </section>
 
-    <section class="story" data-scene="story" aria-labelledby="story-title">
-      <div class="stick">
-        <div class="container center">
-          <h2 id="story-title">{{story_title}}</h2>
-          <p class="intro">{{story_intro}}</p>
-          <div class="story-grid">
-            <ol class="steps">
-              <li class="on"><h3>{{s1_t}}</h3><p>{{s1_d}}</p></li>
-              <li><h3>{{s2_t}}</h3><p>{{s2_d}}</p></li>
-              <li><h3>{{s3_t}}</h3><p>{{s3_d}}</p></li>
-            </ol>
-            <div class="post" data-step="0">
-              <div class="post-top"><span class="tag">{{card_title}}</span><span class="status"><span class="wait">{{card_status}}</span><span class="done">{{card_published}}</span></span></div>
-              <div class="field f1"><b>{{card_promised_l}}</b><span>{{card_promised}}</span><b>{{card_source_l}}</b><span>{{card_source}}</span></div>
-              <div class="field f2"><b>{{card_today_l}}</b><div class="frame">{{card_photo}}</div></div>
-              <div class="field f3"><b>{{card_seen_l}}</b><span>{{card_seen}}</span></div>
-            </div>
-          </div>
+    <section class="band say-band" aria-label="{{h1}}">
+      <div class="container"><p class="say">{{statement}}</p></div>
+    </section>
+
+    <section class="band record" id="record" aria-labelledby="record-title">
+      <div class="container">
+        <h2 id="record-title">{{story_title}}</h2>
+        <p class="intro">{{story_intro}}</p>
+        <div class="bench">
+          <ol class="stages">
+            <li><button class="stage" type="button" data-stage="0" aria-pressed="true"><strong>{{s1_t}}</strong><span>{{s1_d}}</span></button></li>
+            <li><button class="stage" type="button" data-stage="1" aria-pressed="false"><strong>{{s2_t}}</strong><span>{{s2_d}}</span></button></li>
+            <li><button class="stage" type="button" data-stage="2" aria-pressed="false"><strong>{{s3_t}}</strong><span>{{s3_d}}</span></button></li>
+          </ol>
+          <article class="sheet crop" data-step="0" aria-label="{{card_title}}">
+            <div class="sheet-top"><span>{{card_title}}</span><span class="sheet-state" id="sheet-state" role="status" data-wait="{{card_status}}" data-done="{{card_published}}">{{card_status}}</span></div>
+            <dl>
+              <div class="field f1"><dt>{{card_promised_l}}</dt><dd>{{card_promised}}</dd><dt>{{card_source_l}}</dt><dd>{{card_source}}</dd></div>
+              <div class="field f2"><dt>{{card_today_l}}</dt><dd><div class="frame">{{card_photo}}</div></dd></div>
+              <div class="field f3"><dt>{{card_seen_l}}</dt><dd>{{card_seen}}</dd></div>
+            </dl>
+          </article>
         </div>
       </div>
     </section>
 
-    <section class="queue" data-scene="queue" aria-labelledby="queue-title">
-      <div class="stick">
-        <div class="container center">
-          <h2 id="queue-title">{{q_title}}</h2>
-          <p class="intro">{{q_intro}}</p>
-          <div class="board">
-            <div>
-              <h3>{{q_waiting}}</h3>
-              <ul class="lane">
-                <li class="card"><p class="title">{{q_job_lift}}</p><p class="meta">{{q_lift}}</p>
-                  <span class="badge go" data-show="1" data-final>{{q_to_lift}}</span></li>
-                <li class="card"><p class="title">{{q_job_light}}</p><p class="meta">{{q_electrician}}</p>
-                  <span class="badge go" data-show="1" data-final>{{q_to_electrician}}</span></li>
-                <li class="card"><p class="title">{{q_job_leak}}</p><p class="meta">{{q_plumber}}</p>
-                  <div class="slot"><span class="badge wait" data-show="2" data-hide="3">{{q_wait}}</span>
-                  <span class="badge go" data-show="3" data-final>{{q_to_plumber}}</span></div></li>
-              </ul>
-            </div>
-            <div>
-              <h3>{{q_staff}}</h3>
-              <ul class="lane">
-                <li class="card"><p class="title">{{q_lift}}</p>
-                  <div class="slot"><span class="badge free" data-show="0" data-hide="1">{{q_free}}</span>
-                  <span class="badge busy" data-show="1" data-final>{{q_busy}}: {{q_job_lift}}</span></div></li>
-                <li class="card"><p class="title">{{q_electrician}}</p>
-                  <div class="slot"><span class="badge free" data-show="0" data-hide="1">{{q_free}}</span>
-                  <span class="badge busy" data-show="1" data-final>{{q_busy}}: {{q_job_light}}</span></div></li>
-                <li class="card"><p class="title">{{q_plumber}}</p>
-                  <div class="slot"><span class="badge busy" data-show="0" data-hide="3">{{q_busy}}: {{q_job_old}}</span>
-                  <span class="badge busy" data-show="3" data-final>{{q_busy}}: {{q_job_leak}}</span></div></li>
-              </ul>
-            </div>
-          </div>
-          <p class="caption" data-show="0" data-hide="1">{{q_s0}}</p>
-          <p class="caption" data-show="1" data-hide="2">{{q_s1}}</p>
-          <p class="caption" data-show="2" data-hide="3">{{q_s2}}</p>
-          <p class="caption" data-show="3" data-final>{{q_s3}}</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="app" id="complaints" aria-labelledby="app-title">
-      <div class="container center" data-rise>
-        <h2 id="app-title">{{app_title}}</h2>
-        <p class="intro">{{app_intro}}</p>
-      </div>
-      <div class="container fan" aria-hidden="true">
-        <div class="device"><img src="/images/app/{{lang}}/raise.jpg" width="780" height="1560" alt="" loading="lazy"></div>
-        <div class="device"><img src="/images/app/{{lang}}/complaint.jpg" width="780" height="1560" alt="" loading="lazy"></div>
-        <div class="device"><img src="/images/app/{{lang}}/jobs.jpg" width="780" height="1560" alt="" loading="lazy"></div>
-      </div>
-      <div class="container walk">
-        <ol class="wsteps">
-          {{walk_steps}}
-        </ol>
-        <div class="stage-col" aria-hidden="true"><div class="device">{{walk_screens}}</div></div>
-      </div>
-      <p class="container center sample">{{app_sample}}</p>
-    </section>
-
-    <section class="band2" id="how" aria-labelledby="how-title">
-      <div class="container center" data-rise>
-        <h2 id="how-title">{{how_title}}</h2>
-        <p class="intro">{{how_intro}}</p>
-        <div class="tabs" role="tablist" aria-label="{{how_title}}">
-          <button type="button" role="tab" id="tab-complaint" aria-controls="slip-complaint" aria-selected="true">{{tab_complaint}}</button>
-          <button type="button" role="tab" id="tab-feed" aria-controls="slip-feed" aria-selected="false" tabindex="-1">{{tab_feed}}</button>
-          <button type="button" role="tab" id="tab-staff" aria-controls="slip-staff" aria-selected="false" tabindex="-1">{{tab_staff}}</button>
-        </div>
-        <div class="slips">
-          {{slips}}
-        </div>
-      </div>
-    </section>
-
-    <section class="safe" id="why" aria-labelledby="safe-title">
-      <div class="container center" data-rise>
+    <section class="band" id="why" aria-labelledby="safe-title">
+      <div class="container">
         <h2 id="safe-title">{{nav_why}}</h2>
-        <div class="trio">
-          <div><img src="/images/podium-seating.jpg" width="1200" height="675" alt="{{alt_podium}}" loading="lazy"><div class="say"><h3>{{p1_t}}</h3><p>{{p1_d}}</p></div></div>
-          <div><img src="/images/lawn-clubhouse.jpg" width="1200" height="587" alt="{{alt_clubhouse}}" loading="lazy"><div class="say"><h3>{{p2_t}}</h3><p>{{p2_d}}</p></div></div>
-          <div><img src="/images/playground.jpg" width="1200" height="875" alt="{{alt_playground}}" loading="lazy"><div class="say"><h3>{{p3_t}}</h3><p>{{p3_d}}</p></div></div>
+        <ul class="index">
+          <li><h3>{{p1_t}}</h3><p>{{p1_d}}</p><figure class="plate"><img src="/images/podium-seating.jpg" width="1200" height="675" alt="{{alt_podium}}" loading="lazy"></figure></li>
+          <li><h3>{{p2_t}}</h3><p>{{p2_d}}</p><figure class="plate"><img src="/images/lawn-clubhouse.jpg" width="1200" height="587" alt="{{alt_clubhouse}}" loading="lazy"></figure></li>
+          <li><h3>{{p3_t}}</h3><p>{{p3_d}}</p><figure class="plate"><img src="/images/playground.jpg" width="1200" height="875" alt="{{alt_playground}}" loading="lazy"></figure></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="band rules" id="rules" aria-labelledby="rules-title">
+      <div class="container">
+        <h2 id="rules-title">{{rules_title}}</h2>
+        <div class="rule-grid">
+          <div><h3>{{rules_keep}}</h3><ul>{{rules_keep_items}}</ul></div>
+          <div><h3>{{rules_drop}}</h3><ul>{{rules_drop_items}}</ul></div>
         </div>
       </div>
     </section>
 
-    <section class="home" data-scene="drift" aria-label="{{band_line}}">
-      <img src="/images/garden.jpg" width="1200" height="675" alt="{{alt_garden}}" loading="lazy">
-      <div class="shade"></div>
-      <p>{{band_line}}</p>
+    <section class="home" aria-label="{{band_line}}">
+      <div class="container">
+        <p class="say">{{band_line}}</p>
+        <figure class="plate crop"><img src="/images/garden.jpg" width="1200" height="675" alt="{{alt_garden}}" loading="lazy"></figure>
+      </div>
     </section>
 
-    <section id="faq" aria-labelledby="faq-title">
-      <div class="container center" data-rise>
+    <section class="band" id="faq" aria-labelledby="faq-title">
+      <div class="container">
         <h2 id="faq-title">{{faq_title}}</h2>
-        <ul class="facts">
-          <li>{{fact_1}}</li>
-          <li>{{fact_2}}</li>
-          <li>{{fact_3}}</li>
-        </ul>
         <div class="qa">
           <details><summary>{{q1}}</summary><p>{{a1}}</p></details>
           <details><summary>{{q2}}</summary><p>{{a2}}</p></details>
           <details><summary>{{q3}}</summary><p>{{a3}}</p></details>
           <details><summary>{{q4}}</summary><p>{{a4}}</p></details>
-          <details><summary>{{q5}}</summary><p>{{a5}}</p></details>
         </div>
       </div>
     </section>
 
-    <section class="join" aria-labelledby="join-title">
-      <img src="/images/towers-courtyard.jpg" width="1200" height="875" alt="{{alt_towers}}" loading="lazy">
-      <div class="shade"></div>
-      <div class="container center" data-rise>
+    <section class="band join" aria-labelledby="join-title">
+      <div class="container">
         <h2 id="join-title">{{join_title}}</h2>
         <p class="intro">{{join_text}}</p>
-        <div class="actions"><a class="btn" href="/login">{{cta_signin}}</a></div>
-        <p class="note">{{signin_note}}</p>
+        <div class="actions"><a class="btn btn--primary" href="/login">{{cta_signin}}</a></div>
       </div>
     </section>
   </main>
@@ -443,94 +140,18 @@
   {{footer}}
 
   <script>{{shared_js}}</script>
-  <script src="/vendor/motion.js"></script>
   <script>
-    // the live thing: each tab prints its own slip (without script all three slips show, one under another)
-    const tabs = [...document.querySelectorAll('[role=tab]')];
-    function pick(tab) {
-      tabs.forEach((t) => {
-        const on = t === tab;
-        t.setAttribute('aria-selected', on);
-        t.tabIndex = on ? 0 : -1;
-        const slip = document.getElementById(t.getAttribute('aria-controls'));
-        slip.hidden = !on;
-        slip.classList.toggle('show', on);
-      });
-    }
-    tabs.forEach((t, i) => {
-      t.addEventListener('click', () => pick(t));
-      t.addEventListener('keydown', (e) => {
-        const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
-        if (d) { const n = tabs[(i + d + tabs.length) % tabs.length]; n.focus(); pick(n); }
-      });
-    });
-    tabs.slice(1).forEach((t) => { document.getElementById(t.getAttribute('aria-controls')).hidden = true; });
-
-    // everything that moves is driven by Motion (motion.dev), only when motion is welcome
-    if (window.Motion && !document.documentElement.classList.contains('still')) {
-      const { animate, scroll, inView, stagger } = Motion;
-      const $ = (q, el = document) => el.querySelector(q);
-      const $$ = (q, el = document) => [...el.querySelectorAll(q)];
-      document.documentElement.classList.add('motion');
-
-      // the parts of each plain section rise in turn, on a spring, once
-      inView('[data-rise]', (el) => {
-        try {
-          animate([...el.children], { opacity: [0, 1], y: [28, 0] }, { delay: stagger(0.08), type: 'spring', bounce: 0, duration: 0.9 });
-        } catch (e) {
-          document.documentElement.classList.remove('motion'); // never leave content hidden
-        }
-      }, { margin: '0px 0px -10% 0px' });
-
-      // scene 1: the towers settle and the words leave as you scroll
-      const hero = $('.hero');
-      scroll(animate($('img', hero), { scale: [1.18, 1] }, { ease: 'linear' }), { target: hero, offset: ['start start', 'end start'] });
-      scroll(animate($('.words', hero), { opacity: [1, 0], y: [0, -90] }, { ease: 'linear' }), { target: hero, offset: ['start start', '55% start'] });
-
-      // scene 2: the sentence lights up word by word
-      const words = $$('.statement .w');
-      scroll((p) => { const lit = Math.ceil(Math.min(1, p * 1.3) * words.length); words.forEach((w, i) => w.classList.toggle('lit', i < lit)); },
-        { target: $('.statement'), offset: ['start start', 'end end'] });
-
-      // scene 3: the example post fills in
-      const post = $('.post'), steps = $$('.steps li');
-      scroll((p) => {
-        const step = String(Math.min(2, Math.floor(p * 3)));
-        if (post.dataset.step !== step) { post.dataset.step = step; steps.forEach((li, i) => li.classList.toggle('on', String(i) === step)); }
-      }, { target: $('.story'), offset: ['start start', 'end end'] });
-
-      // the queue: complaints go to staff as they free up, one step per stretch of scroll
-      const queue = $('.queue'), parts = $$('[data-show]', queue);
-      let queueStep = -1;
-      const showStep = (step) => {
-        if (step === queueStep) return;
-        queueStep = step;
-        parts.forEach((el) => {
-          const from = Number(el.dataset.show), until = el.dataset.hide === undefined ? Infinity : Number(el.dataset.hide);
-          el.classList.toggle('on', step >= from && step < until);
+    // the example post: each stage shows its part of the sheet (without script the whole sheet shows)
+    (function () {
+      var stages = [].slice.call(document.querySelectorAll('.stage')), sheet = document.querySelector('.sheet'), state = document.getElementById('sheet-state');
+      stages.forEach(function (b) {
+        b.addEventListener('click', function () {
+          stages.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+          sheet.dataset.step = b.dataset.stage;
+          state.textContent = b.dataset.stage === '2' ? state.dataset.done : state.dataset.wait;
         });
-      };
-      showStep(0);
-      const pinned = matchMedia('(min-width: 48rem)').matches;
-      scroll((p) => showStep(Math.min(3, Math.floor(p * 4))),
-        { target: queue, offset: pinned ? ['start start', 'end end'] : ['start 0.6', 'end 0.9'] });
-
-      // the three phones drift at their own speeds
-      $$('.fan .device').forEach((d, i) => {
-        scroll(animate(d, { y: [[140, 60, 180][i], [-20, -80, -40][i]] }, { ease: 'linear' }), { target: $('.fan'), offset: ['start end', 'end start'] });
       });
-
-      // the walkthrough: the phone shows the screen of the step in the middle of the screen
-      const wsteps = $$('.wstep'), screens = $$('.stage-col img');
-      wsteps.forEach((li, i) => inView(li, () => {
-        wsteps.forEach((x) => x.classList.toggle('on', x === li));
-        screens.forEach((img, j) => img.classList.toggle('on', j === i));
-      }, { amount: 0.6 }));
-
-      // scene 4: the garden moves slower than the page
-      const home = $('.home');
-      scroll(animate($('img', home), { y: ['-8%', '8%'] }, { ease: 'linear' }), { target: home, offset: ['start end', 'end start'] });
-    }
+    })();
   </script>
 </body>
 </html>

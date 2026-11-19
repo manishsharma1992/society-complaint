@@ -1,2 +1,8 @@
 User-agent: *
+Allow: /$
+Allow: /hi/$
+Allow: /mr/$
+Allow: /images/
+Allow: /favicon.svg
 Disallow: /
+Sitemap: https://gardencityseva.com/sitemap.xml

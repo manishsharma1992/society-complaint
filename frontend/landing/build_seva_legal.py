@@ -49,7 +49,7 @@ PAGE = """<!doctype html>
 </head>
 <body>
   <header>
-    <a class="brand" href="/login">Garden City Seva</a>
+    <a class="brand" href="{home}">Garden City Seva</a>
     <nav class="tools" aria-label="{title}">{langs}<a href="/login">{signin}</a></nav>
   </header>
   <main>
@@ -76,7 +76,7 @@ def render(lang):
     toc = "".join(f'<li><a href="#{sid}">{e(title)}</a></li>' for sid, title, _ in LEGAL[lang])
     sections = "\n    ".join(f'<section id="{sid}" aria-labelledby="{sid}-h"><h2 id="{sid}-h">{e(title)}</h2>{md(body)}</section>'
                              for sid, title, body in LEGAL[lang])
-    return PAGE.format(lang=lang, title=e(ui["title"]), meta=e(ui["meta"]), signin=e(ui["signin"]), updated=e(ui["updated"]),
+    return PAGE.format(lang=lang, home="/" if lang == "en" else f"/{lang}/", title=e(ui["title"]), meta=e(ui["meta"]), signin=e(ui["signin"]), updated=e(ui["updated"]),
                        langs=langs, note=note, toc=toc, sections=sections)
 
 

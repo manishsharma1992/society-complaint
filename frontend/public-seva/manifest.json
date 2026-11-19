@@ -9,7 +9,7 @@
   "background_color": "#F4F0E8",
   "display": "standalone",
   "short_name": "GC Seva",
-  "start_url": "/",
+  "start_url": "/start",
   "scope": "/",
   "lang": "en"
 }

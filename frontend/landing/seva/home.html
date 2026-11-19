@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="{{lang}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{meta_title}}</title>
+  <meta name="description" content="{{meta_description}}">
+  <link rel="canonical" href="{{site}}{{path}}">
+  <link rel="alternate" hreflang="en" href="{{site}}/">
+  <link rel="alternate" hreflang="hi" href="{{site}}/hi/">
+  <link rel="alternate" hreflang="mr" href="{{site}}/mr/">
+  <link rel="alternate" hreflang="x-default" href="{{site}}/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Garden City Seva">
+  <meta property="og:locale" content="{{og_locale}}">
+  <meta property="og:title" content="{{meta_title}}">
+  <meta property="og:description" content="{{meta_description}}">
+  <meta property="og:url" content="{{site}}{{path}}">
+  <meta property="og:image" content="{{site}}/images/towers-courtyard.jpg">
+  <meta name="theme-color" content="#eef0f3">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <script>
+    // someone already signed in goes straight to their own home in the app; this page remembers the language chosen
+    try {
+      var s = JSON.parse(localStorage.getItem('mycity.session') || 'null');
+      if (s && new Date(s.expiresAt) > new Date()) location.replace('/start');
+      localStorage.setItem('mycity.lang', '{{lang}}');
+    } catch (e) {}
+    document.documentElement.classList.add('js');
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo+Mono:wght@400;500;800&family=Noto+Sans+Devanagari:wght@400;500;800&display=swap">
+  <style>
+{{css}}
+  </style>
+  <script type="application/ld+json">{{json_ld}}</script>
+</head>
+<body>
+  <a class="skip" href="#main">{{skip}}</a>
+  <header class="slab">
+    <div class="container">
+      <a class="brand" href="{{path}}">{{logo}}<span>Garden City Seva</span></a>
+      <div class="tools">
+        <nav class="langs" aria-label="{{language}}">{{langs}}</nav>
+        <a class="btn" href="/login">{{signin}}</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="container">
+        <div>
+          <h1>{{h1}}</h1>
+          <p class="lead">{{lead}}</p>
+          <div class="actions">
+            <a class="btn btn--primary" href="/login">{{cta}}</a>
+            <a class="btn" href="#try">{{cta_try}}</a>
+          </div>
+        </div>
+        <figure class="place">
+          <img src="/images/towers-courtyard.jpg" width="1200" height="875" alt="{{photo_alt}}" fetchpriority="high">
+          <figcaption>{{photo_plate}}</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="band" id="try" aria-labelledby="try-title">
+      <div class="container">
+        <h2 id="try-title">{{try_title}}</h2>
+        <p class="intro">{{try_intro}}</p>
+        <div class="run">
+          <div class="needs-js">
+            <fieldset class="picks">
+              <legend>{{pick_legend}}</legend>
+              {{picks}}
+            </fieldset>
+            <button class="btn btn--primary advance" type="button" id="advance">{{first_action}}</button>
+          </div>
+          <article class="slip on-ink" aria-labelledby="slip-title">
+            <div class="slip-top"><span>{{slip_label}}</span><span class="slip-state needs-js" id="slip-state">{{slip_unsent}}</span></div>
+            <h3 id="slip-title">{{first_title}}</h3>
+            <dl class="facts">
+              <div><dt>{{slip_where}}</dt><dd id="slip-where">{{first_where}}</dd></div>
+              <div><dt>{{slip_cat}}</dt><dd id="slip-cat">{{first_cat}}</dd></div>
+              <div><dt>{{slip_who}}</dt><dd id="slip-who">{{first_who}}</dd></div>
+            </dl>
+            <ol class="route" aria-label="{{route_label}}">{{route}}</ol>
+            <p class="note needs-js" id="slip-note" role="status"></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band on-ink" aria-labelledby="queue-title">
+      <div class="container">
+        <h2 id="queue-title">{{q_title}}</h2>
+        <p class="intro">{{q_intro}}</p>
+        <div class="board">
+          <p class="board-cap"><span>{{q_sample}}</span></p>
+          <div class="row head" aria-hidden="true"><span>{{q_head_job}}</span><span>{{q_head_by}}</span><span>{{q_head_state}}</span></div>
+          <ul>{{board}}</ul>
+          <div class="board-foot">
+            <button class="btn needs-js" type="button" id="finish">{{q_btn}}</button>
+            <p id="board-note" role="status">{{q_wait}}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="band" aria-labelledby="join-title">
+      <div class="container">
+        <h2 id="join-title">{{join_title}}</h2>
+        <p class="intro">{{join_intro}}</p>
+        <ol class="plates">{{plates}}</ol>
+      </div>
+    </section>
+
+    <section class="band" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">{{faq_title}}</h2>
+        <div class="rows">{{faq}}</div>
+      </div>
+    </section>
+
+    <section class="band close" aria-labelledby="close-title">
+      <div class="container">
+        <h2 id="close-title">{{close_title}}</h2>
+        <a class="btn btn--primary" href="/login">{{cta}}</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="container">
+      <div>
+        <p><strong>Garden City Seva</strong></p>
+        <p>{{foot_place}}</p>
+      </div>
+      <nav aria-labelledby="foot-legal">
+        <h2 id="foot-legal">{{foot_legal}}</h2>
+        <ul>
+          <li><a href="{{legal}}#privacy">{{foot_privacy}}</a></li>
+          <li><a href="{{legal}}#terms">{{foot_terms}}</a></li>
+          <li><a href="{{legal}}#grievance">{{foot_grievance}}</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+
+  <script type="application/json" id="demo">{{demo}}</script>
+  <script>
+    (function () {
+      var d = JSON.parse(document.getElementById('demo').textContent);
+      var $ = function (id) { return document.getElementById(id); };
+      var radios = [].slice.call(document.querySelectorAll('input[name=problem]'));
+      var stops = [].slice.call(document.querySelectorAll('.stop'));
+      var step = -1; // -1: not sent yet; 0 to 4: the stops of the route
+
+      function problem() { return d.problems[radios.findIndex(function (r) { return r.checked; })]; }
+      function render() {
+        var p = problem();
+        $('slip-title').textContent = p.title;
+        $('slip-where').textContent = p.where;
+        $('slip-cat').textContent = p.cat;
+        $('slip-who').textContent = p.who;
+        $('slip-state').textContent = step < 0 ? d.unsent : d.stops[step].status;
+        $('slip-note').textContent = step < 0 ? '' : d.stops[step].note.replace('{who}', p.who.toLowerCase());
+        $('advance').textContent = step === d.stops.length - 1 ? d.again : d.stops[step + 1].next;
+        stops.forEach(function (s, i) {
+          s.classList.toggle('done', i < step);
+          if (i === step) s.setAttribute('aria-current', 'step'); else s.removeAttribute('aria-current');
+        });
+        // the problem is chosen before sending, and stays the same on its way through
+        radios.forEach(function (r) { r.disabled = step >= 0; });
+      }
+      radios.forEach(function (r) { r.addEventListener('change', render); });
+      $('advance').addEventListener('click', function () {
+        step = step === d.stops.length - 1 ? -1 : step + 1;
+        render();
+      });
+      render();
+
+      var leak = document.querySelector('[data-row=leak]'), finished = false;
+      $('finish').addEventListener('click', function () {
+        finished = !finished;
+        leak.classList.toggle('waiting', !finished);
+        leak.querySelector('.state').textContent = finished ? d.doneState : d.waitState;
+        $('board-note').textContent = finished ? d.done : d.wait;
+        this.textContent = finished ? d.reset : d.finish;
+      });
+    })();
+  </script>
+</body>
+</html>
