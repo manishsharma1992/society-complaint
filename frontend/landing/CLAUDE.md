@@ -18,6 +18,9 @@
   (a small Markdown subset; English prevails, hi and mr are translations and say so). Courts: Thane. The Privacy
   Policy must list everything the app stores; update it with any new personal data. The Grievance Officer's details
   are "To be announced" until the owner names one. The footer links every section.
+- Garden City Seva has its own legal pages (Terms of Use, Privacy Policy, Grievance Redressal) at the same three addresses:
+  edit `landing/legal_texts_seva.py`, run `python3 frontend/landing/build_seva_legal.py`, commit its outputs in `public-seva/`.
+  Each site's Privacy Policy lists only what that site stores. The sign-in and Help screens link to them (`shared/legal-links.ts`).
 - One header and one footer for the homepage and the legal pages: `landing/shared.css` plus `header()` and `footer()`
   in `build_landing.py`; change them there, never per page. The header is fixed (clear over the homepage photo,
   a frosted bar once the page scrolls, solid when transparency is reduced); pages keep `scroll-padding-top` so

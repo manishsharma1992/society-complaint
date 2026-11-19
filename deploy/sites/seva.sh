@@ -8,4 +8,4 @@ EXTRA_PACKAGES=
 # staff clock in and out with a selfie and their position
 PERMISSIONS="geolocation=(self), camera=(self), microphone=(), payment=()"
 # pages the deploy checks afterwards
-PAGES="/ /login /complaints/7 /i18n/mr.json"
+PAGES="/ /login /legal/ /complaints/7 /i18n/mr.json"

@@ -310,5 +310,11 @@
     "SAD": "Sad",
     "ANGRY": "Angry",
     "failed": "Your reaction could not be saved. Try again."
+  },
+  "legal": {
+    "title": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "grievance": "Grievance Redressal"
   }
 }

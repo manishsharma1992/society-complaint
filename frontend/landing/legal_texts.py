@@ -3,7 +3,7 @@ paragraphs, "- " lists, "1. " lists with "   - " sub-items, **bold**. English pr
 Have every change reviewed by the lawyer before it goes live.
 """
 
-UPDATED = {"en": "Last updated: 8 November 2026", "hi": "अंतिम अपडेट: 8 नवंबर 2026", "mr": "शेवटचा बदल: 8 नोव्हेंबर 2026"}
+UPDATED = {"en": "Last updated: 19 November 2026", "hi": "अंतिम अपडेट: 19 नवंबर 2026", "mr": "शेवटचा बदल: 19 नोव्हेंबर 2026"}
 
 UI = {
     "en": {"legal_title": "Legal", "legal_note": "", "legal_note_link": "", "back_home": "Back to the homepage",
@@ -48,24 +48,23 @@ By using this website you agree to the following:
 8. **Governing law**: These terms are governed by the laws of India. Courts in Thane shall have jurisdiction.
 """),
         ("privacy", "Privacy Policy", """
-This website collects limited personal data: only what is needed to verify that a user is a resident or staff member of the project, and to run the complaint and feed features.
+This website collects limited personal data: only what is needed to verify that a user is a resident of the project, and to run the feed.
 
 **Data collected**:
 
 - Mobile number (for OTP sign-in and admin approval)
-- Your name and your flat (for approval, and so that complaints reach the right tower)
-- Content you voluntarily post: the text and photographs of complaints and feed posts
-- For maintenance staff only: a selfie and the phone’s location when a shift starts and ends
+- Your name and your flat (for approval)
+- Content you voluntarily post: the text, photographs and videos of feed posts
 
-**Purpose**: Resident verification, moderation, handling complaints, and confirming staff shifts. Mobile numbers are visible only to designated society administrators for approval and are not published publicly. Other residents see names only; feed posts are shown as “Verified resident”, never with your name.
+**Purpose**: Resident verification and moderation. Mobile numbers are visible only to designated society administrators for approval and are not published publicly. Other residents see names only; feed posts are shown as “Verified resident”, never with your name.
 
 **Legal basis**: Consent and legitimate use for community verification (Digital Personal Data Protection Act, 2023).
 
-**Where it is stored**: On servers in Singapore (the database on Neon, photographs on Amazon Web Services Lightsail), with access limited to the website operators.
+**Where it is stored**: On servers in Singapore (the database on Neon, photographs and videos on Amazon Web Services Lightsail), with access limited to the website operators.
 
-**Translation**: When someone taps “Translate” on a feed post or a complaint, its text (title, description and comments) is sent to a machine translation service only to translate it: Google Cloud Translation for Marathi, Amazon Translate (Singapore) for English and Hindi. Only the text is sent, never photographs, or the name and mobile number from your account. These services may process the text outside India. Translations of published feed posts are kept with the post; translations of complaints are not stored. Please do not write personal details in the text of a complaint.
+**Translation**: When someone taps “Translate” on a feed post, its text is sent to a machine translation service only to translate it: Google Cloud Translation for Marathi, Amazon Translate (Singapore) for English and Hindi. Only the text is sent, never photographs, videos, or the name and mobile number from your account. These services may process the text outside India. Translations of published feed posts are kept with the post. Please do not write personal details in the text of a post.
 
-**Retention**: Mobile numbers are retained only as long as needed for verification and account management. Staff selfies and locations are deleted automatically 90 days after the shift started. You may request deletion by contacting the Grievance Officer below.
+**Retention**: Mobile numbers are retained only as long as needed for verification and account management. You may request deletion by contacting the Grievance Officer below.
 
 **Sharing**: We do not sell or share personal data with third parties except as required by law or court order. When sign-in codes are sent by SMS, your number is passed to the SMS provider only to deliver the code. Text that someone asks to translate is passed to the translation service only to translate it (see Translation above).
 
@@ -133,24 +132,23 @@ Complaints regarding content or these policies will be acknowledged within 24 ho
 8. **लागू कानून**: ये शर्तें भारत के कानूनों के अधीन हैं। ठाणे के न्यायालयों का अधिकार क्षेत्र होगा।
 """),
         ("privacy", "गोपनीयता नीति", """
-यह वेबसाइट सीमित निजी डेटा लेती है: केवल उतना, जितना यह जाँचने के लिए ज़रूरी है कि उपयोगकर्ता प्रोजेक्ट का निवासी या स्टाफ़ सदस्य है, और शिकायत व फ़ीड सुविधाएँ चलाने के लिए।
+यह वेबसाइट सीमित निजी डेटा लेती है: केवल उतना, जितना यह जाँचने के लिए ज़रूरी है कि उपयोगकर्ता प्रोजेक्ट का निवासी है, और फ़ीड चलाने के लिए।
 
 **लिया जाने वाला डेटा**:
 
 - मोबाइल नंबर (OTP से साइन इन और एडमिन की मंज़ूरी के लिए)
-- आपका नाम और आपका फ़्लैट (मंज़ूरी के लिए, और ताकि शिकायतें सही टावर तक पहुँचें)
-- आपके द्वारा स्वेच्छा से पोस्ट की गई सामग्री: शिकायतों और फ़ीड पोस्ट का टेक्स्ट और फ़ोटो
-- केवल मेंटेनेंस स्टाफ़ के लिए: शिफ़्ट शुरू और ख़त्म होते समय एक सेल्फ़ी और फ़ोन की लोकेशन
+- आपका नाम और आपका फ़्लैट (मंज़ूरी के लिए)
+- आपके द्वारा स्वेच्छा से पोस्ट की गई सामग्री: फ़ीड पोस्ट का टेक्स्ट, फ़ोटो और वीडियो
 
-**उद्देश्य**: निवासियों की पुष्टि, मॉडरेशन, शिकायतों का निपटारा और स्टाफ़ की शिफ़्ट की पुष्टि। मोबाइल नंबर केवल नामित सोसाइटी एडमिन को मंज़ूरी के लिए दिखते हैं और सार्वजनिक नहीं किए जाते। दूसरे निवासी केवल नाम देखते हैं; फ़ीड पोस्ट “सत्यापित निवासी” के रूप में दिखती हैं, आपके नाम के साथ कभी नहीं।
+**उद्देश्य**: निवासियों की पुष्टि और मॉडरेशन। मोबाइल नंबर केवल नामित सोसाइटी एडमिन को मंज़ूरी के लिए दिखते हैं और सार्वजनिक नहीं किए जाते। दूसरे निवासी केवल नाम देखते हैं; फ़ीड पोस्ट “सत्यापित निवासी” के रूप में दिखती हैं, आपके नाम के साथ कभी नहीं।
 
 **कानूनी आधार**: सामुदायिक पुष्टि के लिए सहमति और वैध उपयोग (डिजिटल व्यक्तिगत डेटा संरक्षण अधिनियम, 2023)।
 
-**डेटा कहाँ रखा जाता है**: सिंगापुर के सर्वरों पर (डेटाबेस Neon पर, फ़ोटो Amazon Web Services Lightsail पर), जिन तक केवल वेबसाइट संचालकों की पहुँच है।
+**डेटा कहाँ रखा जाता है**: सिंगापुर के सर्वरों पर (डेटाबेस Neon पर, फ़ोटो और वीडियो Amazon Web Services Lightsail पर), जिन तक केवल वेबसाइट संचालकों की पहुँच है।
 
-**अनुवाद**: जब कोई फ़ीड पोस्ट या शिकायत पर “अनुवाद करें” दबाता है, तो उसका टेक्स्ट (शीर्षक, विवरण और टिप्पणियाँ) केवल अनुवाद के लिए एक मशीन अनुवाद सेवा को भेजा जाता है: मराठी के लिए Google Cloud Translation, अंग्रेज़ी और हिंदी के लिए Amazon Translate (सिंगापुर)। केवल टेक्स्ट भेजा जाता है; फ़ोटो, या आपके खाते का नाम और मोबाइल नंबर कभी नहीं। ये सेवाएँ टेक्स्ट को भारत के बाहर प्रोसेस कर सकती हैं। प्रकाशित फ़ीड पोस्ट के अनुवाद पोस्ट के साथ रखे जाते हैं; शिकायतों के अनुवाद सहेजे नहीं जाते। कृपया शिकायत के टेक्स्ट में निजी जानकारी न लिखें।
+**अनुवाद**: जब कोई फ़ीड पोस्ट पर “अनुवाद करें” दबाता है, तो उसका टेक्स्ट केवल अनुवाद के लिए एक मशीन अनुवाद सेवा को भेजा जाता है: मराठी के लिए Google Cloud Translation, अंग्रेज़ी और हिंदी के लिए Amazon Translate (सिंगापुर)। केवल टेक्स्ट भेजा जाता है; फ़ोटो, वीडियो, या आपके खाते का नाम और मोबाइल नंबर कभी नहीं। ये सेवाएँ टेक्स्ट को भारत के बाहर प्रोसेस कर सकती हैं। प्रकाशित फ़ीड पोस्ट के अनुवाद पोस्ट के साथ रखे जाते हैं। कृपया पोस्ट के टेक्स्ट में निजी जानकारी न लिखें।
 
-**अवधि**: मोबाइल नंबर केवल तब तक रखे जाते हैं जब तक पुष्टि और खाते के प्रबंधन के लिए ज़रूरी हों। स्टाफ़ की सेल्फ़ी और लोकेशन शिफ़्ट शुरू होने के 90 दिन बाद अपने आप हटा दी जाती हैं। हटाने का अनुरोध आप नीचे दिए गए शिकायत अधिकारी से कर सकते हैं।
+**अवधि**: मोबाइल नंबर केवल तब तक रखे जाते हैं जब तक पुष्टि और खाते के प्रबंधन के लिए ज़रूरी हों। हटाने का अनुरोध आप नीचे दिए गए शिकायत अधिकारी से कर सकते हैं।
 
 **साझा करना**: हम निजी डेटा न बेचते हैं, न किसी तीसरे पक्ष से साझा करते हैं, सिवाय कानून या न्यायालय के आदेश के। जब साइन-इन कोड SMS से भेजे जाएँगे, तब आपका नंबर केवल कोड पहुँचाने के लिए SMS सेवा प्रदाता को दिया जाएगा। जिस टेक्स्ट का अनुवाद माँगा जाता है, वह केवल अनुवाद के लिए अनुवाद सेवा को दिया जाता है (ऊपर अनुवाद देखें)।
 
@@ -218,24 +216,23 @@ Complaints regarding content or these policies will be acknowledged within 24 ho
 8. **लागू कायदा**: या अटी भारताच्या कायद्यांच्या अधीन आहेत. ठाणे येथील न्यायालयांना अधिकारक्षेत्र असेल.
 """),
         ("privacy", "गोपनीयता धोरण", """
-वापरकर्ता प्रोजेक्टचा रहिवासी किंवा कर्मचारी आहे याची पडताळणी करण्यासाठी आणि तक्रार व फीड सुविधा चालवण्यासाठी जितकी आवश्यक आहे, तितकीच मर्यादित वैयक्तिक माहिती ही वेबसाइट घेते.
+वापरकर्ता प्रोजेक्टचा रहिवासी आहे याची पडताळणी करण्यासाठी आणि फीड चालवण्यासाठी जितकी आवश्यक आहे, तितकीच मर्यादित वैयक्तिक माहिती ही वेबसाइट घेते.
 
 **घेतली जाणारी माहिती**:
 
 - मोबाइल नंबर (OTP ने साइन इन आणि ॲडमिनच्या मंजुरीसाठी)
-- तुमचे नाव आणि तुमचा फ्लॅट (मंजुरीसाठी, आणि तक्रारी योग्य टॉवरपर्यंत पोहोचाव्यात म्हणून)
-- तुम्ही स्वेच्छेने पोस्ट केलेला मजकूर: तक्रारी आणि फीड पोस्टचा मजकूर आणि फोटो
-- फक्त मेंटेनन्स कर्मचाऱ्यांसाठी: शिफ्ट सुरू होताना आणि संपताना एक सेल्फी आणि फोनचे ठिकाण
+- तुमचे नाव आणि तुमचा फ्लॅट (मंजुरीसाठी)
+- तुम्ही स्वेच्छेने पोस्ट केलेला मजकूर: फीड पोस्टचा मजकूर, फोटो आणि व्हिडिओ
 
-**उद्देश**: रहिवाशांची पडताळणी, नियंत्रण, तक्रारींचा निपटारा आणि कर्मचाऱ्यांच्या शिफ्टची पुष्टी. मोबाइल नंबर फक्त नेमलेल्या सोसायटी ॲडमिनना मंजुरीसाठी दिसतात आणि सार्वजनिक केले जात नाहीत. इतर रहिवाशांना फक्त नावे दिसतात; फीड पोस्ट “सत्यापित रहिवासी” म्हणून दिसतात, तुमच्या नावासह कधीच नाही.
+**उद्देश**: रहिवाशांची पडताळणी आणि नियंत्रण. मोबाइल नंबर फक्त नेमलेल्या सोसायटी ॲडमिनना मंजुरीसाठी दिसतात आणि सार्वजनिक केले जात नाहीत. इतर रहिवाशांना फक्त नावे दिसतात; फीड पोस्ट “सत्यापित रहिवासी” म्हणून दिसतात, तुमच्या नावासह कधीच नाही.
 
 **कायदेशीर आधार**: सामुदायिक पडताळणीसाठी संमती आणि वैध वापर (डिजिटल वैयक्तिक माहिती संरक्षण अधिनियम, 2023).
 
-**माहिती कुठे ठेवली जाते**: सिंगापूरमधील सर्व्हरवर (डेटाबेस Neon वर, फोटो Amazon Web Services Lightsail वर), जिथे फक्त वेबसाइट संचालकांना प्रवेश आहे.
+**माहिती कुठे ठेवली जाते**: सिंगापूरमधील सर्व्हरवर (डेटाबेस Neon वर, फोटो आणि व्हिडिओ Amazon Web Services Lightsail वर), जिथे फक्त वेबसाइट संचालकांना प्रवेश आहे.
 
-**भाषांतर**: एखाद्या फीड पोस्टवर किंवा तक्रारीवर कोणी “भाषांतर करा” दाबल्यास, त्याचा मजकूर (शीर्षक, वर्णन आणि टिप्पण्या) फक्त भाषांतरासाठी यंत्र भाषांतर सेवेकडे पाठवला जातो: मराठीसाठी Google Cloud Translation, इंग्रजी आणि हिंदीसाठी Amazon Translate (सिंगापूर). फक्त मजकूर पाठवला जातो; फोटो, किंवा तुमच्या खात्यातील नाव आणि मोबाइल नंबर कधीच नाही. या सेवा मजकुरावर भारताबाहेर प्रक्रिया करू शकतात. प्रकाशित फीड पोस्टची भाषांतरे पोस्टसोबत ठेवली जातात; तक्रारींची भाषांतरे साठवली जात नाहीत. कृपया तक्रारीच्या मजकुरात वैयक्तिक माहिती लिहू नका.
+**भाषांतर**: एखाद्या फीड पोस्टवर कोणी “भाषांतर करा” दाबल्यास, त्याचा मजकूर फक्त भाषांतरासाठी यंत्र भाषांतर सेवेकडे पाठवला जातो: मराठीसाठी Google Cloud Translation, इंग्रजी आणि हिंदीसाठी Amazon Translate (सिंगापूर). फक्त मजकूर पाठवला जातो; फोटो, व्हिडिओ, किंवा तुमच्या खात्यातील नाव आणि मोबाइल नंबर कधीच नाही. या सेवा मजकुरावर भारताबाहेर प्रक्रिया करू शकतात. प्रकाशित फीड पोस्टची भाषांतरे पोस्टसोबत ठेवली जातात. कृपया पोस्टच्या मजकुरात वैयक्तिक माहिती लिहू नका.
 
-**कालावधी**: मोबाइल नंबर फक्त पडताळणी आणि खाते व्यवस्थापनासाठी आवश्यक असेपर्यंत ठेवले जातात. कर्मचाऱ्यांचे सेल्फी आणि ठिकाण शिफ्ट सुरू झाल्यापासून 90 दिवसांनी आपोआप काढून टाकले जातात. काढून टाकण्याची विनंती तुम्ही खाली दिलेल्या तक्रार अधिकाऱ्याकडे करू शकता.
+**कालावधी**: मोबाइल नंबर फक्त पडताळणी आणि खाते व्यवस्थापनासाठी आवश्यक असेपर्यंत ठेवले जातात. काढून टाकण्याची विनंती तुम्ही खाली दिलेल्या तक्रार अधिकाऱ्याकडे करू शकता.
 
 **माहिती देणे**: आम्ही वैयक्तिक माहिती विकत नाही किंवा कोणत्याही त्रयस्थ पक्षाला देत नाही, कायद्याने किंवा न्यायालयाच्या आदेशाने आवश्यक असेल तेव्हा सोडून. साइन-इन कोड SMS ने पाठवले जातील तेव्हा तुमचा नंबर फक्त कोड पोहोचवण्यासाठी SMS सेवा पुरवठादाराला दिला जाईल. ज्या मजकुराचे भाषांतर मागितले जाते, तो फक्त भाषांतरासाठी भाषांतर सेवेला दिला जातो (वर भाषांतर पाहा).
 

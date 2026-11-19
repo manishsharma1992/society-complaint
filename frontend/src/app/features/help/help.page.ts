@@ -4,6 +4,7 @@ import { TranslocoDirective } from '@jsverse/transloco';
 import { Roles } from '../../core/roles';
 import { SessionStore } from '../../core/session';
 import { SocietyStore } from '../../core/society';
+import { LegalLinks } from '../../shared/legal-links';
 
 export interface HelpSection {
   id: string;
@@ -43,7 +44,7 @@ export function sectionsFor(v: Viewer): HelpSection[] {
 /** How to use the app, in the user's language, showing only what their role and their society's add-ons allow. */
 @Component({
   selector: 'app-help-page',
-  imports: [TranslocoDirective, RouterLink],
+  imports: [TranslocoDirective, RouterLink, LegalLinks],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ng-container *transloco="let t">
@@ -63,6 +64,7 @@ export function sectionsFor(v: Viewer): HelpSection[] {
         }
       </div>
       <p class="muted small">{{ t('help.more') }}</p>
+      <app-legal-links />
     </ng-container>
   `,
   styles: `

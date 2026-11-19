@@ -12,6 +12,8 @@ const SITES = {
     dir: 'dist/feed/browser',
     forbidden: [/\/complaint\/societies/, /\/workforce\//, /gardencityseva/, /Garden City Seva/],
     required: [/\/feed\/public/],
+    // the feed's legal pages describe the feed only: no staff shifts
+    legalForbidden: /selfie|सेल्फ़ी|सेल्फी|शिफ़्ट|शिफ्ट/i,
   },
 };
 
@@ -29,13 +31,19 @@ const fail = (site, message) => {
   console.error(`FAIL ${site}: ${message}`);
 };
 
-for (const [site, { dir, forbidden, required }] of Object.entries(SITES)) {
+for (const [site, { dir, forbidden, required, legalForbidden }] of Object.entries(SITES)) {
   const all = files(dir);
   const code = all.filter((f) => f.endsWith('.js')).map((f) => readFileSync(f, 'utf8')).join('\n');
   const i18n = Object.fromEntries(['en', 'hi', 'mr'].map((l) => [l, JSON.parse(readFileSync(join(dir, 'i18n', `${l}.json`), 'utf8'))]));
-  const text = code + Object.values(i18n).map((j) => JSON.stringify(j)).join('\n');
+  const pages = all.filter((f) => f.endsWith('.html')).map((f) => readFileSync(f, 'utf8')).join('\n');
+  const text = code + pages + Object.values(i18n).map((j) => JSON.stringify(j)).join('\n');
 
   if (!all.some((f) => f === join(dir, 'index.html'))) fail(site, 'has no index.html');
+  for (const page of ['legal', 'hi/legal', 'mr/legal']) {
+    const file = join(dir, page, 'index.html');
+    if (!all.includes(file)) fail(site, `has no ${page}/index.html`);
+    else if (legalForbidden?.test(readFileSync(file, 'utf8'))) fail(site, `${page} mentions ${legalForbidden}`);
+  }
   for (const word of forbidden) if (word.test(text)) fail(site, `contains ${word}`);
   for (const word of required) if (!word.test(text)) fail(site, `is missing ${word}`);
 

@@ -473,5 +473,11 @@
       "3": "Photos are resized and their location data removed on your phone before upload.",
       "4": "Staff selfies and shift locations are deleted after 90 days."
     }
+  },
+  "legal": {
+    "title": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "grievance": "Grievance Redressal"
   }
 }
