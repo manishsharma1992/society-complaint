@@ -29,6 +29,8 @@ a.brand:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 4
 
 .layout {
   display: grid;
+  /* minmax(0) so the form's minimum width (wider in Safari) cannot push the cards past the screen */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-lg);
   padding-top: var(--space-sm);
 }
