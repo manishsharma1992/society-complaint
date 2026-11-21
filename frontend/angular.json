@@ -94,7 +94,8 @@
               "buildTarget": "frontend:build:development"
             },
             "feed": {
-              "buildTarget": "frontend:build:development,feed"
+              "buildTarget": "frontend:build:development,feed",
+              "proxyConfig": "proxy.feed.conf.json"
             }
           },
           "defaultConfiguration": "development",

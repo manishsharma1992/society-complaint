@@ -1,16 +1,24 @@
 # Society Complaint App
 
-Residents of **Runwal MyCity** (Dombivli) raise complaints from their phone (lift, water, plumbing, ...), add photos,
-and follow them until they are fixed. The society's admins and staff assign, work on and close them.
+One codebase, two separate sites (split on 2026-11-21). They share no server, database, photo bucket, login or link.
 
-- Web app: **https://runwalltdfakepromises.com** (Angular, in `frontend/`; English, हिन्दी, मराठी)
-- API: **https://runwalltdfakepromises.com/api/...**
-- Backend: Java 25, Spring Boot, PostgreSQL on Neon, photos in Lightsail Object Storage; all contexts run as one app
-  on a 512 MB Lightsail server for now (see `CLAUDE.md`, and `deploy/README.md` for the server)
+| Site | What it is | Backend jar | Web app |
+|---|---|---|---|
+| **Garden City Seva**, https://gardencityseva.com | Residents of Runwal Garden City (Dombivli) raise maintenance complaints from their phone (lift, water, plumbing, ...), add photos and follow them until fixed; admins and staff assign, work on and close them | `app` (complaints, staff shifts, accounts, flats) | `ng build` |
+| **Runwal MyCity Residents**, https://runwalltdfakepromises.com | A moderated public feed where residents document what was promised and what exists today | `feed-app` (feed, accounts, flats) | `ng build -c production,feed` |
+
+- Both web apps are Angular, in `frontend/`, in English, हिन्दी and मराठी.
+- APIs: `https://gardencityseva.com/api/...` and `https://runwalltdfakepromises.com/api/...`.
+- Backend: Java 25, Spring Boot, PostgreSQL on Neon (one database per site), photos in Lightsail Object Storage
+  (one private bucket per site). Each site runs one Spring Boot app on its own Lightsail server; see `CLAUDE.md`,
+  and `deploy/README.md` for the servers.
+- Accounts are separate: signing in on one site does not sign you in on the other.
+
+The rest of this README is about Garden City Seva unless it says otherwise; the feed's rules are in `feed/CLAUDE.md`.
 
 ## The web app
 
-Open **https://runwalltdfakepromises.com** on a phone or computer (nothing to install; on a phone, "Add to Home
+Open **https://gardencityseva.com** on a phone or computer (nothing to install; on a phone, "Add to Home
 Screen" makes it an icon). Pick English, हिन्दी or मराठी at the top. What each person sees:
 
 | Who | Tabs | What they do |
@@ -26,7 +34,8 @@ A plain-language guide for committee members (which demo login to use for what) 
 ## Demo logins
 
 Login is **phone number + one-time code (OTP)**. Until SMS works (MSG91, after DLT approval), use these placeholder
-numbers. They never receive an SMS; they accept the **demo code** set as `OTP_DEMO_CODE` on the server (ask Manish).
+numbers. They never receive an SMS; they accept the **demo code** set as `OTP_DEMO_CODE` on each server (ask Manish).
+The same four numbers exist on both sites, but each site has its own accounts and its own demo code.
 
 | Phone number | Name in the app | Role | What they can do |
 |---|---|---|---|
@@ -38,12 +47,12 @@ numbers. They never receive an SMS; they accept the **demo code** set as `OTP_DE
 Any other (real) number can sign up too: its code is written to the server log until SMS works
 (`journalctl -u complaint-service | grep "OTP for"` on the server), and the society admin approves it.
 
-Before going live: delete the demo users and remove `OTP_DEMO_CODE` from the server.
+Before going live: delete the demo users and remove `OTP_DEMO_CODE` from both servers.
 
 ## Logging in (API)
 
 ```bash
-API=https://runwalltdfakepromises.com/api
+API=https://gardencityseva.com/api
 
 # 1. ask for a code (for demo numbers nothing is sent; use the demo code)
 curl -X POST $API/identity/login/otp -H 'Content-Type: application/json' -d '{"phone": "9000000004"}'
@@ -80,7 +89,8 @@ Users who signed up but are not approved yet can only see themselves and registe
 
 ## Main endpoints
 
-All under `https://runwalltdfakepromises.com/api`, society 1 = Runwal MyCity.
+All under `https://gardencityseva.com/api`, society 1 = Runwal Garden City. The feed's endpoints (`/feed/...`)
+are served only by `https://runwalltdfakepromises.com/api`; see `feed/CLAUDE.md`.
 
 **Login and sign-up** (`/identity`)
 - `POST /identity/login/otp` `{phone}`, `POST /identity/login/verify` `{phone, code}`
@@ -120,7 +130,8 @@ Needs JDK 25 and Maven. Put the settings in a git-ignored `.env` in the project 
 
 ```bash
 mvn clean verify                                   # all tests, including the architecture rules
-java -jar app/target/app-1.0-SNAPSHOT.jar          # http://localhost:8080/api/...
+java -jar app/target/app-1.0-SNAPSHOT.jar          # Garden City Seva, http://localhost:8080/api/...
+java -jar feed-app/target/feed-app-1.0-SNAPSHOT.jar # the feed (same port, so run one at a time)
 ```
 
 Database tests use Testcontainers and are skipped when Docker is not available.
@@ -131,12 +142,16 @@ The web app (Node 24, from `frontend/.nvmrc`):
 cd frontend
 nvm use                      # Node 24
 npm ci                       # first time only
-npx ng serve                 # http://localhost:4200, its /api calls go to the live server (proxy.conf.json)
+npx ng serve                 # Garden City Seva at http://localhost:4200
+npx ng serve -c feed         # the feed at http://localhost:4200
+npm run build:sites          # build both and check that neither contains the other
 ```
 
-To use a local backend instead, point `proxy.conf.json` at `http://localhost:8080`.
+Each sends its `/api` calls to its own live server: `proxy.conf.json` (Seva, `https://gardencityseva.com`) and
+`proxy.feed.conf.json` (the feed). To use a local backend instead, point the matching file at `http://localhost:8080`.
 
 ## Deploying
 
-`deploy/deploy.sh` builds, tests and deploys the backend to the Lightsail server; `deploy/deploy.sh frontend` builds
-and publishes the web app. See `deploy/README.md`.
+Each site deploys to its own server: `deploy/deploy.sh <seva|feed>` builds, tests and deploys that site's backend;
+`deploy/deploy.sh <seva|feed> frontend` builds and publishes its web app (set `SEVA_HOST` or `FEED_HOST` to the
+server's static IP). See `deploy/README.md`.

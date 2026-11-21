@@ -1,0 +1,7 @@
+{
+  "/api": {
+    "target": "https://runwalltdfakepromises.com",
+    "secure": true,
+    "changeOrigin": true
+  }
+}
