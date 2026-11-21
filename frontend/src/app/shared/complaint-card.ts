@@ -21,7 +21,7 @@ import { Complaint, isOngoing } from '../core/models';
         <p class="no num">{{ t('card.number', { id: complaint().id }) }}</p>
         <span class="chip" [attr.data-status]="complaint().status">{{ t('status.' + complaint().status) }}</span>
       </header>
-      <h3>{{ complaint().title }}</h3>
+      <h2>{{ complaint().title }}</h2>
       <dl class="label ruled">
         <div><dt class="visually-hidden">{{ t('raise.categoryLabel') }}</dt><dd>{{ categoryName() ? t('category.' + categoryName()) : '' }}</dd></div>
         <div><dt class="visually-hidden">{{ t('raise.locationLabel') }}</dt><dd>{{ where() ?? t('card.commonArea') + ', ' + (towerName() ?? t('card.wholeSociety')) }}</dd></div>
@@ -43,7 +43,7 @@ import { Complaint, isOngoing } from '../core/models';
     .ticket { height: 100%; align-content: start; padding: var(--space-md) var(--space-md) var(--space-sm); display: grid; gap: var(--space-xs); }
     header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); }
     .no { font-size: var(--text-sm); color: var(--color-ink-muted); }
-    h3 { font-family: var(--font-display); font-weight: var(--serif-small); font-size: var(--text-lg); line-height: 1.25; max-width: none; color: var(--color-ink); }
+    h2 { font-family: var(--font-display); font-weight: var(--serif-small); font-size: var(--text-lg); line-height: 1.25; max-width: none; color: var(--color-ink); }
     .label { margin: var(--space-2xs) 0 0; font-size: var(--text-sm); }
     .label > div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-2xs) var(--space-sm); padding-block: var(--space-xs); }
     .label > div + div { border-top: var(--rule-hair) solid var(--color-rule); }

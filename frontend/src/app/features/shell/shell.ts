@@ -55,7 +55,7 @@ import { HAS_COMPLAINTS, HAS_FEED } from '../../site';
   styles: `
     :host { display: block; }
     .shell { min-height: 100dvh; }
-    .skip { position: absolute; left: var(--space-sm); top: -100px; z-index: var(--z-toast); padding: var(--space-xs) var(--space-sm); background: var(--color-stock); }
+    .skip { position: absolute; left: var(--space-sm); top: -100px; z-index: var(--z-toast); display: inline-flex; align-items: center; min-height: 44px; padding: var(--space-xs) var(--space-sm); background: var(--color-stock); }
     .skip:focus-visible { top: var(--space-sm); }
     .top {
       max-width: 1120px;

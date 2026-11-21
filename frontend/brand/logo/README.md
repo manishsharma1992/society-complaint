@@ -13,7 +13,7 @@ more societies). The text beside it, "Runwal MyCity / Residents", is the society
 | `mycity-mono-1b8233.svg` | Symbol in brand green: the default on light backgrounds |
 | `mycity-white.svg` | Symbol in white: on brand green or dark backgrounds |
 | `mycity-black.svg` | One colour black: fax, stamps, newspaper |
-| `mycity-app-icon.svg`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `maskable-512.png` | White tower on a green tile |
+| `mycity-app-icon.svg`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `maskable-512.png` | White tower (full six-window symbol) on a green tile |
 | `favicon.ico`, `favicon.svg`, `favicon-16/32/48.png` | Browser tab (green small cut) |
 | `manifest.json`, `head-snippet.html` | Web app install (copied to `frontend/public/` and `src/index.html`) |
 | `mycity-horizontal.svg`, `mycity-horizontal-white.svg` | Symbol + wordmark. **Live text**: convert to outlines before print |
