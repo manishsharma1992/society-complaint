@@ -41,7 +41,8 @@ for (const [site, { dir, forbidden, required, legalForbidden, homeForbidden }] o
   const text = code + pages + Object.values(i18n).map((j) => JSON.stringify(j)).join('\n');
 
   if (!all.some((f) => f === join(dir, 'index.html'))) fail(site, 'has no index.html');
-  for (const page of ['home.html', 'hi/index.html', 'mr/index.html']) {
+  // index.html is the app's own page (login, posts): its description must not speak of the other app either
+  for (const page of ['home.html', 'hi/index.html', 'mr/index.html', 'index.html']) {
     const file = join(dir, page);
     if (!all.includes(file)) fail(site, `has no ${page}`);
     else if (homeForbidden?.test(readFileSync(file, 'utf8').replace(/शिकायत निवारण|तक्रार निवारण/g, ''))) fail(site, `${page} mentions ${homeForbidden}`);
