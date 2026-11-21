@@ -32,8 +32,8 @@ Ubiquitous language: Post, Evidence (a media item), Moderation, Report, Reaction
 - Every moderation action goes to an append-only audit log (who, what, when, why).
 
 ### Media storage
-- Uploads go to the existing private bucket under `feed/{societyId}/{postId}/<uuid>.<ext>` through presigned URLs,
-  as for complaint photos.
+- Uploads go to the feed's own private bucket (`runwal-feed-media`, since 2026-11-21) under
+  `feed/{societyId}/{postId}/<uuid>.<ext>` through presigned URLs, as for complaint photos.
 - Shared links must keep working, so published media can't use short-lived presigned URLs. When a post becomes
   PUBLISHED, its files are copied to a separate **public** Lightsail bucket served through a Lightsail distribution
   (CDN). When it becomes HIDDEN or REMOVED, the public copies are deleted and the CDN cache is invalidated.

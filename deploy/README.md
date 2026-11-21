@@ -121,15 +121,18 @@ Rolling back the jar does not undo Flyway migrations; keep migrations backward c
 
 ## Photo bucket CORS (once)
 
-Browsers upload photos straight to the bucket, so the bucket must allow the app's origin.
-`bucket-cors.json` allows GET and PUT from the domain (and `http://localhost:4200` for Angular development).
-This needs an account-level AWS action, not the bucket's access keys. Easiest from **AWS CloudShell**
-(AWS console, region Singapore, the `>_` icon in the top bar), after uploading `bucket-cors.json` there
-(Actions -> Upload file):
+Browsers upload photos straight to the bucket, so each bucket must allow its own site's origin, and only that one.
+Each site has its own private bucket and access key: `seva` uses `runwal-complaint-photos` (`bucket-cors.json`),
+`feed` uses `runwal-feed-media` (`feed-bucket-cors.json`); both also allow `http://localhost:4200` for Angular
+development. This needs an account-level AWS action, not the bucket's access keys. Easiest from **AWS CloudShell**
+(AWS console, region Singapore, the `>_` icon in the top bar), after uploading the file there (Actions -> Upload
+file; CloudShell keeps an old upload of the same name, so check it with `cat` first):
 
 ```bash
-aws lightsail update-bucket --bucket-name runwal-complaint-photos --cors file://bucket-cors.json
-aws lightsail get-buckets --bucket-name runwal-complaint-photos --include-cors     # check
+aws lightsail update-bucket --bucket-name runwal-complaint-photos --cors file://bucket-cors.json --no-cli-pager
+aws lightsail update-bucket --bucket-name runwal-feed-media --cors file://feed-bucket-cors.json --no-cli-pager
+aws lightsail get-buckets --bucket-name runwal-complaint-photos --include-cors --no-cli-pager \
+    --query 'buckets[0].cors.rules[0].allowedOrigins'     # check
 ```
 
 Re-run it after editing the file (the new rules replace the old ones).

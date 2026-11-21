@@ -80,7 +80,10 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
     is still its own Maven module, package, schema and ArchUnit boundary, but they are packaged into a single JVM.
     Cross-context calls go through the same `application.port` interfaces, implemented in-process instead of over HTTP.
     Split into separate services only when there is a reason to (the 2 GB plan has room for one or two more JVMs).
-- Photo storage: **Lightsail Object Storage** (S3-compatible, Singapore), private bucket. The database stores only the
+  - Since the separation (2026-11-21) each site has its own server: Seva on a 1 GB plan (`-Xmx512m`), the feed on
+    the old 2 GB server. See deploy/README.md.
+- Photo storage: **Lightsail Object Storage** (S3-compatible, Singapore), one private bucket per site
+  (`runwal-complaint-photos` for Seva, `runwal-feed-media` for the feed), each with its own key. The database stores only the
   object key (`complaints/{societyId}/{complaintId}/<uuid>.<ext>`), never a public URL; clients upload and view through
   short-lived presigned URLs. Bucket credentials come from environment variables, like the DB credentials.
 - Login: phone number + OTP (identity module). SMS through MSG91 once DLT registration is approved; until then codes
@@ -91,10 +94,10 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 ## Project structure
 Maven multi-module (see the poms): `shared` (kernel), `architecture-rules`, one module per context (`core`, `residency`,
 `identity`, `feed`, `workforce`), two deployable Spring Boot apps and `frontend` (Angular).
-- **The complaint app and the feed are being separated (decided 2026-11-18).** `app` is the complaint app, Garden City
-  Seva at gardencityseva.com (`core`, `workforce`, `identity`, `residency`); `feed-app` is the public feed at
-  runwalltdfakepromises.com (`feed`, `identity`, `residency`). They will share no server, database, bucket, login or
-  link. Until the switch the live server still runs the last combined jar; it has no site mark, so `deploy/deploy.sh` refuses it.
+- **The complaint app and the feed are separate (decided 2026-11-18, switched 2026-11-21).** `app` is the complaint
+  app, Garden City Seva at gardencityseva.com (`core`, `workforce`, `identity`, `residency`); `feed-app` is the
+  public feed at runwalltdfakepromises.com (`feed`, `identity`, `residency`). They share no server, database, bucket,
+  login or link. Each Neon database holds only its app's schemas (identity and residency exist in both, separately).
 - Residency is seeded with Runwal MyCity: 10 towers, flats labelled "<tower code>-<floor><unit>", e.g. B2-503.
 - `com.mycity.runwal.integration` (in each app) holds the in-process anticorruption adapters between contexts (e.g.
   `InProcessFlatDirectory`: complaint's FlatDirectory port -> Residency); it is the only code that may see two contexts.
@@ -256,8 +259,9 @@ Angular web app; its conventions are in `frontend/CLAUDE.md`, the public homepag
 - Expect a short delay on the first query after Neon has been idle.
 - Each Spring Boot service needs roughly 250-400 MB RAM. Set `-Xmx` per service and size the Lightsail plan for the number of running services.
 
-## Where things stand (2026-11-08)
-Live at https://runwalltdfakepromises.com (web app) and /api (one Spring Boot app, 2 GB Lightsail with a static IP). Done: all
+## Where things stand (2026-11-21)
+Live as two sites: https://gardencityseva.com (complaints, `app`) and https://runwalltdfakepromises.com (feed,
+`feed-app`), each on its own Lightsail server with a static IP, Neon database and bucket. Done: all
 contexts with their REST APIs, phone + OTP login, self sign-up with approval, photos, comments, the full complaint
 lifecycle, and the web app for residents, staff and admins in three languages. A public homepage at `/`, `/hi/`
 and `/mr/` for search engines; Google Search Console verification (a DNS TXT record) is the owner's step.
@@ -265,8 +269,8 @@ and `/mr/` for search engines; Google Search Console verification (a DNS TXT rec
 ## Next step
 1. Before real residents: SMS through MSG91 (after DLT approval); remove the demo users and `OTP_DEMO_CODE`;
    delete the SMOKE TEST complaints; take down the example feed posts (`deploy/demo-feed.sh remove`); have the
-   Hindi and Marathi texts reviewed by native speakers; rotate the Neon password.
-2. The Lightsail plan is 2 GB since 2026-11-15; consider splitting the contexts into services only when needed.
+   Hindi and Marathi texts reviewed by native speakers; rotate the feed's Neon password (it was the shared one).
+2. Seva's server has 1 GB; watch its memory as use grows. Split contexts into services only when needed.
 3. Notifications (`notification-service`): tell residents when their complaint changes, staff when work is assigned.
 4. Later hardening: a Content-Security-Policy header (allow the photo bucket's address for images and uploads, and
    Google Fonts for the homepage). Before the homepage is shared widely: a lawyer reviews it with the domain name,

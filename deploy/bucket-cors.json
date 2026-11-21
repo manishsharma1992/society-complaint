@@ -3,8 +3,6 @@
     {
       "id": "app-photo-upload-and-view",
       "allowedOrigins": [
-        "https://runwalltdfakepromises.com",
-        "https://www.runwalltdfakepromises.com",
         "https://gardencityseva.com",
         "https://www.gardencityseva.com",
         "http://localhost:4200"
