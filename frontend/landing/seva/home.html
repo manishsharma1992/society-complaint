@@ -17,7 +17,7 @@
   <meta property="og:description" content="{{meta_description}}">
   <meta property="og:url" content="{{site}}{{path}}">
   <meta property="og:image" content="{{site}}/images/towers-courtyard.jpg">
-  <meta name="theme-color" content="#eef0f3">
+  <meta name="theme-color" content="#f5f4f1">
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -32,102 +32,112 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo+Mono:wght@400;500;800&family=Noto+Sans+Devanagari:wght@400;500;800&display=swap">
+  <link rel="stylesheet" href="{{fonts}}">
   <style>
 {{css}}
   </style>
   <script type="application/ld+json">{{json_ld}}</script>
 </head>
 <body>
-  <a class="skip" href="#main">{{skip}}</a>
-  <header class="slab">
-    <div class="container">
-      <a class="brand" href="{{path}}">{{logo}}<span>Garden City Seva</span></a>
-      <div class="tools">
-        <nav class="langs" aria-label="{{language}}">{{langs}}</nav>
-        <a class="btn" href="/login">{{signin}}</a>
-      </div>
-    </div>
-  </header>
+  <a class="skip" href="#hero-title">{{skip}}</a>
 
   <main id="main">
-    <section class="hero">
-      <div class="container">
-        <div>
-          <h1>{{h1}}</h1>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="sheet">
+        <div class="bar">
+          <nav class="langs" aria-label="{{language}}">{{langs}}</nav>
+          <a class="brand" href="{{path}}">{{logo}}<span translate="no">Garden City Seva</span></a>
+          <a class="quiet" href="/login">{{signin}}</a>
+        </div>
+        <div class="hero-text rise">
+          <h1 id="hero-title" tabindex="-1">{{h1}}</h1>
           <p class="lead">{{lead}}</p>
           <div class="actions">
             <a class="btn btn--primary" href="/login">{{cta}}</a>
-            <a class="btn" href="#try">{{cta_try}}</a>
+            <a class="quiet" href="#try">{{cta_try}}</a>
           </div>
         </div>
-        <figure class="place">
-          <img src="/images/towers-courtyard.jpg" width="1200" height="875" alt="{{photo_alt}}" fetchpriority="high">
-          <figcaption>{{photo_plate}}</figcaption>
-        </figure>
       </div>
+      <figure class="place">
+        <img src="/images/towers-courtyard.jpg" width="1200" height="875" alt="{{photo_alt}}" fetchpriority="high">
+        <figcaption><span>{{photo_plate}}</span><span>{{photo_road}}</span></figcaption>
+      </figure>
     </section>
 
-    <section class="band" id="try" aria-labelledby="try-title">
-      <div class="container">
-        <h2 id="try-title">{{try_title}}</h2>
-        <p class="intro">{{try_intro}}</p>
-        <div class="run">
+    <section class="try" id="try" aria-labelledby="try-title">
+      <div class="hand">
+        <div class="hand-in rise">
+          <h2 id="try-title">{{try_title}}</h2>
+          <p class="intro">{{try_intro}}</p>
           <div class="needs-js">
-            <fieldset class="picks">
+            <fieldset class="picks rise">
               <legend>{{pick_legend}}</legend>
               {{picks}}
             </fieldset>
             <button class="btn btn--primary advance" type="button" id="advance">{{first_action}}</button>
           </div>
-          <article class="slip on-ink" aria-labelledby="slip-title">
-            <div class="slip-top"><span>{{slip_label}}</span><span class="slip-state needs-js" id="slip-state">{{slip_unsent}}</span></div>
-            <h3 id="slip-title">{{first_title}}</h3>
-            <dl class="facts">
-              <div><dt>{{slip_where}}</dt><dd id="slip-where">{{first_where}}</dd></div>
-              <div><dt>{{slip_cat}}</dt><dd id="slip-cat">{{first_cat}}</dd></div>
-              <div><dt>{{slip_who}}</dt><dd id="slip-who">{{first_who}}</dd></div>
-            </dl>
-            <ol class="route" aria-label="{{route_label}}">{{route}}</ol>
-            <p class="note needs-js" id="slip-note" role="status"></p>
-          </article>
         </div>
+      </div>
+      <div class="made">
+        <article class="slip rise" data-ui aria-labelledby="slip-title">
+          <div class="slip-top"><span>{{slip_label}}</span><span class="slip-state needs-js" id="slip-state">{{slip_unsent}}</span></div>
+          <h3 id="slip-title">{{first_title}}</h3>
+          <dl class="facts">
+            <div><dt>{{slip_where}}</dt><dd id="slip-where">{{first_where}}</dd></div>
+            <div><dt>{{slip_cat}}</dt><dd id="slip-cat">{{first_cat}}</dd></div>
+            <div><dt>{{slip_who}}</dt><dd id="slip-who">{{first_who}}</dd></div>
+          </dl>
+          <ol class="route" aria-label="{{route_label}}">{{route}}</ol>
+          <p class="note needs-js" id="slip-note" role="status"></p>
+        </article>
       </div>
     </section>
 
-    <section class="band on-ink" aria-labelledby="queue-title">
-      <div class="container">
-        <h2 id="queue-title">{{q_title}}</h2>
-        <p class="intro">{{q_intro}}</p>
-        <div class="board">
-          <p class="board-cap"><span>{{q_sample}}</span></p>
-          <div class="row head" aria-hidden="true"><span>{{q_head_job}}</span><span>{{q_head_by}}</span><span>{{q_head_state}}</span></div>
-          <ul>{{board}}</ul>
+    <section class="queue" id="queue" aria-labelledby="queue-title">
+      <div class="frame">
+        <div class="queue-text rise">
+          <h2 id="queue-title">{{q_title}}</h2>
+          <p class="intro">{{q_intro}}</p>
+        </div>
+        <div class="board rise" data-ui>
+          <table>
+            <caption>{{q_sample}}</caption>
+            <thead><tr><th scope="col">{{q_head_job}}</th><th scope="col">{{q_head_by}}</th><th scope="col">{{q_head_state}}</th></tr></thead>
+            <tbody class="rise">{{board}}</tbody>
+          </table>
           <div class="board-foot">
-            <button class="btn needs-js" type="button" id="finish">{{q_btn}}</button>
+            <button class="btn btn--ghost needs-js" type="button" id="finish">{{q_btn}}</button>
             <p id="board-note" role="status">{{q_wait}}</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="band" aria-labelledby="join-title">
-      <div class="container">
-        <h2 id="join-title">{{join_title}}</h2>
-        <p class="intro">{{join_intro}}</p>
-        <ol class="plates">{{plates}}</ol>
+    <section class="join" id="join" aria-labelledby="join-title">
+      <div class="frame">
+        <div class="join-text rise">
+          <h2 id="join-title">{{join_title}}</h2>
+          <p class="intro">{{join_intro}}</p>
+        </div>
+        <div class="receipt rise">
+          {{itinerary}}
+          <p class="result">{{join_result}}</p>
+        </div>
       </div>
     </section>
 
-    <section class="band" aria-labelledby="faq-title">
-      <div class="container">
-        <h2 id="faq-title">{{faq_title}}</h2>
-        <div class="rows">{{faq}}</div>
+    <section class="faq" id="faq" aria-labelledby="faq-title">
+      <div class="frame">
+        <div class="faq-side rise">
+          <h2 id="faq-title">{{faq_title}}</h2>
+          <dl class="known">{{facts}}</dl>
+        </div>
+        <div class="qs rise">{{faq}}</div>
       </div>
     </section>
 
-    <section class="band close" aria-labelledby="close-title">
-      <div class="container">
+    <section class="close" aria-labelledby="close-title">
+      <div class="frame rise">
         <h2 id="close-title">{{close_title}}</h2>
         <a class="btn btn--primary" href="/login">{{cta}}</a>
       </div>
@@ -135,19 +145,26 @@
   </main>
 
   <footer class="foot">
-    <div class="container">
-      <div>
-        <p><strong>Garden City Seva</strong></p>
-        <p>{{foot_place}}</p>
-      </div>
-      <nav aria-labelledby="foot-legal">
-        <h2 id="foot-legal">{{foot_legal}}</h2>
-        <ul>
-          <li><a href="{{legal}}#privacy">{{foot_privacy}}</a></li>
-          <li><a href="{{legal}}#terms">{{foot_terms}}</a></li>
-          <li><a href="{{legal}}#grievance">{{foot_grievance}}</a></li>
+    <figure class="foot-photo"><img src="/images/towers-courtyard.jpg" width="1200" height="875" alt="" loading="lazy"></figure>
+    <div class="foot-menu">
+      <a class="brand" href="{{path}}">{{logo}}<span translate="no">Garden City Seva</span></a>
+      <nav aria-label="{{foot_menu}}">
+        <ul class="menu rise">
+          <li><a href="#try">{{try_title}}</a></li>
+          <li><a href="#queue">{{q_title}}</a></li>
+          <li><a href="#join">{{join_title}}</a></li>
+          <li><a href="#faq">{{faq_title}}</a></li>
+          <li><a href="/login">{{signin}}</a></li>
         </ul>
       </nav>
+      <div class="foot-small">
+        <p>{{foot_place}}</p>
+        <nav aria-label="{{foot_legal}}">
+          <a href="{{legal}}#privacy">{{foot_privacy}}</a>
+          <a href="{{legal}}#terms">{{foot_terms}}</a>
+          <a href="{{legal}}#grievance">{{foot_grievance}}</a>
+        </nav>
+      </div>
     </div>
   </footer>
 
@@ -192,6 +209,16 @@
         $('board-note').textContent = finished ? d.done : d.wait;
         this.textContent = finished ? d.reset : d.finish;
       });
+
+      // each part of a section rises into place once, as the section arrives (content is visible without script)
+      var parts = [].slice.call(document.querySelectorAll('.rise'));
+      if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('moving');
+        var seen = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); seen.unobserve(en.target); } });
+        }, { rootMargin: '0px 0px -8% 0px' });
+        parts.forEach(function (p) { [].forEach.call(p.children, function (c, i) { c.style.setProperty('--i', i); }); seen.observe(p); });
+      }
     })();
   </script>
 </body>

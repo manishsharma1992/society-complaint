@@ -12,11 +12,13 @@ from seva_texts import TEXTS
 HERE = Path(__file__).parent
 OUT = HERE.parent / "public-seva"
 SITE = "https://gardencityseva.com"
-NAMES = {"en": "EN", "hi": "हिन्दी", "mr": "मराठी"}
+NAMES = {"en": "English", "hi": "हिन्दी", "mr": "मराठी"}
 FULL = {"en": "English", "hi": "हिन्दी", "mr": "मराठी"}
 CHECK = '<svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1.5 5.5 4 8l4.5-6"/></svg>'
-STAMP = ("/* Hallmark · v2.0.0 · theme: wayfind (dealt 3/3, seed garden-city-seva-housing-808e·2c8c8255·2026-11-19·r0) · wayfind: platform "
-         "· genre: modern-minimal · shape: Narrative Workflow · draw: f93868 · signature: a sample complaint moved along its real statuses */\n")
+STAMP = ("/* tasteskill v2 · direction: split-stage (seed 821773164, 2026-11-22) · type and colour kept: DESIGN.md editorial system "
+         "with the Seva brand green · idea: the courtyard holds still while one complaint moves Open to Closed */\n")
+FONTS = ("https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Inter:wght@400;500;600"
+         "&family=Noto+Serif+Devanagari:wght@400;500&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap")
 
 
 def logo():
@@ -34,8 +36,16 @@ def render(lang, t):
                     for i, p in enumerate(t["problems"]))
     route = "".join(f'<li class="stop"><i>{CHECK}</i>{e(s["status"])}<span class="stop-note">{e(s["note"].replace("{who}", first["who"].lower()))}</span></li>'
                     for s in t["stops"])
-    board = "".join(f'<li class="row{" waiting" if r["id"] == "leak" else ""}" data-row="{r["id"]}"><span class="job">{e(r["job"])}</span>'
-                    f'<span class="by">{e(r["by"])}</span><span class="state">{e(r["state"])}</span></li>' for r in t["q_rows"])
+    board = "".join(f'<tr class="row{" waiting" if r["id"] == "leak" else ""}" data-row="{r["id"]}"><td class="job">{e(r["job"])}</td>'
+                    f'<td class="by">{e(r["by"])}</td><td><span class="state">{e(r["state"])}</span></td></tr>' for r in t["q_rows"])
+    # the joining steps as a receipt: consecutive steps that happen at the same time share one heading
+    legs = []
+    for title, value, when in t["join"]:
+        if not legs or legs[-1][0] != when:
+            legs.append((when, []))
+        legs[-1][1].append((title, value))
+    itinerary = "".join(f'<div class="leg"><h3>{e(when)}</h3><ul>' + "".join(
+        f'<li><span>{e(a)}</span><i aria-hidden="true"></i><span>{e(b)}</span></li>' for a, b in rows) + "</ul></div>" for when, rows in legs)
     leak = next(r for r in t["q_rows"] if r["id"] == "leak")
     demo = {"problems": t["problems"], "stops": t["stops"], "unsent": t["slip_unsent"], "again": t["again"],
             "wait": t["q_wait"], "done": t["q_done"], "waitState": leak["state"], "doneState": t["q_done_state"],
@@ -44,15 +54,15 @@ def render(lang, t):
                "description": t["meta_description"], "inLanguage": lang, "applicationCategory": "UtilitiesApplication",
                "operatingSystem": "Web browser", "areaServed": {"@type": "Place", "name": "Runwal Garden City, Dombivli East, Thane, Maharashtra, India"}}
     values = {**{k: e(v) for k, v in t.items() if isinstance(v, str)},
-              "lang": lang, "site": SITE, "css": css, "logo": logo(),
+              "lang": lang, "site": SITE, "css": css, "logo": logo(), "fonts": FONTS,
               "json_ld": json.dumps(json_ld, ensure_ascii=False).replace("</", "<\\/"),
               "demo": json.dumps(demo, ensure_ascii=False).replace("</", "<\\/"),
               "legal": "/legal/" if lang == "en" else f"/{lang}/legal/",
               "langs": "".join(f'<a href="{TEXTS[l]["path"]}" hreflang="{l}" lang="{l}" aria-label="{FULL[l]}"{" aria-current=page" if l == lang else ""}>{NAMES[l]}</a>' for l in TEXTS),
-              "picks": picks, "route": route, "board": board,
+              "picks": picks, "route": route, "board": board, "itinerary": itinerary,
+              "facts": "".join(f"<div><dt>{e(a)}</dt><dd>{e(b)}</dd></div>" for a, b in t["facts"]),
               "first_action": e(t["stops"][0]["next"]), "first_title": e(first["title"]), "first_where": e(first["where"]),
               "first_cat": e(first["cat"]), "first_who": e(first["who"]),
-              "plates": "".join(f"<li><h3>{e(a)}</h3><p>{e(b)}</p></li>" for a, b in t["join"]),
               "faq": "".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in t["faq"])}
     out = re.sub(r"\{\{(\w+)\}\}", lambda m: values[m.group(1)], page)
     assert "{{" not in out, "a placeholder has no text"

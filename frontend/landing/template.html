@@ -11,8 +11,8 @@
   <link rel="alternate" hreflang="mr" href="https://runwalltdfakepromises.com/mr/">
   <link rel="alternate" hreflang="x-default" href="https://runwalltdfakepromises.com/">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" content="#f4f7f8" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0e141b" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f5f4f1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121412" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -48,35 +48,43 @@
   {{header}}
 
   <main id="main">
-    <section class="hero">
-      <div class="container">
-        <div>
-          <h1>{{h1}}</h1>
-          <p class="lead">{{lead}}</p>
+    <section class="mast" aria-labelledby="mast-title">
+      <figure class="mast-photo"><img src="/images/skyline.jpg" width="1200" height="675" alt="{{alt_skyline}}" fetchpriority="high"></figure>
+      <div class="axis-row">
+        <p class="lead">{{lead}}</p>
+        <div class="mast-text">
+          <h1 id="mast-title">{{h1}}</h1>
           <div class="actions">
             <a class="btn btn--primary" href="/public">{{nav_posts}}</a>
-            <a class="btn" href="/login">{{cta_voice}}</a>
+            <a class="quiet" href="/login">{{cta_voice}}</a>
           </div>
         </div>
-        <figure class="plate crop"><img src="/images/skyline.jpg" width="1200" height="675" alt="{{alt_skyline}}" fetchpriority="high"></figure>
       </div>
     </section>
 
-    <section class="band say-band" aria-label="{{h1}}">
-      <div class="container"><p class="say">{{statement}}</p></div>
+    <section class="mosaic" aria-labelledby="mosaic-title">
+      <div class="tiles">
+        <div class="tile tile-a"><h2 id="mosaic-title">{{mosaic_a}}</h2></div>
+        <p class="tile tile-b"><span>{{mosaic_b}}</span></p>
+        <figure class="tile tile-c"><img src="/images/garden.jpg" width="1200" height="675" alt="{{alt_garden}}" loading="lazy"></figure>
+      </div>
+      <div class="axis-row says">
+        <div></div>
+        <div class="rise"><p class="say">{{statement}}</p><p class="say say-2">{{band_line}}</p></div>
+      </div>
     </section>
 
-    <section class="band record" id="record" aria-labelledby="record-title">
-      <div class="container">
-        <h2 id="record-title">{{story_title}}</h2>
-        <p class="intro">{{story_intro}}</p>
-        <div class="bench">
-          <ol class="stages">
-            <li><button class="stage" type="button" data-stage="0" aria-pressed="true"><strong>{{s1_t}}</strong><span>{{s1_d}}</span></button></li>
-            <li><button class="stage" type="button" data-stage="1" aria-pressed="false"><strong>{{s2_t}}</strong><span>{{s2_d}}</span></button></li>
-            <li><button class="stage" type="button" data-stage="2" aria-pressed="false"><strong>{{s3_t}}</strong><span>{{s3_d}}</span></button></li>
-          </ol>
-          <article class="sheet crop" data-step="0" aria-label="{{card_title}}">
+    <section class="record" id="record" aria-labelledby="record-title">
+      <div class="axis-row">
+        <ol class="stages rise">
+          <li><button class="stage" type="button" data-stage="0" aria-pressed="true"><strong>{{s1_t}}</strong><span>{{s1_d}}</span></button></li>
+          <li><button class="stage" type="button" data-stage="1" aria-pressed="false"><strong>{{s2_t}}</strong><span>{{s2_d}}</span></button></li>
+          <li><button class="stage" type="button" data-stage="2" aria-pressed="false"><strong>{{s3_t}}</strong><span>{{s3_d}}</span></button></li>
+        </ol>
+        <div class="record-main rise">
+          <h2 id="record-title">{{story_title}}</h2>
+          <p class="intro">{{story_intro}}</p>
+          <article class="sheet" data-ui data-step="0" aria-label="{{card_title}}">
             <div class="sheet-top"><span>{{card_title}}</span><span class="sheet-state" id="sheet-state" role="status" data-wait="{{card_status}}" data-done="{{card_published}}">{{card_status}}</span></div>
             <dl>
               <div class="field f1"><dt>{{card_promised_l}}</dt><dd>{{card_promised}}</dd><dt>{{card_source_l}}</dt><dd>{{card_source}}</dd></div>
@@ -88,51 +96,53 @@
       </div>
     </section>
 
-    <section class="band" id="why" aria-labelledby="safe-title">
-      <div class="container">
-        <h2 id="safe-title">{{nav_why}}</h2>
-        <ul class="index">
-          <li><h3>{{p1_t}}</h3><p>{{p1_d}}</p><figure class="plate"><img src="/images/podium-seating.jpg" width="1200" height="675" alt="{{alt_podium}}" loading="lazy"></figure></li>
-          <li><h3>{{p2_t}}</h3><p>{{p2_d}}</p><figure class="plate"><img src="/images/lawn-clubhouse.jpg" width="1200" height="587" alt="{{alt_clubhouse}}" loading="lazy"></figure></li>
-          <li><h3>{{p3_t}}</h3><p>{{p3_d}}</p><figure class="plate"><img src="/images/playground.jpg" width="1200" height="875" alt="{{alt_playground}}" loading="lazy"></figure></li>
-        </ul>
+    <section class="chapters" id="why" aria-labelledby="why-title">
+      <div class="chapter c1">
+        <div class="chapter-head"><h2 id="why-title">{{nav_why}}</h2><h3>{{p1_t}}</h3></div>
+        <figure><img src="/images/podium-seating.jpg" width="1200" height="675" alt="{{alt_podium}}" loading="lazy"></figure>
+        <p>{{p1_d}}</p>
+      </div>
+      <div class="chapter c2">
+        <div class="chapter-head"><h3>{{p2_t}}</h3></div>
+        <figure><img src="/images/lawn-clubhouse.jpg" width="1200" height="587" alt="{{alt_clubhouse}}" loading="lazy"></figure>
+        <p>{{p2_d}}</p>
+      </div>
+      <div class="chapter c3">
+        <div class="chapter-head"><h3>{{p3_t}}</h3></div>
+        <figure><img src="/images/playground.jpg" width="1200" height="875" alt="{{alt_playground}}" loading="lazy"></figure>
+        <p>{{p3_d}}</p>
       </div>
     </section>
 
-    <section class="band rules" id="rules" aria-labelledby="rules-title">
-      <div class="container">
+    <section class="rules" id="rules" aria-labelledby="rules-title">
+      <div class="rules-cell rise">
         <h2 id="rules-title">{{rules_title}}</h2>
-        <div class="rule-grid">
-          <div><h3>{{rules_keep}}</h3><ul>{{rules_keep_items}}</ul></div>
-          <div><h3>{{rules_drop}}</h3><ul>{{rules_drop_items}}</ul></div>
+        <div class="rules-foot">
+          <p>{{rules_intro}}</p>
+          <a class="quiet" href="{{legal_guidelines}}">{{rules_link}}</a>
         </div>
       </div>
-    </section>
-
-    <section class="home" aria-label="{{band_line}}">
-      <div class="container">
-        <p class="say">{{band_line}}</p>
-        <figure class="plate crop"><img src="/images/garden.jpg" width="1200" height="675" alt="{{alt_garden}}" loading="lazy"></figure>
+      <div class="rules-rows">
+        <div class="rule-row rise"><h3>{{rules_keep}}</h3><ul>{{rules_keep_items}}</ul></div>
+        <div class="rule-row rise"><h3>{{rules_drop}}</h3><ul>{{rules_drop_items}}</ul></div>
       </div>
     </section>
 
-    <section class="band" id="faq" aria-labelledby="faq-title">
-      <div class="container">
-        <h2 id="faq-title">{{faq_title}}</h2>
-        <div class="qa">
-          <details><summary>{{q1}}</summary><p>{{a1}}</p></details>
-          <details><summary>{{q2}}</summary><p>{{a2}}</p></details>
-          <details><summary>{{q3}}</summary><p>{{a3}}</p></details>
-          <details><summary>{{q4}}</summary><p>{{a4}}</p></details>
-        </div>
+    <section class="faq" id="faq" aria-labelledby="faq-title">
+      <div class="qa">
+        <div class="qa-row"><h2 id="faq-title">{{faq_title}}</h2><div></div></div>
+        <div class="qa-row rise"><h3>{{q1}}</h3><p>{{a1}}</p></div>
+        <div class="qa-row rise"><h3>{{q2}}</h3><p>{{a2}}</p></div>
+        <div class="qa-row rise"><h3>{{q3}}</h3><p>{{a3}}</p></div>
+        <div class="qa-row rise"><h3>{{q4}}</h3><p>{{a4}}</p></div>
       </div>
     </section>
 
-    <section class="band join" aria-labelledby="join-title">
-      <div class="container">
-        <h2 id="join-title">{{join_title}}</h2>
-        <p class="intro">{{join_text}}</p>
-        <div class="actions"><a class="btn btn--primary" href="/login">{{cta_signin}}</a></div>
+    <section class="invert" aria-labelledby="join-title">
+      <h2 id="join-title" class="rise"><span>{{join_title}}</span></h2>
+      <div class="invert-foot">
+        <p>{{join_text}}</p>
+        <a class="btn btn--primary" href="/login">{{cta_signin}}</a>
       </div>
     </section>
   </main>
@@ -141,8 +151,8 @@
 
   <script>{{shared_js}}</script>
   <script>
-    // the example post: each stage shows its part of the sheet (without script the whole sheet shows)
     (function () {
+      // the example post: each stage shows its part of the sheet (without script the whole sheet shows)
       var stages = [].slice.call(document.querySelectorAll('.stage')), sheet = document.querySelector('.sheet'), state = document.getElementById('sheet-state');
       stages.forEach(function (b) {
         b.addEventListener('click', function () {
@@ -151,6 +161,14 @@
           state.textContent = b.dataset.stage === '2' ? state.dataset.done : state.dataset.wait;
         });
       });
+      // parts arrive once as they come into view; chapters open to the full width (content is visible without script)
+      if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('moving');
+        var seen = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); seen.unobserve(en.target); } });
+        }, { rootMargin: '0px 0px -10% 0px' });
+        [].forEach.call(document.querySelectorAll('.rise, .chapter, .tile'), function (el, i) { el.style.setProperty('--i', i % 4); seen.observe(el); });
+      }
     })();
   </script>
 </body>

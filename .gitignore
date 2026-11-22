@@ -21,3 +21,5 @@ frontend/.hallmark/shots/
 # Nx workspace cache (Spartan CLI)
 frontend/.nx/
 __pycache__/
+# Playwright CLI output (may contain credentials)
+.playwright-cli/

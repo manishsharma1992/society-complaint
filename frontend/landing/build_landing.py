@@ -14,10 +14,10 @@ from legal_texts import LEGAL, UI, UPDATED
 HERE = Path(__file__).parent
 PUBLIC = HERE.parent / "public"
 SITE = "https://runwalltdfakepromises.com"
-FONTS = ("https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif:opsz@12..24&family=Geist:wght@400;500&"
-         "family=Noto+Serif+Devanagari:wght@400&family=Noto+Sans+Devanagari:wght@400;500&display=swap")
-STAMP = ("/* Hallmark · v2.0.0 · theme: studio (dealt 1/3, seed garden-city-seva-housing-808e·2c8c8255·2026-11-19·r0) · genre: editorial "
-         "· shape: Split Studio · draw: b2b1d5 · signature: the example post on a proof sheet, one stage at a time */\n")
+FONTS = ("https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Inter:wght@400;500;600"
+         "&family=Noto+Serif+Devanagari:wght@400;500&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap")
+STAMP = ("/* tasteskill v2 · direction: editorial-report (2026-11-22) · type and colour kept: DESIGN.md editorial system "
+         "in the brand green · idea: what was promised sits in the margin, what is there today runs in the column */\n")
 
 LOGO = ('<svg viewBox="72 24 112 216" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" '
         'd="M92 24 H164 A20 20 0 0 1 184 44 V188 A20 20 0 0 1 164 208 H126 L92 238 V208 A20 20 0 0 1 72 188 V44 '
@@ -87,7 +87,7 @@ THEME_BOOT = ("try { var m = localStorage.getItem('mycity.theme'); "
 
 SHARED_JS = """
     (function () {
-      // the header turns into a frosted bar once the page scrolls
+      // the header turns into a solid bar once the page scrolls
       var top = document.querySelector('.top');
       var mark = function () { top.classList.toggle('scrolled', scrollY > 8); };
       addEventListener('scroll', mark, { passive: true }); mark();
@@ -118,7 +118,7 @@ def header(lang, t, kind):
     auto, light, dark = (e(x) for x in THEME[lang])
     return (f'<a class="skip" href="#main">{e(t["skip"])}</a>\n'
             f'  <header class="top"><div class="shell">'
-            f'<a class="brand" href="{t["path"]}" aria-label="Runwal MyCity">{LOGO}<span>Runwal MyCity</span></a>'
+            f'<a class="brand" href="{t["path"]}" aria-label="Runwal MyCity">{LOGO}<span translate="no">Runwal MyCity</span></a>'
             f'<nav class="tools" aria-label="{e(t["language"])}">{langs}'
             f'<button type="button" class="theme" data-mode="auto" data-label-auto="{auto}" data-label-light="{light}" data-label-dark="{dark}" '
             f'aria-label="{auto}" title="{auto}">{ICONS}</button>'
@@ -137,7 +137,7 @@ def footer(lang, t, kind):
         site = li(t["path"], UI[lang]["back_home"]) + li("/public", t["nav_posts"]) + li("/login", t["nav_signin"])
     updated = f"<span>{e(UPDATED[lang])}</span>" if kind == "legal" else ""
     return (f'<footer class="site-foot"><div class="shell foot">'
-            f'<div class="about"><a class="brand" href="{t["path"]}">{LOGO}<span>Runwal MyCity</span></a><p>{e(t["footer_independent"])}</p></div>'
+            f'<div class="about"><a class="brand" href="{t["path"]}">{LOGO}<span translate="no">Runwal MyCity</span></a><p>{e(t["footer_independent"])}</p></div>'
             f'<nav aria-labelledby="f-legal"><h2 class="foot-h" id="f-legal">{e(UI[lang]["legal_title"])}</h2><ul>{legal}</ul></nav>'
             f'<nav aria-labelledby="f-lang"><h2 class="foot-h" id="f-lang">{e(t["foot_lang"])}</h2><ul>{langs}</ul></nav>'
             f'<nav aria-labelledby="f-site"><h2 class="foot-h" id="f-site">Runwal MyCity</h2><ul>{site}</ul></nav>'
@@ -154,7 +154,7 @@ def render_legal(lang, t):
     ui = UI[lang]
     note = (f'<p class="note">{e(ui["legal_note"])} <a href="/legal/" hreflang="en" lang="en">{e(ui["legal_note_link"])}</a></p>'
             if ui["legal_note"] else "")
-    values = {**{k: e(v) for k, v in ui.items()}, "lang": lang, "logo": LOGO, "path": t["path"], "language": e(t["language"]),
+    values = {**{k: e(v) for k, v in ui.items()}, "lang": lang, "logo": LOGO, "path": t["path"], "language": e(t["language"]), "fonts": e(FONTS),
               "legal_path": legal_path(lang), "updated": e(UPDATED[lang]), "note": note,
               "footer_independent": e(t["footer_independent"]),
               "footer_place": e(t["footer_place"]), "nav_signin": e(t["nav_signin"]), "skip": e(t["skip"]),
@@ -186,7 +186,8 @@ def rules(lang):
 def render(lang, t):
     page = (HERE / "template.html").read_text(encoding="utf-8")
     css = STAMP + "".join((HERE / f).read_text(encoding="utf-8") for f in ("feed/tokens.css", "feed/base.css", "shared.css", "feed/page.css"))
-    values = {**{k: e(v) for k, v in t.items() if isinstance(v, str)}, "lang": lang, "json_ld": json_ld(t), "fonts": e(FONTS), "css": css, **rules(lang)}
+    values = {**{k: e(v) for k, v in t.items() if isinstance(v, str)}, "lang": lang, "json_ld": json_ld(t), "fonts": e(FONTS), "css": css, **rules(lang),
+              "legal_guidelines": legal_path(lang) + "#guidelines"}
     values.update(shared_values(lang, t, "home"))
     out = re.sub(r"\{\{(\w+)\}\}", lambda m: values[m.group(1)], page)
     assert "{{" not in out, "a placeholder has no text"

@@ -12,7 +12,10 @@
 - **Seva homepage** (gardencityseva.com): layout `landing/seva/home.html`, styles `landing/seva/`, texts `landing/seva_texts.py`.
   Run `python3 frontend/landing/build_seva_home.py`; commit its outputs in `public-seva/`. Its samples are labelled as samples and
   use the app's real status names; never add a figure or a claim that is not true of the app. Only the homepages are open to search engines.
-- Font: the feed uses Hedvig Letters Serif and Geist with Noto Serif and Noto Sans Devanagari; Seva uses Chivo Mono with Noto Sans Devanagari.
+- Design: both homepages follow the root `DESIGN.md` editorial system (warm paper ground, Newsreader serif headings at weight 400,
+  Inter text, Noto Serif/Sans Devanagari for hi and mr, the brand green as the one accent) with their own composition:
+  Seva a split stage (the courtyard photo beside the text), the feed a printed report (one vertical axis at 42%).
+  Checked with the taste skill (`.taste-skill/`, `lint.mjs` and `inspect.mjs`): no monospace, eyebrows, hairlines, gradients or shadows at rest.
 - Legal pages at `/legal/`, `/hi/legal/`, `/mr/legal/` (Disclaimer, Terms of Use, Privacy Policy, Community
   Guidelines, Grievance Redressal), built by the same script from `landing/legal.html` and `landing/legal_texts.py`
   (a small Markdown subset; English prevails, hi and mr are translations and say so). Courts: Thane. The Privacy

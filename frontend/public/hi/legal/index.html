@@ -18,20 +18,21 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif:opsz@12..24&family=Geist:wght@400;500;600&family=Noto+Serif+Devanagari:wght@400&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=Inter:wght@400;500;600&amp;family=Noto+Serif+Devanagari:wght@400;500&amp;family=Noto+Sans+Devanagari:wght@400;500;600&amp;display=swap">
   <script>try { var m = localStorage.getItem('mycity.theme'); if (m === 'light' || m === 'dark') document.documentElement.dataset.theme = m; } catch (e) {}</script>
   <style>
     /* shared by the homepage and the legal pages (inlined by build_landing.py): theme colours, header, footer */
     :root {
       color-scheme: light;
-      --surface: #f4f7f8; --surface-2: #e9eef0; --surface-3: #dde4e7; --sheet: #fbfcfd; --rule: #cdd6da; --on-surface: #0b1622; --on-surface-2: #333f4c; --muted: #566270;
-      --link: #9c4300; --focus: #9c4300; --brand-mark: #1b8233;
-      --color-accent: #e8792f; --color-accent-press: #d2651c; --color-accent-ink: #0b1622;
-      --deep: #0b1622; --on-deep: #eef2f5; --on-deep-2: #c3ced6; --deep-rule: #2d3a48;
-      --color-glass: rgba(11, 22, 34, 0.08);
-      --shadow-sheet: 1px 2px 0 rgba(11, 22, 34, 0.07), 10px 18px 36px -14px rgba(11, 22, 34, 0.32);
-      --font-body: "Geist", "Noto Sans Devanagari", system-ui, sans-serif;
-      --font-heading: "Hedvig Letters Serif", "Noto Serif Devanagari", Georgia, serif;
+      /* DESIGN.md's editorial system in the brand green */
+      --surface: #f5f4f1; --surface-2: #e9e7e2; --surface-3: #dedbd4; --sheet: #fdfdfb; --rule: #dcd8cf; --on-surface: #181714; --on-surface-2: #45433e; --muted: #66635c;
+      --link: #145a26; --focus: #1b8233; --brand-mark: #1b8233;
+      --color-accent: #1b8233; --color-accent-press: #166b2a; --color-accent-ink: #ffffff;
+      --deep: #171a17; --deep-2: #20241f; --on-deep: #f4f2ec; --on-deep-2: #bdb9ae; --deep-rule: #33372f;
+      --color-glass: rgba(24, 23, 20, 0.07);
+      --shadow-sheet: none;
+      --font-body: "Inter", "Noto Sans Devanagari", system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-heading: "Newsreader", "Noto Serif Devanagari", Georgia, serif;
       --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-xl: 40px; --space-2xl: 64px;
       --shell: 1200px; --shell-gutter: 32px; --header-h: 72px;
     }
@@ -39,16 +40,16 @@
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
         color-scheme: dark;
-        --surface: #0e141b; --surface-2: #151d26; --surface-3: #222c37; --sheet: #182029; --rule: #303b47; --on-surface: #eef2f5; --on-surface-2: #bcc7d0; --muted: #98a5b0;
-        --link: #f09a5c; --focus: #f09a5c; --brand-mark: #ffffff; --deep: #18212b; --deep-rule: #364250;
-        --shadow-sheet: 0 18px 36px -14px rgba(0, 0, 0, 0.7);
+--surface: #121412; --surface-2: #1b1e1b; --surface-3: #262a25; --sheet: #20241f; --rule: #33372f; --on-surface: #f1efe9; --on-surface-2: #c9c5bb; --muted: #9c988e;
+        --link: #7fd393; --focus: #7fd393; --brand-mark: #ffffff; --deep: #0b0d0b; --deep-2: #151815; --deep-rule: #2c302a;
+        --shadow-sheet: none;
       }
     }
     :root[data-theme="dark"] {
       color-scheme: dark;
-      --surface: #0e141b; --surface-2: #151d26; --surface-3: #222c37; --sheet: #182029; --rule: #303b47; --on-surface: #eef2f5; --on-surface-2: #bcc7d0; --muted: #98a5b0;
-        --link: #f09a5c; --focus: #f09a5c; --brand-mark: #ffffff; --deep: #18212b; --deep-rule: #364250;
-        --shadow-sheet: 0 18px 36px -14px rgba(0, 0, 0, 0.7);
+--surface: #121412; --surface-2: #1b1e1b; --surface-3: #262a25; --sheet: #20241f; --rule: #33372f; --on-surface: #f1efe9; --on-surface-2: #c9c5bb; --muted: #9c988e;
+        --link: #7fd393; --focus: #7fd393; --brand-mark: #ffffff; --deep: #0b0d0b; --deep-2: #151815; --deep-rule: #2c302a;
+        --shadow-sheet: none;
     }
     @media (max-width: 40rem) { :root { --shell-gutter: 20px; } }
     .shell { width: 100%; max-width: var(--shell); margin-inline: auto; padding-inline: var(--shell-gutter); }
@@ -58,14 +59,14 @@
     /* header: fixed; a solid bar in the theme's colours once the page scrolls */
     .top { position: fixed; inset: 0 0 auto; z-index: 50; color: var(--on-surface);
       transition: background-color 240ms ease-out, box-shadow 240ms ease-out; }
-    .top.scrolled { background: var(--surface); box-shadow: 0 1px 0 var(--rule); }
+    .top.scrolled { background: var(--surface); }
     .top .shell { display: flex; align-items: center; justify-content: space-between; gap: var(--space-xs); min-height: var(--header-h); }
-    .brand { display: inline-flex; align-items: center; gap: var(--space-xs); min-height: 44px; text-decoration: none; font-weight: 700; color: inherit; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; text-decoration: none; font-family: var(--font-heading); font-size: 1.5rem; letter-spacing: -0.01em; color: inherit; }
     .brand svg { height: 30px; width: auto; color: var(--brand-mark); flex: none; }
     .tools { display: flex; align-items: center; gap: var(--space-2xs) var(--space-sm); font-size: 0.9375rem; }
     .tools a:not(.btn) { min-height: 44px; display: inline-flex; align-items: center; color: inherit; opacity: 0.78; text-decoration: none; }
     .tools a:not(.btn):hover, .tools a[aria-current] { opacity: 1; text-decoration: underline; text-underline-offset: 0.3em; }
-    .tools .btn { min-height: 44px; padding: 0 var(--space-md); font-size: 0.9375rem; }
+    .tools .btn { min-height: 44px; padding: 0 20px; font-size: 0.9375rem; border-radius: 999px; }
     .theme { width: 44px; height: 44px; display: inline-grid; place-items: center; border: 0; border-radius: 999px; background: transparent; color: inherit; cursor: pointer;
       transition: background-color 160ms ease-out, transform 120ms ease-out; }
     .theme:hover { background: var(--color-glass); }
@@ -74,22 +75,25 @@
     .theme[data-mode="auto"] .i-auto, .theme[data-mode="light"] .i-light, .theme[data-mode="dark"] .i-dark { display: block; }
     @media (max-width: 40rem) {
       .top .brand span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-      .tools { gap: var(--space-2xs) var(--space-xs); font-size: 0.875rem; }
+      .tools { gap: var(--space-2xs) var(--space-xs); }
     }
 
     /* footer: about, legal, language, site; a base strip for the address */
-    .site-foot { background: var(--surface-2); color: var(--on-surface-2); font-size: 0.9375rem; }
+    .site-foot { background: var(--deep); color: var(--on-deep-2); font-size: 0.9375rem; --on-surface: var(--on-deep); --on-surface-2: var(--on-deep-2); --surface-2: var(--deep); }
+    .site-foot .brand { font-size: clamp(2rem, 1.3rem + 2vw, 3rem); line-height: 1.05; gap: 16px; }
+    .site-foot .brand svg { height: 0.9em; }
     .foot { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); padding-block: var(--space-2xl) var(--space-xl); }
     .foot .brand { color: var(--on-surface); }
     .foot .about p { max-width: 36ch; margin: var(--space-sm) 0 0; }
-    .foot-h { font-size: 1rem; font-weight: 600; color: var(--on-surface); margin: 0 0 var(--space-2xs); letter-spacing: 0; line-height: 1.4; }
+    .foot-h { font-size: 0.9375rem; font-weight: 600; color: var(--on-surface); margin: 0 0 var(--space-2xs); letter-spacing: 0; line-height: 1.4; }
     .foot ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-md); }
     .foot ul a { min-height: 44px; display: inline-flex; align-items: center; color: var(--on-surface-2); text-decoration: none; }
     .foot ul a:hover { color: var(--on-surface); text-decoration: underline; text-underline-offset: 0.2em; }
-    .base { background: color-mix(in oklab, var(--surface-2) 90%, var(--on-surface)); }
-    .base .shell { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-xs) var(--space-lg); padding-block: var(--space-md); font-size: 0.875rem; }
+    .base { background: var(--deep-2); }
+    .base .shell { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-xs) var(--space-lg); padding-block: var(--space-md); font-size: 0.9375rem; }
     @media (min-width: 48rem) {
-      .foot { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.2fr) minmax(0, 0.8fr) minmax(0, 0.9fr); gap: var(--space-xl); }
+      .foot { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-xl); padding-block: 96px var(--space-2xl); }
+      .foot .about { grid-column: 1 / -1; }
       .foot ul { grid-template-columns: minmax(0, 1fr); }
     }
 
@@ -125,7 +129,7 @@
 </head>
 <body>
   <a class="skip" href="#main">सामग्री पर जाएँ</a>
-  <header class="top"><div class="shell"><a class="brand" href="/hi/" aria-label="Runwal MyCity"><svg viewBox="72 24 112 216" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M92 24 H164 A20 20 0 0 1 184 44 V188 A20 20 0 0 1 164 208 H126 L92 238 V208 A20 20 0 0 1 72 188 V44 A20 20 0 0 1 92 24 Z M96 56 h24 v24 h-24 Z M136 56 h24 v24 h-24 Z M96 100 h24 v24 h-24 Z M136 100 h24 v24 h-24 Z M96 144 h24 v24 h-24 Z M136 144 h24 v24 h-24 Z"/></svg><span>Runwal MyCity</span></a><nav class="tools" aria-label="भाषा"><a href="/legal/" hreflang="en" lang="en">English</a><a href="/hi/legal/" hreflang="hi" lang="hi" aria-current="page">हिन्दी</a><a href="/mr/legal/" hreflang="mr" lang="mr">मराठी</a><button type="button" class="theme" data-mode="auto" data-label-auto="थीम: अपने आप" data-label-light="थीम: हल्की" data-label-dark="थीम: गहरी" aria-label="थीम: अपने आप" title="थीम: अपने आप"><svg class="i-auto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg><svg class="i-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="i-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button><a class="btn" href="/login">साइन इन</a></nav></div></header>
+  <header class="top"><div class="shell"><a class="brand" href="/hi/" aria-label="Runwal MyCity"><svg viewBox="72 24 112 216" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M92 24 H164 A20 20 0 0 1 184 44 V188 A20 20 0 0 1 164 208 H126 L92 238 V208 A20 20 0 0 1 72 188 V44 A20 20 0 0 1 92 24 Z M96 56 h24 v24 h-24 Z M136 56 h24 v24 h-24 Z M96 100 h24 v24 h-24 Z M136 100 h24 v24 h-24 Z M96 144 h24 v24 h-24 Z M136 144 h24 v24 h-24 Z"/></svg><span translate="no">Runwal MyCity</span></a><nav class="tools" aria-label="भाषा"><a href="/legal/" hreflang="en" lang="en">English</a><a href="/hi/legal/" hreflang="hi" lang="hi" aria-current="page">हिन्दी</a><a href="/mr/legal/" hreflang="mr" lang="mr">मराठी</a><button type="button" class="theme" data-mode="auto" data-label-auto="थीम: अपने आप" data-label-light="थीम: हल्की" data-label-dark="थीम: गहरी" aria-label="थीम: अपने आप" title="थीम: अपने आप"><svg class="i-auto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg><svg class="i-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="i-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button><a class="btn" href="/login">साइन इन</a></nav></div></header>
   <main id="main">
     <h1>कानूनी जानकारी</h1>
     <p class="updated">अंतिम अपडेट: 19 नवंबर 2026</p>
@@ -159,10 +163,10 @@
 <p><strong>शिकायत अधिकारी</strong>: जल्द घोषित किया जाएगा<br><strong>ईमेल</strong>: जल्द घोषित किया जाएगा<br><strong>संपर्क</strong>: जल्द घोषित किया जाएगा</p>
 <p>सामग्री या इन नीतियों से जुड़ी शिकायतों की प्राप्ति 24 घंटे के भीतर स्वीकार की जाएगी और लागू कानून के अधीन 7 दिनों के भीतर उनका निपटारा किया जाएगा।</p></section>
   </main>
-  <footer class="site-foot"><div class="shell foot"><div class="about"><a class="brand" href="/hi/"><svg viewBox="72 24 112 216" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M92 24 H164 A20 20 0 0 1 184 44 V188 A20 20 0 0 1 164 208 H126 L92 238 V208 A20 20 0 0 1 72 188 V44 A20 20 0 0 1 92 24 Z M96 56 h24 v24 h-24 Z M136 56 h24 v24 h-24 Z M96 100 h24 v24 h-24 Z M136 100 h24 v24 h-24 Z M96 144 h24 v24 h-24 Z M136 144 h24 v24 h-24 Z"/></svg><span>Runwal MyCity</span></a><p>निवासियों का स्वतंत्र ऐप। इसे रनवाल या बिल्डर नहीं चलाते, न इसका उनसे कोई संबंध है।</p></div><nav aria-labelledby="f-legal"><h2 class="foot-h" id="f-legal">कानूनी जानकारी</h2><ul><li><a href="#disclaimer">अस्वीकरण</a></li><li><a href="#terms">उपयोग की शर्तें</a></li><li><a href="#privacy">गोपनीयता नीति</a></li><li><a href="#guidelines">सामुदायिक दिशानिर्देश</a></li><li><a href="#grievance">शिकायत निवारण</a></li></ul></nav><nav aria-labelledby="f-lang"><h2 class="foot-h" id="f-lang">भाषा</h2><ul><li><a href="/legal/" hreflang="en" lang="en">English</a></li><li><a href="/hi/legal/" hreflang="hi" lang="hi">हिन्दी</a></li><li><a href="/mr/legal/" hreflang="mr" lang="mr">मराठी</a></li></ul></nav><nav aria-labelledby="f-site"><h2 class="foot-h" id="f-site">Runwal MyCity</h2><ul><li><a href="/hi/">होमपेज पर वापस</a></li><li><a href="/public">निवासियों की पोस्ट पढ़ें</a></li><li><a href="/login">साइन इन</a></li></ul></nav></div><div class="base"><div class="shell"><span>रनवाल मायसिटी, कल्याण-शिल रोड, डोंबिवली पूर्व, ठाणे, महाराष्ट्र।</span><span>अंतिम अपडेट: 19 नवंबर 2026</span></div></div></footer>
+  <footer class="site-foot"><div class="shell foot"><div class="about"><a class="brand" href="/hi/"><svg viewBox="72 24 112 216" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M92 24 H164 A20 20 0 0 1 184 44 V188 A20 20 0 0 1 164 208 H126 L92 238 V208 A20 20 0 0 1 72 188 V44 A20 20 0 0 1 92 24 Z M96 56 h24 v24 h-24 Z M136 56 h24 v24 h-24 Z M96 100 h24 v24 h-24 Z M136 100 h24 v24 h-24 Z M96 144 h24 v24 h-24 Z M136 144 h24 v24 h-24 Z"/></svg><span translate="no">Runwal MyCity</span></a><p>निवासियों का स्वतंत्र ऐप। इसे रनवाल या बिल्डर नहीं चलाते, न इसका उनसे कोई संबंध है।</p></div><nav aria-labelledby="f-legal"><h2 class="foot-h" id="f-legal">कानूनी जानकारी</h2><ul><li><a href="#disclaimer">अस्वीकरण</a></li><li><a href="#terms">उपयोग की शर्तें</a></li><li><a href="#privacy">गोपनीयता नीति</a></li><li><a href="#guidelines">सामुदायिक दिशानिर्देश</a></li><li><a href="#grievance">शिकायत निवारण</a></li></ul></nav><nav aria-labelledby="f-lang"><h2 class="foot-h" id="f-lang">भाषा</h2><ul><li><a href="/legal/" hreflang="en" lang="en">English</a></li><li><a href="/hi/legal/" hreflang="hi" lang="hi">हिन्दी</a></li><li><a href="/mr/legal/" hreflang="mr" lang="mr">मराठी</a></li></ul></nav><nav aria-labelledby="f-site"><h2 class="foot-h" id="f-site">Runwal MyCity</h2><ul><li><a href="/hi/">होमपेज पर वापस</a></li><li><a href="/public">निवासियों की पोस्ट पढ़ें</a></li><li><a href="/login">साइन इन</a></li></ul></nav></div><div class="base"><div class="shell"><span>रनवाल मायसिटी, कल्याण-शिल रोड, डोंबिवली पूर्व, ठाणे, महाराष्ट्र।</span><span>अंतिम अपडेट: 19 नवंबर 2026</span></div></div></footer>
   <script>
     (function () {
-      // the header turns into a frosted bar once the page scrolls
+      // the header turns into a solid bar once the page scrolls
       var top = document.querySelector('.top');
       var mark = function () { top.classList.toggle('scrolled', scrollY > 8); };
       addEventListener('scroll', mark, { passive: true }); mark();

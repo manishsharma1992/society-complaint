@@ -11,8 +11,8 @@
   <link rel="alternate" hreflang="mr" href="https://runwalltdfakepromises.com/mr/">
   <link rel="alternate" hreflang="x-default" href="https://runwalltdfakepromises.com/">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" content="#f4f7f8" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0e141b" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f5f4f1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121412" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -29,7 +29,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif:opsz@12..24&amp;family=Geist:wght@400;500&amp;family=Noto+Serif+Devanagari:wght@400&amp;family=Noto+Sans+Devanagari:wght@400;500&amp;display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&amp;family=Inter:wght@400;500;600&amp;family=Noto+Serif+Devanagari:wght@400;500&amp;family=Noto+Sans+Devanagari:wght@400;500;600&amp;display=swap">
   <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://runwalltdfakepromises.com/#website", "url": "https://runwalltdfakepromises.com/", "name": "Runwal MyCity Residents", "inLanguage": ["en", "hi", "mr"]}, {"@type": "WebApplication", "name": "Runwal MyCity Residents", "url": "https://runwalltdfakepromises.com/hi/", "description": "रनवाल मायसिटी, डोंबिवली के निवासी दर्ज करते हैं कि क्या वादा था और आज क्या है। मॉडरेटर हर पोस्ट जाँचते हैं, और वह लेखक के नाम के बिना प्रकाशित होती है।", "inLanguage": "hi", "applicationCategory": "LifestyleApplication", "operatingSystem": "Web browser", "areaServed": {"@type": "Place", "name": "Runwal MyCity, Dombivli East, Thane, Maharashtra, India"}}]}</script>
   <script>
     document.documentElement.classList.add('js');
@@ -41,66 +41,58 @@
     try { var m = localStorage.getItem('mycity.theme'); if (m === 'light' || m === 'dark') document.documentElement.dataset.theme = m; } catch (e) {}
   </script>
   <style>
-/* Hallmark · v2.0.0 · theme: studio (dealt 1/3, seed garden-city-seva-housing-808e·2c8c8255·2026-11-19·r0) · genre: editorial · shape: Split Studio · draw: b2b1d5 · signature: the example post on a proof sheet, one stage at a time */
+/* tasteskill v2 · direction: editorial-report (2026-11-22) · type and colour kept: DESIGN.md editorial system in the brand green · idea: what was promised sits in the margin, what is there today runs in the column */
+/* the feed's sizes and its one vertical axis; colours and faces are the shared theme tokens in shared.css */
 :root {
-  color-scheme: light;
-  --space-3xs: 2px; --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-xl: 40px; --space-2xl: 64px; --space-3xl: 96px; --space-4xl: 144px;
-  --text-xs: 0.8125rem; --text-sm: 0.875rem; --text-md: 1rem; --text-lg: 1.25rem; --text-xl: 1.5625rem; --text-2xl: 1.953rem; --text-3xl: 2.441rem;
-  --text-display-s: clamp(2.25rem, 4vw + 0.5rem, 3.75rem); --text-display: clamp(2.75rem, 5vw + 1rem, 5.25rem);
-  --text-section: clamp(2rem, 2.5vw + 1rem, 3.5rem); --text-title: clamp(1.25rem, 0.75vw + 0.875rem, 1.625rem); --text-lead: clamp(1.125rem, 0.35vw + 1rem, 1.375rem);
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-in: cubic-bezier(0.7, 0, 0.84, 0); --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-  --dur-micro: 120ms; --dur-short: 220ms; --dur-long: 420ms;
-  --color-error: oklch(52% 0.19 27); --color-success: oklch(50% 0.12 150);
-  --container: 1440px; --gutter: 64px; --gap-columns: 32px; --section-gap-s: 120px; --section-gap: 144px; --section-gap-l: 176px;
-  --z-base: 1; --z-raised: 10; --z-dropdown: 100; --z-sticky: 200; --z-sticky-nav: 300; --z-modal: 400; --z-toast: 500; --z-tooltip: 600;
-  --color-paper: oklch(97.2% 0.006 215); --color-paper-2: oklch(94% 0.009 215); --color-paper-3: oklch(90.5% 0.011 215); --color-paper-hi: oklch(99% 0.004 215);
-  --color-ink: oklch(16% 0.032 250); --color-ink-2: oklch(34% 0.022 245); --color-muted: oklch(49% 0.018 240);
-  --color-rule: oklch(84% 0.010 225);
-  --color-accent: oklch(68% 0.172 50); --color-accent-ink: oklch(16% 0.032 250); --color-focus: oklch(52% 0.15 48);
-  --color-dot: color-mix(in oklab, var(--color-ink) 20%, transparent); --color-mark: color-mix(in oklab, var(--color-ink) 72%, transparent);
-  --font-display: "Hedvig Letters Serif", ui-serif, Georgia, serif; --font-body: "Geist", ui-sans-serif, system-ui, sans-serif;
-  --font-outlier: "Sofia Sans Extra Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
-  --radius-card: 3px; --radius-pill: 3px; --rule-hair: 1px;
-  --shadow-card: none;
-  --shadow-sheet: 1px 2px 0 color-mix(in oklab, var(--color-ink) 7%, transparent), 10px 18px 36px -14px color-mix(in oklab, var(--color-ink) 32%, transparent);
-  --tracking-display: -0.022em; --display-weight: 400;
+  --t-small: 0.9375rem; --t-body: 1.125rem; --t-title: 1.5rem;
+  --t-section: clamp(2rem, 1.3rem + 2vw, 3rem);
+  --t-display: clamp(2.75rem, 0.6rem + 7.2vw, 7.5rem);
+  --margin: clamp(20px, 3.4vw, 48px); --axis: 42%; --radius: 12px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --chapter-1: #232a22; --chapter-2: #1d2b1c; --chapter-3: #2b2721;
 }
 *, *::before, *::after { box-sizing: border-box; }
-html, body { overflow-x: clip; }
-html { scrollbar-color: var(--color-muted) var(--color-paper); scroll-padding-top: var(--space-3xl); }
-body { margin: 0; background: var(--color-paper); color: var(--color-ink); font-family: var(--font-body); font-size: var(--text-md); line-height: 1.55; -webkit-font-smoothing: antialiased; caret-color: var(--color-accent); }
-::selection { background: color-mix(in oklab, var(--color-accent) 22%, transparent); color: var(--color-ink); }
-:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
-a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.16em; }
-h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: var(--display-weight, 700); font-synthesis: none; letter-spacing: var(--tracking-display); line-height: 1.05; overflow-wrap: break-word; min-width: 0; text-wrap: balance; }
-h1 { max-width: 20ch; font-size: var(--text-display); } h2 { max-width: 30ch; font-size: var(--text-section); } h3 { max-width: 40ch; font-size: var(--text-title); line-height: 1.2; }
-.lead { font-size: var(--text-lead); line-height: 1.45; max-width: 52ch; }
-p { margin: 0; text-wrap: pretty; }
-p:not([class]) { max-width: 65ch; }
-img, video { max-width: 100%; height: auto; display: block; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h) + 16px); overflow-x: clip; }
+body { margin: 0; overflow-x: clip; background: var(--surface); color: var(--on-surface); font: 400 var(--t-body)/1.55 var(--font-body); -webkit-font-smoothing: antialiased; }
+:lang(hi), :lang(mr) { line-height: 1.7; }
+img { display: block; max-width: 100%; height: auto; }
+h1, h2, h3, p, ul, ol, dl, dd, figure { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+h1, h2 { font-family: var(--font-heading); font-weight: 400; letter-spacing: -0.03em; line-height: 0.98; text-wrap: balance; overflow-wrap: break-word; min-width: 0; color: inherit; }
+:lang(hi) :is(h1, h2, h3), :lang(mr) :is(h1, h2, h3) { letter-spacing: 0; line-height: 1.3; }
+h1 { font-size: var(--t-display); }
+h2 { font-size: var(--t-section); }
+h3 { font-family: var(--font-heading); font-weight: 400; font-size: var(--t-title); line-height: 1.2; letter-spacing: -0.01em; }
+a { color: inherit; }
 svg { display: block; }
-[hidden] { display: none !important; }
-button, input, select, textarea { font: inherit; }
-.container { width: 100%; max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); box-sizing: border-box; }
-.num, .figure, td.num { font-variant-numeric: tabular-nums; }
-.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-[data-slot] { position: relative; overflow: hidden; background: linear-gradient(160deg, var(--color-paper-2, var(--color-paper)), var(--color-paper-3, var(--color-paper))); }
-[data-slot] > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
-[data-slot]:has(> img) > :not(img):not([data-keep]) { display: none !important; }
-@media (max-width: 60rem) { :root { --gutter: 24px; --section-gap-s: 80px; --section-gap: 96px; --section-gap-l: 120px; } }
-@media (max-width: 40rem) { :root { --gutter: 16px; --section-gap-s: 56px; --section-gap: 72px; --section-gap-l: 96px; --gap-columns: 16px; } }
-@media (prefers-reduced-motion: reduce) { *:not(.keep-motion), *:not(.keep-motion)::before, *:not(.keep-motion)::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+
+/* the page draws under a notch (viewport-fit=cover), so keep content clear of it */
+body { padding-inline: env(safe-area-inset-left, 0) env(safe-area-inset-right, 0); }
+a, button, summary, label { -webkit-tap-highlight-color: transparent; }
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 24px; border: 2px solid transparent; border-radius: 999px; background: transparent; color: var(--on-surface); font: 500 var(--t-small)/1.2 var(--font-body); text-align: center; text-decoration: none; cursor: pointer; touch-action: manipulation; transition: background-color 180ms var(--ease), transform 120ms var(--ease); }
+.btn:active { transform: translateY(1px) scale(0.99); }
+.btn--primary, .tools .btn { background: var(--color-accent); color: var(--color-accent-ink); }
+.btn--primary:hover, .tools .btn:hover { background: var(--color-accent-press); }
+.quiet { display: inline-flex; align-items: center; min-height: 44px; font-weight: 500; font-size: var(--t-small); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.3em; transition: text-decoration-thickness 160ms var(--ease); }
+.quiet:hover { text-decoration-thickness: 2px; }
+
+/* parts arrive in turn as they come into view; visible without script and under reduced motion */
+.moving .rise { opacity: 0; transform: translateY(24px); transition: opacity 700ms var(--ease) calc(var(--i, 0) * 90ms), transform 900ms var(--ease) calc(var(--i, 0) * 90ms); }
+.moving .rise.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn:active { transform: none; } }
     /* shared by the homepage and the legal pages (inlined by build_landing.py): theme colours, header, footer */
     :root {
       color-scheme: light;
-      --surface: #f4f7f8; --surface-2: #e9eef0; --surface-3: #dde4e7; --sheet: #fbfcfd; --rule: #cdd6da; --on-surface: #0b1622; --on-surface-2: #333f4c; --muted: #566270;
-      --link: #9c4300; --focus: #9c4300; --brand-mark: #1b8233;
-      --color-accent: #e8792f; --color-accent-press: #d2651c; --color-accent-ink: #0b1622;
-      --deep: #0b1622; --on-deep: #eef2f5; --on-deep-2: #c3ced6; --deep-rule: #2d3a48;
-      --color-glass: rgba(11, 22, 34, 0.08);
-      --shadow-sheet: 1px 2px 0 rgba(11, 22, 34, 0.07), 10px 18px 36px -14px rgba(11, 22, 34, 0.32);
-      --font-body: "Geist", "Noto Sans Devanagari", system-ui, sans-serif;
-      --font-heading: "Hedvig Letters Serif", "Noto Serif Devanagari", Georgia, serif;
+      /* DESIGN.md's editorial system in the brand green */
+      --surface: #f5f4f1; --surface-2: #e9e7e2; --surface-3: #dedbd4; --sheet: #fdfdfb; --rule: #dcd8cf; --on-surface: #181714; --on-surface-2: #45433e; --muted: #66635c;
+      --link: #145a26; --focus: #1b8233; --brand-mark: #1b8233;
+      --color-accent: #1b8233; --color-accent-press: #166b2a; --color-accent-ink: #ffffff;
+      --deep: #171a17; --deep-2: #20241f; --on-deep: #f4f2ec; --on-deep-2: #bdb9ae; --deep-rule: #33372f;
+      --color-glass: rgba(24, 23, 20, 0.07);
+      --shadow-sheet: none;
+      --font-body: "Inter", "Noto Sans Devanagari", system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-heading: "Newsreader", "Noto Serif Devanagari", Georgia, serif;
       --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px; --space-lg: 24px; --space-xl: 40px; --space-2xl: 64px;
       --shell: 1200px; --shell-gutter: 32px; --header-h: 72px;
     }
@@ -108,16 +100,16 @@ button, input, select, textarea { font: inherit; }
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
         color-scheme: dark;
-        --surface: #0e141b; --surface-2: #151d26; --surface-3: #222c37; --sheet: #182029; --rule: #303b47; --on-surface: #eef2f5; --on-surface-2: #bcc7d0; --muted: #98a5b0;
-        --link: #f09a5c; --focus: #f09a5c; --brand-mark: #ffffff; --deep: #18212b; --deep-rule: #364250;
-        --shadow-sheet: 0 18px 36px -14px rgba(0, 0, 0, 0.7);
+--surface: #121412; --surface-2: #1b1e1b; --surface-3: #262a25; --sheet: #20241f; --rule: #33372f; --on-surface: #f1efe9; --on-surface-2: #c9c5bb; --muted: #9c988e;
+        --link: #7fd393; --focus: #7fd393; --brand-mark: #ffffff; --deep: #0b0d0b; --deep-2: #151815; --deep-rule: #2c302a;
+        --shadow-sheet: none;
       }
     }
     :root[data-theme="dark"] {
       color-scheme: dark;
-      --surface: #0e141b; --surface-2: #151d26; --surface-3: #222c37; --sheet: #182029; --rule: #303b47; --on-surface: #eef2f5; --on-surface-2: #bcc7d0; --muted: #98a5b0;
-        --link: #f09a5c; --focus: #f09a5c; --brand-mark: #ffffff; --deep: #18212b; --deep-rule: #364250;
-        --shadow-sheet: 0 18px 36px -14px rgba(0, 0, 0, 0.7);
+--surface: #121412; --surface-2: #1b1e1b; --surface-3: #262a25; --sheet: #20241f; --rule: #33372f; --on-surface: #f1efe9; --on-surface-2: #c9c5bb; --muted: #9c988e;
+        --link: #7fd393; --focus: #7fd393; --brand-mark: #ffffff; --deep: #0b0d0b; --deep-2: #151815; --deep-rule: #2c302a;
+        --shadow-sheet: none;
     }
     @media (max-width: 40rem) { :root { --shell-gutter: 20px; } }
     .shell { width: 100%; max-width: var(--shell); margin-inline: auto; padding-inline: var(--shell-gutter); }
@@ -127,14 +119,14 @@ button, input, select, textarea { font: inherit; }
     /* header: fixed; a solid bar in the theme's colours once the page scrolls */
     .top { position: fixed; inset: 0 0 auto; z-index: 50; color: var(--on-surface);
       transition: background-color 240ms ease-out, box-shadow 240ms ease-out; }
-    .top.scrolled { background: var(--surface); box-shadow: 0 1px 0 var(--rule); }
+    .top.scrolled { background: var(--surface); }
     .top .shell { display: flex; align-items: center; justify-content: space-between; gap: var(--space-xs); min-height: var(--header-h); }
-    .brand { display: inline-flex; align-items: center; gap: var(--space-xs); min-height: 44px; text-decoration: none; font-weight: 700; color: inherit; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; text-decoration: none; font-family: var(--font-heading); font-size: 1.5rem; letter-spacing: -0.01em; color: inherit; }
     .brand svg { height: 30px; width: auto; color: var(--brand-mark); flex: none; }
     .tools { display: flex; align-items: center; gap: var(--space-2xs) var(--space-sm); font-size: 0.9375rem; }
     .tools a:not(.btn) { min-height: 44px; display: inline-flex; align-items: center; color: inherit; opacity: 0.78; text-decoration: none; }
     .tools a:not(.btn):hover, .tools a[aria-current] { opacity: 1; text-decoration: underline; text-underline-offset: 0.3em; }
-    .tools .btn { min-height: 44px; padding: 0 var(--space-md); font-size: 0.9375rem; }
+    .tools .btn { min-height: 44px; padding: 0 20px; font-size: 0.9375rem; border-radius: 999px; }
     .theme { width: 44px; height: 44px; display: inline-grid; place-items: center; border: 0; border-radius: 999px; background: transparent; color: inherit; cursor: pointer;
       transition: background-color 160ms ease-out, transform 120ms ease-out; }
     .theme:hover { background: var(--color-glass); }
@@ -143,167 +135,191 @@ button, input, select, textarea { font: inherit; }
     .theme[data-mode="auto"] .i-auto, .theme[data-mode="light"] .i-light, .theme[data-mode="dark"] .i-dark { display: block; }
     @media (max-width: 40rem) {
       .top .brand span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-      .tools { gap: var(--space-2xs) var(--space-xs); font-size: 0.875rem; }
+      .tools { gap: var(--space-2xs) var(--space-xs); }
     }
 
     /* footer: about, legal, language, site; a base strip for the address */
-    .site-foot { background: var(--surface-2); color: var(--on-surface-2); font-size: 0.9375rem; }
+    .site-foot { background: var(--deep); color: var(--on-deep-2); font-size: 0.9375rem; --on-surface: var(--on-deep); --on-surface-2: var(--on-deep-2); --surface-2: var(--deep); }
+    .site-foot .brand { font-size: clamp(2rem, 1.3rem + 2vw, 3rem); line-height: 1.05; gap: 16px; }
+    .site-foot .brand svg { height: 0.9em; }
     .foot { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); padding-block: var(--space-2xl) var(--space-xl); }
     .foot .brand { color: var(--on-surface); }
     .foot .about p { max-width: 36ch; margin: var(--space-sm) 0 0; }
-    .foot-h { font-size: 1rem; font-weight: 600; color: var(--on-surface); margin: 0 0 var(--space-2xs); letter-spacing: 0; line-height: 1.4; }
+    .foot-h { font-size: 0.9375rem; font-weight: 600; color: var(--on-surface); margin: 0 0 var(--space-2xs); letter-spacing: 0; line-height: 1.4; }
     .foot ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-md); }
     .foot ul a { min-height: 44px; display: inline-flex; align-items: center; color: var(--on-surface-2); text-decoration: none; }
     .foot ul a:hover { color: var(--on-surface); text-decoration: underline; text-underline-offset: 0.2em; }
-    .base { background: color-mix(in oklab, var(--surface-2) 90%, var(--on-surface)); }
-    .base .shell { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-xs) var(--space-lg); padding-block: var(--space-md); font-size: 0.875rem; }
+    .base { background: var(--deep-2); }
+    .base .shell { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-xs) var(--space-lg); padding-block: var(--space-md); font-size: 0.9375rem; }
     @media (min-width: 48rem) {
-      .foot { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.2fr) minmax(0, 0.8fr) minmax(0, 0.9fr); gap: var(--space-xl); }
+      .foot { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-xl); padding-block: 96px var(--space-2xl); }
+      .foot .about { grid-column: 1 / -1; }
       .foot ul { grid-template-columns: minmax(0, 1fr); }
     }
-/* The proof sheet: cool paper, ink, crop marks on everything printed, one orange that draws the construction. */
-:root {
-  --container: 1200px; --header-clear: calc(var(--header-h) + var(--space-lg));
-  --color-paper: var(--surface); --color-paper-2: var(--surface-2); --color-paper-3: var(--surface-3); --color-paper-hi: var(--sheet);
-  --color-ink: var(--on-surface); --color-ink-2: var(--on-surface-2); --color-muted: var(--muted); --color-rule: var(--rule); --color-focus: var(--focus);
-  --color-dot: color-mix(in oklab, var(--on-surface) 18%, transparent); --color-mark: color-mix(in oklab, var(--on-surface) 70%, transparent);
-  --font-display: var(--font-heading);
-}
-:lang(hi), :lang(mr) { --tracking-display: 0; }
-html { scroll-behavior: smooth; scroll-padding-top: var(--header-clear); -webkit-text-size-adjust: 100%; }
-body { background: var(--surface); color: var(--on-surface); }
-h1, h2, h3 { font-family: var(--font-heading); font-weight: 400; color: var(--on-surface); overflow-wrap: break-word; min-width: 0; line-height: 1.04; }
-:lang(hi) :is(h1, h2, h3), :lang(mr) :is(h1, h2, h3) { line-height: 1.3; }
-h1 { max-width: 11ch; font-size: clamp(3rem, 1.6rem + 6vw, 6rem); }
-h2 { font-size: clamp(2.125rem, 1.4rem + 2.6vw, 3.5rem); max-width: 18ch; }
-h3 { font-size: var(--text-xl); line-height: 1.2; max-width: none; }
-ul, ol { margin: 0; padding: 0; list-style: none; }
+/* the printed annual: one vertical axis at 42% of the width; notes left of it, the column hangs from it */
+.axis-row { display: grid; grid-template-columns: minmax(0, var(--axis)) minmax(0, 1fr); column-gap: clamp(24px, 4vw, 72px); padding-inline: var(--margin); }
+.intro { margin-top: 20px; max-width: 40ch; }
 
-/* crop marks: eight ticks set off the corners of anything printed */
-.crop { position: relative; --l: 10px; --o: 10px; }
-.crop::before { content: ""; position: absolute; inset: calc(-1 * var(--o)); pointer-events: none;
-  background:
-    linear-gradient(var(--color-mark), var(--color-mark)) 0 var(--o) / var(--l) 1px no-repeat, linear-gradient(var(--color-mark), var(--color-mark)) var(--o) 0 / 1px var(--l) no-repeat,
-    linear-gradient(var(--color-mark), var(--color-mark)) 100% var(--o) / var(--l) 1px no-repeat, linear-gradient(var(--color-mark), var(--color-mark)) calc(100% - var(--o)) 0 / 1px var(--l) no-repeat,
-    linear-gradient(var(--color-mark), var(--color-mark)) 0 calc(100% - var(--o)) / var(--l) 1px no-repeat, linear-gradient(var(--color-mark), var(--color-mark)) var(--o) 100% / 1px var(--l) no-repeat,
-    linear-gradient(var(--color-mark), var(--color-mark)) 100% calc(100% - var(--o)) / var(--l) 1px no-repeat, linear-gradient(var(--color-mark), var(--color-mark)) calc(100% - var(--o)) 100% / 1px var(--l) no-repeat; }
+/* masthead: the township as it stands, then the title on the axis */
+.mast { padding-top: var(--header-h); }
+.mast-photo { margin-inline: var(--margin); height: 46svh; min-height: 280px; border-radius: var(--radius); overflow: hidden; background: var(--surface-3); }
+.mast-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%; animation: drift 4.5s var(--ease) both; }
+/* the photograph settles once on arrival (under five seconds, so it needs no pause control) */
+@keyframes drift { from { transform: scale(1.06); } to { transform: scale(1); } }
+.mast .axis-row { padding-block: clamp(32px, 5vh, 56px) clamp(56px, 9vh, 96px); align-items: end; }
+.mast .lead { max-width: 30ch; font-size: var(--t-body); color: var(--on-surface); padding-bottom: 6px; }
+.mast h1 { max-width: 12ch; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin-top: 36px; }
 
-.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: var(--space-sm) var(--space-lg); border: 1px solid var(--on-surface); border-radius: 3px; background: transparent; color: var(--on-surface); font: 500 var(--text-md)/1.25 var(--font-body); text-align: center; text-decoration: none; cursor: pointer; touch-action: manipulation; transition: background-color var(--dur-short) var(--ease-out), color var(--dur-short) var(--ease-out), transform var(--dur-micro) var(--ease-out); }
-.btn:hover { background: var(--surface-2); }
-.btn:active { transform: translateY(1px); }
-.btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
-.btn--primary { border-color: var(--color-accent); background: var(--color-accent); color: var(--color-accent-ink); }
-.btn--primary:hover { border-color: var(--color-accent-press); background: var(--color-accent-press); }
+/* promised and today: a board of whole tiles */
+.tiles { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-template-rows: repeat(2, 38svh); gap: 8px; padding-inline: var(--margin); }
+.tile { margin: 0; border-radius: var(--radius); overflow: hidden; display: flex; align-items: flex-end; padding: 24px clamp(20px, 2.4vw, 32px); }
+.tile-a { grid-column: 1 / span 8; grid-row: 1 / span 2; background: var(--deep); color: var(--on-deep); }
+.tile-b { grid-column: 9 / span 4; grid-row: 1; background: var(--surface-3); }
+.tile-c { grid-column: 9 / span 4; grid-row: 2; padding: 0; }
+.tile-c img { width: 100%; height: 100%; object-fit: cover; }
+.tile-a h2, .tile-b span { font-family: var(--font-heading); font-weight: 400; font-size: var(--t-display); line-height: 0.86; letter-spacing: -0.04em; }
+:lang(hi) :is(.tile-a h2, .tile-b span), :lang(mr) :is(.tile-a h2, .tile-b span) { letter-spacing: 0; line-height: 1.15; }
+.says { padding-block: clamp(56px, 8vw, 112px) clamp(96px, 12vw, 176px); }
+.say { max-width: 46ch; font-size: var(--t-title); line-height: 1.42; }
+.say-2 { margin-top: 20px; font-family: var(--font-heading); }
 
-/* hero: the poster, on a proof with its dot grid */
-.hero { padding-block: calc(var(--header-h) + clamp(var(--space-xl), 4vw, var(--space-3xl))) clamp(var(--space-2xl), 6vw, 88px); background-image: radial-gradient(circle at 1px 1px, var(--color-dot) 1px, transparent 1.4px); background-size: 24px 24px; }
-.hero .container { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(var(--space-2xl), 5vw, 72px); align-items: center; }
-.hero .lead { margin-top: var(--space-lg); max-width: 32ch; font-size: var(--text-lg); line-height: 1.45; color: var(--on-surface-2); }
-.actions { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-xl); }
-.plate { margin: 0; }
-.plate img { width: 100%; height: 100%; object-fit: cover; border-radius: 3px; }
-.hero .plate { aspect-ratio: 4 / 5; max-height: 560px; }
-
-.band { padding-block: clamp(72px, 9vw, 128px); }
-.say { max-width: 24ch; font-family: var(--font-heading); font-size: clamp(1.75rem, 1.2rem + 2.2vw, 3rem); line-height: 1.2; color: var(--on-surface); }
-:lang(hi) .say, :lang(mr) .say { line-height: 1.45; max-width: 30ch; }
-.say-band { border-top: 1px solid var(--on-surface); }
-.intro { margin-top: var(--space-md); max-width: 46ch; font-size: var(--text-lg); line-height: 1.5; color: var(--on-surface-2); }
-
-/* the example post: pick a stage, the sheet shows it */
-.record { background: var(--surface-2); }
-.bench { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(var(--space-2xl), 6vw, 88px); align-items: start; margin-top: var(--space-2xl); }
-.stages { border-top: 1px solid var(--on-surface); }
-.stage { display: block; width: 100%; min-height: 44px; padding: var(--space-md) 0 var(--space-md) var(--space-md); border: 0; border-bottom: 1px solid var(--rule); background: transparent; color: var(--on-surface-2); font: inherit; text-align: start; cursor: pointer; transition: background-color var(--dur-short) var(--ease-out), color var(--dur-short) var(--ease-out); }
-.stage strong { display: block; font-family: var(--font-heading); font-size: var(--text-xl); font-weight: 400; line-height: 1.25; color: var(--on-surface); }
-.stage span { display: block; margin-top: var(--space-2xs); }
+/* the example post: the three questions as notes in the margin, the post hanging from the axis */
+.record { background: var(--surface-2); padding-block: clamp(96px, 12vw, 176px); }
+.record .axis-row { align-items: start; }
+.stages { display: grid; gap: 6px; margin-top: clamp(120px, 14vw, 200px); }
+.stage { display: grid; gap: 4px; width: 100%; min-height: 44px; padding: 16px 20px; border: 0; border-radius: var(--radius); background: transparent; color: var(--on-surface-2); font: inherit; text-align: start; cursor: pointer; transition: background-color 180ms var(--ease), color 180ms var(--ease); }
+.stage strong { font-family: var(--font-heading); font-weight: 400; font-size: var(--t-title); line-height: 1.25; color: var(--on-surface); }
+.stage span { font-size: var(--t-small); }
 .stage:hover { background: var(--surface-3); }
-.stage[aria-pressed="true"] { background: var(--sheet); color: var(--on-surface); box-shadow: inset 2px 0 0 var(--color-accent); }
-.sheet { padding: clamp(var(--space-lg), 3vw, var(--space-xl)); border-radius: 3px; background: var(--sheet); box-shadow: var(--shadow-sheet); }
-.sheet-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-xs) var(--space-md); padding-bottom: var(--space-md); border-bottom: 1px solid var(--on-surface); font-size: var(--text-sm); font-weight: 500; color: var(--muted); }
-.sheet-state { color: var(--on-surface); }
-.field { position: relative; padding: var(--space-md) var(--space-sm); border-bottom: 1px solid var(--rule); transition: opacity var(--dur-short) var(--ease-out); }
-.field:last-child { border-bottom: 0; }
-.field dt { font-size: var(--text-sm); font-weight: 500; color: var(--muted); }
-.field dd { margin: var(--space-3xs) 0 0; font-family: var(--font-heading); font-size: var(--text-lg); line-height: 1.3; }
-.frame { display: grid; place-items: center; margin-top: var(--space-xs); aspect-ratio: 16 / 7; border: 1px dashed var(--muted); font-family: var(--font-body); font-size: var(--text-sm); color: var(--muted); }
-.js .sheet[data-step="0"] .field:not(.f1), .js .sheet[data-step="1"] .f3 { opacity: 0.36; }
-.field::after { content: ""; position: absolute; inset: 2px 0; border: 1px solid var(--color-accent); opacity: 0; pointer-events: none; transition: opacity var(--dur-short) var(--ease-out); }
-.js .sheet[data-step="0"] .f1::after, .js .sheet[data-step="1"] .f2::after, .js .sheet[data-step="2"] .f3::after { opacity: 1; }
+.stage[aria-pressed="true"] { background: var(--sheet); color: var(--on-surface); }
+.sheet { margin-top: 40px; max-width: 580px; padding: 28px; border-radius: var(--radius); background: var(--sheet); }
+.sheet-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 16px; padding-bottom: 16px; font-size: var(--t-small); color: var(--muted); }
+.sheet-state { display: inline-flex; align-items: center; min-height: 28px; padding: 0 12px; border-radius: 999px; background: var(--surface-2); color: var(--on-surface); font-weight: 500; }
+.field { padding: 16px 12px; border-top: 1px solid var(--rule); border-radius: 8px; transition: opacity 260ms var(--ease), background-color 260ms var(--ease); } /* taste-skill-ignore: the example post is the app's own card (data-ui) */
+.field dt { font-size: var(--t-small); color: var(--muted); }
+.field dt + dd + dt { margin-top: 10px; }
+.field dd { margin-top: 2px; font-family: var(--font-heading); font-size: var(--t-body); line-height: 1.35; }
+.frame { display: grid; place-items: center; margin-top: 8px; aspect-ratio: 16 / 7; border: 1px dashed var(--muted); border-radius: 8px; font-family: var(--font-body); font-size: var(--t-small); color: var(--muted); }
+.js .sheet[data-step="0"] .field:not(.f1), .js .sheet[data-step="1"] .f3 { opacity: 0.55; }
+.js .sheet[data-step="0"] .f1, .js .sheet[data-step="1"] .f2, .js .sheet[data-step="2"] .f3 { background: color-mix(in oklab, var(--color-accent) 9%, transparent); }
 
-/* safety: an index of three promises */
-.index { margin-top: var(--space-2xl); border-top: 1px solid var(--on-surface); }
-.index li { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 5fr) minmax(0, 2fr); gap: var(--space-xl); align-items: center; padding-block: var(--space-lg); border-bottom: 1px solid var(--rule); }
-.index p { color: var(--on-surface-2); }
-.index .plate { aspect-ratio: 3 / 2; }
+/* speak up, safely: one chapter per promise, each on the darkest tone of its own photograph */
+.chapter { display: grid; grid-template-columns: minmax(0, 1fr) min(40vw, 500px) minmax(0, 1fr); grid-template-rows: 1fr auto; column-gap: clamp(24px, 4vw, 64px); row-gap: 24px; min-height: 92svh; padding: clamp(28px, 4vw, 48px) var(--margin); color: var(--on-deep); }
+.c1 { background: var(--chapter-1); } .c2 { background: var(--chapter-2); } .c3 { background: var(--chapter-3); }
+.chapter-head { grid-column: 1; grid-row: 1; align-self: start; display: grid; gap: 20px; }
+.chapter-head h2 { font-size: var(--t-section); }
+.chapter-head h3 { font-size: var(--t-title); }
+.chapter figure { grid-column: 2; grid-row: 1 / span 2; align-self: center; aspect-ratio: 3 / 4; max-height: 76svh; width: 100%; overflow: hidden; border-radius: var(--radius); }
+.chapter img { width: 100%; height: 100%; object-fit: cover; }
+.chapter p { grid-column: 1; grid-row: 2; align-self: end; max-width: 30ch; color: var(--on-deep-2); }
+.moving .chapter > * { opacity: 0; transform: translateY(20px); transition: opacity 700ms var(--ease), transform 900ms var(--ease); }
+.moving .chapter.in > * { opacity: 1; transform: none; }
+.moving .chapter img { transform: scale(0.92); transition: transform 1000ms var(--ease); }
+.moving .chapter.in img { transform: none; }
 
-/* what is published, on ink */
-.rules { background: var(--deep); --on-surface: var(--on-deep); --on-surface-2: var(--on-deep-2); --rule: var(--deep-rule); color: var(--on-deep); }
-.rule-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(var(--space-2xl), 6vw, 88px); margin-top: var(--space-2xl); }
-.rule-grid h3 { padding-bottom: var(--space-md); border-bottom: 1px solid var(--on-deep); }
-.rule-grid li { padding-block: var(--space-sm); border-bottom: 1px solid var(--deep-rule); color: var(--on-deep-2); }
-.rules :focus-visible { outline-color: var(--color-accent); }
+/* community guidelines: a pale statement cell beside dark rows */
+.rules { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: 86svh; }
+.rules-cell { display: flex; flex-direction: column; justify-content: space-between; gap: 48px; padding: clamp(64px, 8vw, 112px) var(--margin); background: var(--surface); }
+.rules-cell h2 { max-width: 11ch; }
+.rules-foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px 32px; }
+.rules-foot p { max-width: 30ch; }
+.rules-rows { display: grid; grid-template-rows: 1fr 1fr; background: var(--deep); color: var(--on-deep); }
+.rule-row { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 24px; padding: clamp(36px, 4vw, 56px) var(--margin); }
+.rule-row + .rule-row { background: var(--deep-2); }
+.rule-row h3 { font-size: var(--t-title); }
+.rule-row ul { display: grid; gap: 14px; color: var(--on-deep-2); }
 
-.home { padding-block: clamp(72px, 9vw, 128px) 0; }
-.home .container { display: grid; gap: var(--space-2xl); }
-.home .plate { aspect-ratio: 21 / 9; }
+/* questions: large on the left, answers open beside them */
+.faq { padding-block: clamp(96px, 12vw, 176px); }
+.qa { display: grid; gap: clamp(48px, 6vw, 80px); padding-inline: var(--margin); }
+.qa-row { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: clamp(16px, 2.4vw, 32px); align-items: baseline; }
+.qa-row h2, .qa-row h3 { grid-column: 1 / span 6; font-family: var(--font-heading); font-weight: 400; font-size: var(--t-section); line-height: 1.1; letter-spacing: -0.02em; }
+.qa-row h2 { color: var(--muted); }
+.qa-row p { grid-column: 8 / span 5; max-width: 40ch; }
 
-.qa { margin-top: var(--space-xl); max-width: 52rem; border-top: 1px solid var(--on-surface); }
-.qa details { border-bottom: 1px solid var(--rule); }
-.qa summary { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); min-height: 64px; padding-block: var(--space-sm); font-family: var(--font-heading); font-size: var(--text-lg); line-height: 1.3; cursor: pointer; list-style: none; }
-.qa summary::-webkit-details-marker { display: none; }
-.qa summary::after { content: ""; flex: none; width: 14px; height: 14px; background: linear-gradient(currentColor, currentColor) center / 100% 1px no-repeat, linear-gradient(currentColor, currentColor) center / 1px 100% no-repeat; }
-.qa details[open] summary::after { background: linear-gradient(currentColor, currentColor) center / 100% 1px no-repeat; }
-.qa details p { padding-bottom: var(--space-lg); max-width: 62ch; color: var(--on-surface-2); }
+/* the close: the page's colours flipped */
+.invert { display: flex; flex-direction: column; justify-content: space-between; gap: 64px; min-height: 86svh; padding: clamp(64px, 8vw, 112px) var(--margin) 40px; background: var(--on-surface); color: var(--surface); --focus: var(--surface); }
+.invert h2 { font-size: var(--t-display); line-height: 0.92; letter-spacing: -0.04em; max-width: 9ch; }
+.invert-foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 24px 40px; }
+.invert-foot p { max-width: 34ch; }
+.invert .btn { min-height: 56px; padding-inline: 32px; }
 
-.join { background: var(--surface-2); }
-
-@media (max-width: 60rem) {
-  .hero .container, .bench, .rule-grid { grid-template-columns: minmax(0, 1fr); }
-  .hero .plate { aspect-ratio: 16 / 10; max-height: none; }
-  .index li { grid-template-columns: minmax(0, 1fr) minmax(0, 7rem); gap: var(--space-2xs) var(--space-md); }
-  .index h3 { grid-column: 1; } .index p { grid-column: 1; } .index .plate { grid-column: 2; grid-row: 1 / span 2; }
-  .home .plate { aspect-ratio: 16 / 10; }
+@media (max-width: 48rem) {
+  .axis-row { grid-template-columns: minmax(0, 1fr); }
+  .mast-photo { height: 42svh; }
+  .mast .axis-row { padding-block: 28px 64px; }
+  .mast .lead { order: 2; margin-top: 20px; padding: 0; }
+  .mast-text { order: 1; }
+  .actions .btn { width: 100%; }
+  .tiles { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: 30svh auto; gap: 6px; }
+  .tile-a { grid-column: 1 / -1; grid-row: 1; min-height: 0; }
+  .tile-b, .tile-c { grid-row: 2; grid-column: auto; aspect-ratio: 1; }
+  .record { padding-block: 72px; }
+  .frame { aspect-ratio: 3 / 1; }
+  .record-main, .moving .record-main.rise { display: contents; opacity: 1; transform: none; } /* a layout-only wrapper here: it never arrives, so it must not hide its parts */
+  .record h2 { order: 1; } .record .intro { order: 2; } .stages { order: 3; margin-top: 32px; } .sheet { order: 4; margin-top: 24px; }
+  .chapter { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; min-height: 0; padding-block: 56px; }
+  .chapter-head, .chapter figure, .chapter p { grid-column: 1; grid-row: auto; }
+  .chapter figure { width: 80%; justify-self: center; max-height: none; }
+  .rules { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+  .rule-row { grid-template-columns: minmax(0, 1fr); }
+  .qa-row h2, .qa-row h3, .qa-row p { grid-column: 1 / -1; }
+  .qa-row p { margin-top: 12px; }
+  .invert { min-height: 0; gap: 96px; }
+  .say { font-size: var(--t-body); }
+  .invert-foot .btn { width: 100%; }
 }
-@media (max-width: 40rem) { .actions .btn { width: 100%; } }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn:active { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .mast-photo img { animation: none; } }
+/* Devanagari headlines are longer: a wider measure and one size step down keep them to two lines */
+:lang(hi) .mast h1, :lang(mr) .mast h1 { max-width: 16ch; font-size: clamp(2.125rem, 0.6rem + 5.2vw, 6rem); }
+:lang(hi) .invert h2, :lang(mr) .invert h2 { max-width: 16ch; font-size: clamp(2.125rem, 0.6rem + 5.2vw, 6rem); }
+@media (max-width: 48rem) { :lang(hi) .invert h2, :lang(mr) .invert h2 { max-width: none; font-size: clamp(1.75rem, 8.6vw, 2.125rem); line-height: 1.25; } }
 
   </style>
 </head>
 <body>
   <a class="skip" href="#main">सामग्री पर जाएँ</a>
-  <header class="top"><div class="shell"><a class="brand" href="/hi/" aria-label="Runwal MyCity"><svg viewBox="72 24 112 216" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M92 24 H164 A20 20 0 0 1 184 44 V188 A20 20 0 0 1 164 208 H126 L92 238 V208 A20 20 0 0 1 72 188 V44 A20 20 0 0 1 92 24 Z M96 56 h24 v24 h-24 Z M136 56 h24 v24 h-24 Z M96 100 h24 v24 h-24 Z M136 100 h24 v24 h-24 Z M96 144 h24 v24 h-24 Z M136 144 h24 v24 h-24 Z"/></svg><span>Runwal MyCity</span></a><nav class="tools" aria-label="भाषा"><a href="/" hreflang="en" lang="en">English</a><a href="/hi/" hreflang="hi" lang="hi" aria-current="page">हिन्दी</a><a href="/mr/" hreflang="mr" lang="mr">मराठी</a><button type="button" class="theme" data-mode="auto" data-label-auto="थीम: अपने आप" data-label-light="थीम: हल्की" data-label-dark="थीम: गहरी" aria-label="थीम: अपने आप" title="थीम: अपने आप"><svg class="i-auto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg><svg class="i-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="i-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button><a class="btn" href="/login">साइन इन</a></nav></div></header>
+  <header class="top"><div class="shell"><a class="brand" href="/hi/" aria-label="Runwal MyCity"><svg viewBox="72 24 112 216" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M92 24 H164 A20 20 0 0 1 184 44 V188 A20 20 0 0 1 164 208 H126 L92 238 V208 A20 20 0 0 1 72 188 V44 A20 20 0 0 1 92 24 Z M96 56 h24 v24 h-24 Z M136 56 h24 v24 h-24 Z M96 100 h24 v24 h-24 Z M136 100 h24 v24 h-24 Z M96 144 h24 v24 h-24 Z M136 144 h24 v24 h-24 Z"/></svg><span translate="no">Runwal MyCity</span></a><nav class="tools" aria-label="भाषा"><a href="/" hreflang="en" lang="en">English</a><a href="/hi/" hreflang="hi" lang="hi" aria-current="page">हिन्दी</a><a href="/mr/" hreflang="mr" lang="mr">मराठी</a><button type="button" class="theme" data-mode="auto" data-label-auto="थीम: अपने आप" data-label-light="थीम: हल्की" data-label-dark="थीम: गहरी" aria-label="थीम: अपने आप" title="थीम: अपने आप"><svg class="i-auto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg><svg class="i-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="i-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button><a class="btn" href="/login">साइन इन</a></nav></div></header>
 
   <main id="main">
-    <section class="hero">
-      <div class="container">
-        <div>
-          <h1>आपने एक वादे के लिए पैसे दिए।</h1>
-          <p class="lead">दिखाइए क्या वादा था, असल में क्या है, और अपनी बात कहिए।</p>
+    <section class="mast" aria-labelledby="mast-title">
+      <figure class="mast-photo"><img src="/images/skyline.jpg" width="1200" height="675" alt="सोसाइटी के बाहर से दिखते टावर" fetchpriority="high"></figure>
+      <div class="axis-row">
+        <p class="lead">दिखाइए क्या वादा था, असल में क्या है, और अपनी बात कहिए।</p>
+        <div class="mast-text">
+          <h1 id="mast-title">आपने एक वादे के लिए पैसे दिए।</h1>
           <div class="actions">
             <a class="btn btn--primary" href="/public">निवासियों की पोस्ट पढ़ें</a>
-            <a class="btn" href="/login">अपनी आवाज़ उठाएँ</a>
+            <a class="quiet" href="/login">अपनी आवाज़ उठाएँ</a>
           </div>
         </div>
-        <figure class="plate crop"><img src="/images/skyline.jpg" width="1200" height="675" alt="सोसाइटी के बाहर से दिखते टावर" fetchpriority="high"></figure>
       </div>
     </section>
 
-    <section class="band say-band" aria-label="आपने एक वादे के लिए पैसे दिए।">
-      <div class="container"><p class="say">ब्रोशर में बगीचे, दीवारें, क्लबहाउस और पक्की सड़कें दिखाई गई थीं। कई निवासियों को लगता है कि जिसके लिए पैसे दिए, वह वैसा नहीं है जैसा आज वे जी रहे हैं।</p></div>
+    <section class="mosaic" aria-labelledby="mosaic-title">
+      <div class="tiles">
+        <div class="tile tile-a"><h2 id="mosaic-title">वादा था।</h2></div>
+        <p class="tile tile-b"><span>आज।</span></p>
+        <figure class="tile tile-c"><img src="/images/garden.jpg" width="1200" height="675" alt="टावरों के पास लॉन और पेड़ों वाला बगीचा" loading="lazy"></figure>
+      </div>
+      <div class="axis-row says">
+        <div></div>
+        <div class="rise"><p class="say">ब्रोशर में बगीचे, दीवारें, क्लबहाउस और पक्की सड़कें दिखाई गई थीं। कई निवासियों को लगता है कि जिसके लिए पैसे दिए, वह वैसा नहीं है जैसा आज वे जी रहे हैं।</p><p class="say say-2">यह हमारा घर है। यह वैसा होना चाहिए जैसा वादा किया गया था।</p></div>
+      </div>
     </section>
 
-    <section class="band record" id="record" aria-labelledby="record-title">
-      <div class="container">
-        <h2 id="record-title">इसे दर्ज करें</h2>
-        <p class="intro">हर पोस्ट तीन सवालों का जवाब देती है। किसी के देखने से पहले मॉडरेटर इसे जाँचते हैं।</p>
-        <div class="bench">
-          <ol class="stages">
-            <li><button class="stage" type="button" data-stage="0" aria-pressed="true"><strong>क्या वादा था</strong><span>ब्रोशर, एग्रीमेंट या मंज़ूर नक्शे से, पेज के साथ लिखें।</span></button></li>
-            <li><button class="stage" type="button" data-stage="1" aria-pressed="false"><strong>आज क्या है</strong><span>अपनी फ़ोटो जोड़ें, कहाँ और कब ली गई।</span></button></li>
-            <li><button class="stage" type="button" data-stage="2" aria-pressed="false"><strong>निवासी देखते हैं</strong><span>“सत्यापित निवासी” के नाम से प्रकाशित। आपका नाम और नंबर छिपे रहते हैं।</span></button></li>
-          </ol>
-          <article class="sheet crop" data-step="0" aria-label="उदाहरण पोस्ट">
+    <section class="record" id="record" aria-labelledby="record-title">
+      <div class="axis-row">
+        <ol class="stages rise">
+          <li><button class="stage" type="button" data-stage="0" aria-pressed="true"><strong>क्या वादा था</strong><span>ब्रोशर, एग्रीमेंट या मंज़ूर नक्शे से, पेज के साथ लिखें।</span></button></li>
+          <li><button class="stage" type="button" data-stage="1" aria-pressed="false"><strong>आज क्या है</strong><span>अपनी फ़ोटो जोड़ें, कहाँ और कब ली गई।</span></button></li>
+          <li><button class="stage" type="button" data-stage="2" aria-pressed="false"><strong>निवासी देखते हैं</strong><span>“सत्यापित निवासी” के नाम से प्रकाशित। आपका नाम और नंबर छिपे रहते हैं।</span></button></li>
+        </ol>
+        <div class="record-main rise">
+          <h2 id="record-title">इसे दर्ज करें</h2>
+          <p class="intro">हर पोस्ट तीन सवालों का जवाब देती है। किसी के देखने से पहले मॉडरेटर इसे जाँचते हैं।</p>
+          <article class="sheet" data-ui data-step="0" aria-label="उदाहरण पोस्ट">
             <div class="sheet-top"><span>उदाहरण पोस्ट</span><span class="sheet-state" id="sheet-state" role="status" data-wait="जाँच के इंतज़ार में" data-done="प्रकाशित">जाँच के इंतज़ार में</span></div>
             <dl>
               <div class="field f1"><dt>वादा</dt><dd>फ़ेज़ 1 के चारों ओर बाउंड्री वॉल</dd><dt>स्रोत</dt><dd>ब्रोशर, पेज नंबर के साथ</dd></div>
@@ -315,60 +331,62 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
       </div>
     </section>
 
-    <section class="band" id="why" aria-labelledby="safe-title">
-      <div class="container">
-        <h2 id="safe-title">सुरक्षित होकर बोलें</h2>
-        <ul class="index">
-          <li><h3>सबके लिए गुमनाम</h3><p>पोस्ट पर “सत्यापित निवासी” दिखता है, आपका नाम कभी नहीं।</p><figure class="plate"><img src="/images/podium-seating.jpg" width="1200" height="675" alt="टावरों के बीच पोडियम पर बैठने की जगह" loading="lazy"></figure></li>
-          <li><h3>दिखने से पहले जाँच</h3><p>मॉडरेटर हर पोस्ट को पहले कंटेंट नियमों से पढ़ते हैं।</p><figure class="plate"><img src="/images/lawn-clubhouse.jpg" width="1200" height="587" alt="क्लबहाउस और उसका लॉन" loading="lazy"></figure></li>
-          <li><h3>आपका नंबर निजी</h3><p>सिर्फ़ सोसाइटी एडमिन, एक बार, आपको मंज़ूरी देने के लिए देखते हैं।</p><figure class="plate"><img src="/images/playground.jpg" width="1200" height="875" alt="लॉन पर स्लाइड वाला बच्चों का खेल का मैदान" loading="lazy"></figure></li>
-        </ul>
+    <section class="chapters" id="why" aria-labelledby="why-title">
+      <div class="chapter c1">
+        <div class="chapter-head"><h2 id="why-title">सुरक्षित होकर बोलें</h2><h3>सबके लिए गुमनाम</h3></div>
+        <figure><img src="/images/podium-seating.jpg" width="1200" height="675" alt="टावरों के बीच पोडियम पर बैठने की जगह" loading="lazy"></figure>
+        <p>पोस्ट पर “सत्यापित निवासी” दिखता है, आपका नाम कभी नहीं।</p>
+      </div>
+      <div class="chapter c2">
+        <div class="chapter-head"><h3>दिखने से पहले जाँच</h3></div>
+        <figure><img src="/images/lawn-clubhouse.jpg" width="1200" height="587" alt="क्लबहाउस और उसका लॉन" loading="lazy"></figure>
+        <p>मॉडरेटर हर पोस्ट को पहले कंटेंट नियमों से पढ़ते हैं।</p>
+      </div>
+      <div class="chapter c3">
+        <div class="chapter-head"><h3>आपका नंबर निजी</h3></div>
+        <figure><img src="/images/playground.jpg" width="1200" height="875" alt="लॉन पर स्लाइड वाला बच्चों का खेल का मैदान" loading="lazy"></figure>
+        <p>सिर्फ़ सोसाइटी एडमिन, एक बार, आपको मंज़ूरी देने के लिए देखते हैं।</p>
       </div>
     </section>
 
-    <section class="band rules" id="rules" aria-labelledby="rules-title">
-      <div class="container">
+    <section class="rules" id="rules" aria-labelledby="rules-title">
+      <div class="rules-cell rise">
         <h2 id="rules-title">सामुदायिक दिशानिर्देश</h2>
-        <div class="rule-grid">
-          <div><h3>पोस्ट में ये होना चाहिए</h3><ul><li>साफ़ बताएँ कि क्या वादा किया गया था (हो सके तो स्रोत के साथ: ब्रोशर का पेज, एग्रीमेंट की धारा, नक्शा आदि)</li><li>आज ज़मीन पर क्या है, उसका वर्णन करें या उसे दिखाएँ</li><li>जहाँ ज़रूरी हो, हाल की फ़ोटो जोड़ें</li><li>किसी कर्मचारी या निवासी का नाम अपमानजनक तरीके से न लें</li></ul></div>
-          <div><h3>हम ये हटा देंगे</h3><ul><li>जानबूझकर झूठी लगने वाली सामग्री</li><li>व्यक्तिगत हमले, अपशब्द या धमकियाँ</li><li>निजी जगहों की, या पहचाने जा सकने वाले चेहरों की, बिना सहमति ली गई फ़ोटो</li><li>भारतीय कानून का उल्लंघन करने वाली कोई भी सामग्री</li></ul></div>
+        <div class="rules-foot">
+          <p>किसी और के देखने से पहले, मॉडरेटर हर पोस्ट को इन नियमों पर जाँचता है।</p>
+          <a class="quiet" href="/hi/legal/#guidelines">पूरे दिशानिर्देश पढ़ें</a>
         </div>
       </div>
-    </section>
-
-    <section class="home" aria-label="यह हमारा घर है। यह वैसा होना चाहिए जैसा वादा किया गया था।">
-      <div class="container">
-        <p class="say">यह हमारा घर है। यह वैसा होना चाहिए जैसा वादा किया गया था।</p>
-        <figure class="plate crop"><img src="/images/garden.jpg" width="1200" height="675" alt="टावरों के पास लॉन और पेड़ों वाला बगीचा" loading="lazy"></figure>
+      <div class="rules-rows">
+        <div class="rule-row rise"><h3>पोस्ट में ये होना चाहिए</h3><ul><li>साफ़ बताएँ कि क्या वादा किया गया था (हो सके तो स्रोत के साथ: ब्रोशर का पेज, एग्रीमेंट की धारा, नक्शा आदि)</li><li>आज ज़मीन पर क्या है, उसका वर्णन करें या उसे दिखाएँ</li><li>जहाँ ज़रूरी हो, हाल की फ़ोटो जोड़ें</li><li>किसी कर्मचारी या निवासी का नाम अपमानजनक तरीके से न लें</li></ul></div>
+        <div class="rule-row rise"><h3>हम ये हटा देंगे</h3><ul><li>जानबूझकर झूठी लगने वाली सामग्री</li><li>व्यक्तिगत हमले, अपशब्द या धमकियाँ</li><li>निजी जगहों की, या पहचाने जा सकने वाले चेहरों की, बिना सहमति ली गई फ़ोटो</li><li>भारतीय कानून का उल्लंघन करने वाली कोई भी सामग्री</li></ul></div>
       </div>
     </section>
 
-    <section class="band" id="faq" aria-labelledby="faq-title">
-      <div class="container">
-        <h2 id="faq-title">सवाल</h2>
-        <div class="qa">
-          <details><summary>इसे कौन इस्तेमाल कर सकता है?</summary><p>रनवाल मायसिटी, डोंबिवली के निवासी: मालिक और किरायेदार। मोबाइल नंबर से साइन इन करें, अपना फ़्लैट बताएँ, और सोसाइटी एडमिन आम तौर पर एक दिन में मंज़ूरी देते हैं।</p></details>
-          <details><summary>क्या यह डेवलपर का ऐप है?</summary><p>नहीं। यह निवासियों का स्वतंत्र ऐप है। इसे रनवाल या बिल्डर नहीं चलाते, न इसका उनसे कोई संबंध है।</p></details>
-          <details><summary>मेरा मोबाइल नंबर कौन देखता है?</summary><p>सिर्फ़ सोसाइटी एडमिन, एक बार, आपका पंजीकरण जाँचने के लिए। दूसरे निवासी सिर्फ़ नाम देखते हैं, और फ़ीड पोस्ट में कभी नहीं दिखता कि किसने लिखी।</p></details>
-          <details><summary>फ़ीड में क्या प्रकाशित होता है?</summary><p>तथ्य पर आधारित, दर्ज समस्याएँ: क्या, कहाँ, कब, और क्या वादा था। नाम, चेहरे, अपशब्द या बिना सबूत के आरोप वाली पोस्ट प्रकाशित नहीं होतीं।</p></details>
-        </div>
+    <section class="faq" id="faq" aria-labelledby="faq-title">
+      <div class="qa">
+        <div class="qa-row"><h2 id="faq-title">सवाल</h2><div></div></div>
+        <div class="qa-row rise"><h3>इसे कौन इस्तेमाल कर सकता है?</h3><p>रनवाल मायसिटी, डोंबिवली के निवासी: मालिक और किरायेदार। मोबाइल नंबर से साइन इन करें, अपना फ़्लैट बताएँ, और सोसाइटी एडमिन आम तौर पर एक दिन में मंज़ूरी देते हैं।</p></div>
+        <div class="qa-row rise"><h3>क्या यह डेवलपर का ऐप है?</h3><p>नहीं। यह निवासियों का स्वतंत्र ऐप है। इसे रनवाल या बिल्डर नहीं चलाते, न इसका उनसे कोई संबंध है।</p></div>
+        <div class="qa-row rise"><h3>मेरा मोबाइल नंबर कौन देखता है?</h3><p>सिर्फ़ सोसाइटी एडमिन, एक बार, आपका पंजीकरण जाँचने के लिए। दूसरे निवासी सिर्फ़ नाम देखते हैं, और फ़ीड पोस्ट में कभी नहीं दिखता कि किसने लिखी।</p></div>
+        <div class="qa-row rise"><h3>फ़ीड में क्या प्रकाशित होता है?</h3><p>तथ्य पर आधारित, दर्ज समस्याएँ: क्या, कहाँ, कब, और क्या वादा था। नाम, चेहरे, अपशब्द या बिना सबूत के आरोप वाली पोस्ट प्रकाशित नहीं होतीं।</p></div>
       </div>
     </section>
 
-    <section class="band join" aria-labelledby="join-title">
-      <div class="container">
-        <h2 id="join-title">आपकी आवाज़ मायने रखती है।</h2>
-        <p class="intro">अपने मोबाइल नंबर से साइन इन करें और अपना फ़्लैट बताएँ। सोसाइटी एडमिन आम तौर पर एक दिन में मंज़ूरी देते हैं।</p>
-        <div class="actions"><a class="btn btn--primary" href="/login">मोबाइल से साइन इन करें</a></div>
+    <section class="invert" aria-labelledby="join-title">
+      <h2 id="join-title" class="rise"><span>आपकी आवाज़ मायने रखती है।</span></h2>
+      <div class="invert-foot">
+        <p>अपने मोबाइल नंबर से साइन इन करें और अपना फ़्लैट बताएँ। सोसाइटी एडमिन आम तौर पर एक दिन में मंज़ूरी देते हैं।</p>
+        <a class="btn btn--primary" href="/login">मोबाइल से साइन इन करें</a>
       </div>
     </section>
   </main>
 
-  <footer class="site-foot"><div class="shell foot"><div class="about"><a class="brand" href="/hi/"><svg viewBox="72 24 112 216" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M92 24 H164 A20 20 0 0 1 184 44 V188 A20 20 0 0 1 164 208 H126 L92 238 V208 A20 20 0 0 1 72 188 V44 A20 20 0 0 1 92 24 Z M96 56 h24 v24 h-24 Z M136 56 h24 v24 h-24 Z M96 100 h24 v24 h-24 Z M136 100 h24 v24 h-24 Z M96 144 h24 v24 h-24 Z M136 144 h24 v24 h-24 Z"/></svg><span>Runwal MyCity</span></a><p>निवासियों का स्वतंत्र ऐप। इसे रनवाल या बिल्डर नहीं चलाते, न इसका उनसे कोई संबंध है।</p></div><nav aria-labelledby="f-legal"><h2 class="foot-h" id="f-legal">कानूनी जानकारी</h2><ul><li><a href="/hi/legal/#disclaimer">अस्वीकरण</a></li><li><a href="/hi/legal/#terms">उपयोग की शर्तें</a></li><li><a href="/hi/legal/#privacy">गोपनीयता नीति</a></li><li><a href="/hi/legal/#guidelines">सामुदायिक दिशानिर्देश</a></li><li><a href="/hi/legal/#grievance">शिकायत निवारण</a></li></ul></nav><nav aria-labelledby="f-lang"><h2 class="foot-h" id="f-lang">भाषा</h2><ul><li><a href="/" hreflang="en" lang="en">English</a></li><li><a href="/hi/" hreflang="hi" lang="hi">हिन्दी</a></li><li><a href="/mr/" hreflang="mr" lang="mr">मराठी</a></li></ul></nav><nav aria-labelledby="f-site"><h2 class="foot-h" id="f-site">Runwal MyCity</h2><ul><li><a href="/public">निवासियों की पोस्ट पढ़ें</a></li><li><a href="#why">सुरक्षित होकर बोलें</a></li><li><a href="#faq">सवाल</a></li><li><a href="/login">साइन इन</a></li></ul></nav></div><div class="base"><div class="shell"><span>रनवाल मायसिटी, कल्याण-शिल रोड, डोंबिवली पूर्व, ठाणे, महाराष्ट्र।</span></div></div></footer>
+  <footer class="site-foot"><div class="shell foot"><div class="about"><a class="brand" href="/hi/"><svg viewBox="72 24 112 216" aria-hidden="true" focusable="false"><path fill="currentColor" fill-rule="evenodd" d="M92 24 H164 A20 20 0 0 1 184 44 V188 A20 20 0 0 1 164 208 H126 L92 238 V208 A20 20 0 0 1 72 188 V44 A20 20 0 0 1 92 24 Z M96 56 h24 v24 h-24 Z M136 56 h24 v24 h-24 Z M96 100 h24 v24 h-24 Z M136 100 h24 v24 h-24 Z M96 144 h24 v24 h-24 Z M136 144 h24 v24 h-24 Z"/></svg><span translate="no">Runwal MyCity</span></a><p>निवासियों का स्वतंत्र ऐप। इसे रनवाल या बिल्डर नहीं चलाते, न इसका उनसे कोई संबंध है।</p></div><nav aria-labelledby="f-legal"><h2 class="foot-h" id="f-legal">कानूनी जानकारी</h2><ul><li><a href="/hi/legal/#disclaimer">अस्वीकरण</a></li><li><a href="/hi/legal/#terms">उपयोग की शर्तें</a></li><li><a href="/hi/legal/#privacy">गोपनीयता नीति</a></li><li><a href="/hi/legal/#guidelines">सामुदायिक दिशानिर्देश</a></li><li><a href="/hi/legal/#grievance">शिकायत निवारण</a></li></ul></nav><nav aria-labelledby="f-lang"><h2 class="foot-h" id="f-lang">भाषा</h2><ul><li><a href="/" hreflang="en" lang="en">English</a></li><li><a href="/hi/" hreflang="hi" lang="hi">हिन्दी</a></li><li><a href="/mr/" hreflang="mr" lang="mr">मराठी</a></li></ul></nav><nav aria-labelledby="f-site"><h2 class="foot-h" id="f-site">Runwal MyCity</h2><ul><li><a href="/public">निवासियों की पोस्ट पढ़ें</a></li><li><a href="#why">सुरक्षित होकर बोलें</a></li><li><a href="#faq">सवाल</a></li><li><a href="/login">साइन इन</a></li></ul></nav></div><div class="base"><div class="shell"><span>रनवाल मायसिटी, कल्याण-शिल रोड, डोंबिवली पूर्व, ठाणे, महाराष्ट्र।</span></div></div></footer>
 
   <script>
     (function () {
-      // the header turns into a frosted bar once the page scrolls
+      // the header turns into a solid bar once the page scrolls
       var top = document.querySelector('.top');
       var mark = function () { top.classList.toggle('scrolled', scrollY > 8); };
       addEventListener('scroll', mark, { passive: true }); mark();
@@ -386,8 +404,8 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
     })();
 </script>
   <script>
-    // the example post: each stage shows its part of the sheet (without script the whole sheet shows)
     (function () {
+      // the example post: each stage shows its part of the sheet (without script the whole sheet shows)
       var stages = [].slice.call(document.querySelectorAll('.stage')), sheet = document.querySelector('.sheet'), state = document.getElementById('sheet-state');
       stages.forEach(function (b) {
         b.addEventListener('click', function () {
@@ -396,6 +414,14 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
           state.textContent = b.dataset.stage === '2' ? state.dataset.done : state.dataset.wait;
         });
       });
+      // parts arrive once as they come into view; chapters open to the full width (content is visible without script)
+      if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('moving');
+        var seen = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); seen.unobserve(en.target); } });
+        }, { rootMargin: '0px 0px -10% 0px' });
+        [].forEach.call(document.querySelectorAll('.rise, .chapter, .tile'), function (el, i) { el.style.setProperty('--i', i % 4); seen.observe(el); });
+      }
     })();
   </script>
 </body>
