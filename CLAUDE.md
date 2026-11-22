@@ -264,7 +264,7 @@ Live as two sites: https://gardencityseva.com (complaints, `app`) and https://ru
 `feed-app`), each on its own Lightsail server with a static IP, Neon database and bucket. Done: all
 contexts with their REST APIs, phone + OTP login, self sign-up with approval, photos, comments, the full complaint
 lifecycle, and the web app for residents, staff and admins in three languages. A public homepage at `/`, `/hi/`
-and `/mr/` for search engines; Google Search Console verification (a DNS TXT record) is the owner's step.
+and `/mr/` for search engines; both domains are verified in Google Search Console (DNS TXT records) with their sitemaps submitted (2026-11-22).
 
 ## Next step
 1. Before real residents: SMS through MSG91 (after DLT approval); remove the demo users and `OTP_DEMO_CODE`;
