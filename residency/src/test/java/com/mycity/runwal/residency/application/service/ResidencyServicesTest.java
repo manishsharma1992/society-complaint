@@ -155,6 +155,19 @@ class ResidencyServicesTest {
     }
 
     @Test
+    void flatsOfMemberShowsMembersOnlyToAdminsOfTheirTower() {
+        memberships.addMember(new AddFlatMemberCommand(1, 795, 10, "OWNER"));
+
+        caller = actor(21, ActorRole.Part.TOWER_ADMIN, 8L);
+        assertThat(queries.flatsOfMember(new FlatsOfMemberQuery(1, 10))).singleElement()
+                .satisfies(flat -> assertThat(flat.members()).isEmpty());
+
+        caller = actor(20, ActorRole.Part.TOWER_ADMIN, 7L);
+        assertThat(queries.flatsOfMember(new FlatsOfMemberQuery(1, 10))).singleElement()
+                .satisfies(flat -> assertThat(flat.members()).hasSize(1));
+    }
+
+    @Test
     void unknownTypeOrFlat() {
         assertThatThrownBy(() -> memberships.addMember(new AddFlatMemberCommand(1, 795, 10, "FAMILY")))
                 .isInstanceOf(InvalidResidencyException.class);

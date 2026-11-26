@@ -115,7 +115,9 @@ public class ResidencyQueryService {
         List<Flat> memberFlats = flats.findByMember(societyId, member);
         Map<TowerId, Tower> towersById = towers.findBySociety(societyId).stream()
                 .collect(Collectors.toMap(Tower::id, Function.identity()));
-        return memberFlats.stream().map(flat -> FlatView.of(flat, towersById.get(flat.towerId()))).toList();
+        return memberFlats.stream()
+                .map(flat -> forCaller(FlatView.of(flat, towersById.get(flat.towerId())), flat))
+                .toList();
     }
 
     private FlatView forCaller(FlatView view, Flat flat) {
